@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63ef1b4989389e14eb6429de4b50689e, type: 3}
+  m_Name: SpeakingAbility
+  m_EditorClassIdentifier: Assembly-CSharp::TraitDefinition
+  TraitID: SPEAKING_ABILITY
+  levels:
+  - levelName: Uninspired Speaker
+    epithet:
+      title: 
+      priority: 0
+    flavorText: When he can finally get a word in, few are impressed by what he has to say.
+    requiredPoints: -1
+    Modifiers:
+    - Stat: 0
+      Value: -1
+    - Stat: 3
+      Value: -1
+  - levelName: Quite Eloquent
+    epithet:
+      title: 
+      priority: 0
+    flavorText: He knows a few tricks to get a crowd excited.
+    requiredPoints: 1
+    Modifiers:
+    - Stat: 3
+      Value: 1
+  - levelName: Master Orator
+    epithet:
+      title: the Silver-Tongued
+      priority: 4
+    flavorText: This man's words could convince a disobedient peasant, scoffing noble, or rebellious mule.
+    requiredPoints: 3
+    Modifiers:
+    - Stat: 0
+      Value: 2
+    - Stat: 3
+      Value: 2
+  mutallyExclusiveTraits: []

@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecd666007e17dd34f9931c405d02aaa8, type: 3}
+  m_Name: TestGeneral
+  m_EditorClassIdentifier: Assembly-CSharp::General
+  givenName: Test General
+  epithet: of Valken
+  stats:
+  - key: 0
+    value: 1
+  - key: 1
+    value: 1
+  - key: 2
+    value: 0
+  - key: 3
+    value: 0
+  associatedNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  traitController:
+    activeTraits:
+    - key: APPEARANCE
+      value:
+        TraitDef: {fileID: 11400000, guid: 4fa5e99ada7680848889eb1185bef9fa, type: 2}
+        CurrentPoints: 1
+    - key: MADNESS
+      value:
+        TraitDef: {fileID: 11400000, guid: 07648bd14ed16334ab40b095bb86ea5a, type: 2}
+        CurrentPoints: 1
+    - key: VALKEN
+      value:
+        TraitDef: {fileID: 11400000, guid: 4c1b6bdc4edcc9b409da7f46119376f0, type: 2}
+        CurrentPoints: 1

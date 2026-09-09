@@ -1,0 +1,1372 @@
+fileFormatVersion: 2
+guid: 605956ca47e57094ead722fe83bf8955
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7933032100119009924
+    second: isometricTiles 1_0
+  - first:
+      213: 2976669602537305649
+    second: isometricTiles 1_1
+  - first:
+      213: -8155827239161785386
+    second: isometricTiles 1_2
+  - first:
+      213: -2307662059503154048
+    second: isometricTiles 1_3
+  - first:
+      213: -171499493444665096
+    second: isometricTiles 1_4
+  - first:
+      213: 4402943630713932160
+    second: isometricTiles 1_5
+  - first:
+      213: -7949592884571877021
+    second: isometricTiles 1_6
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: isometricTiles_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a22bf9fa492a84a40bbe0712df741ae3
+      internalID: 1560795083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc0bfca33dfcfc248acdab8eb77fbc46
+      internalID: 1178488227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f485aefa1fa5ef4fbd067bc3539c726
+      internalID: 296598723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 571c83df478abfc4fb0f685961e61581
+      internalID: 789030512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5867bbb0e37cd14180df36bbf1a0758
+      internalID: 1189136591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19be3d5c74981234880eb6be49b1ae8e
+      internalID: -892015610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_6
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65b3b06243ee46b44ad0358c2d68e30b
+      internalID: 1561281756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_7
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cf34f121c4c3bc409a35d0f7ee58553
+      internalID: -1297588479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_8
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4966371b1fdf37d47bce4c31ea5a7076
+      internalID: -1371796576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_9
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98688d2f675e6494ebd1796b163b63ce
+      internalID: -1926433884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c26f9f392b498e04c8d449848a9139e4
+      internalID: 1077733078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f2736c023e8c8d4b8b5bf0ef2509fe3
+      internalID: 1807457115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_12
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d003d429261397f4c97c2d6a9991e31c
+      internalID: 849043528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_13
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 208
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b4ab6dd46c47b0439c6b2856fd22b5c
+      internalID: -446577218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69a15ec1d041f0146a5380805e226795
+      internalID: -1155829395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_15
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75f3c960a36b0f244b32bdf0c1d978f3
+      internalID: 480540016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_16
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb91c256ff8efe342922ffb049cbbbbc
+      internalID: -2086362078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_17
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4abc1c97914a0344185b42cbdddc5e82
+      internalID: -1131822478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_18
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66c792d5fb7ddad48b56fd05829d4eff
+      internalID: -1375119603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_19
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9676bfe5aed336a46914dbd74b13e889
+      internalID: 530411712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_20
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 723b5c78b5aa53049bb863cefb88c4f4
+      internalID: 557365242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_21
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d88a6ce50c6a434eb1c08296dd5cc0c
+      internalID: 1880143762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_22
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbb19be6dfd4fcb49a2471c2f76c5edc
+      internalID: 1762762016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_23
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3bcc7e23710f3384d8b7301caf32ebd7
+      internalID: -1917061882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_24
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ccbecfa050137f442b2e79dfebb38e3b
+      internalID: -1605684457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_25
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21b4d73101b5cfe48a9f37505cd52296
+      internalID: 1082619376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_26
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85d1c8459c7fd4b4295bf406004d62b5
+      internalID: 588702519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_27
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 176
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f06a75b97f1105b4f9cea7018157daf1
+      internalID: -447948424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf4c472e507d7ee4180092f8a8b99d73
+      internalID: -741692445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_29
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b54a8d6dee21a54a8a8bb7dc83169d5
+      internalID: 2102479098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_30
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fb4d85f473a6474c997ca562e6a3983
+      internalID: 1405097589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_31
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25ac6070683039348bb7c0b0f0559cfe
+      internalID: -1918195005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_32
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 980b10eb3a1c03a429be12d2cd394f15
+      internalID: 261782687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_33
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f39162a4f6188574c86c14fd0ddc4710
+      internalID: 1902757951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_34
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dacc423092f503043a6cf86a5946a0ea
+      internalID: 92405184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_35
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa54a180b04d74949bc389aa1822d594
+      internalID: 928077992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_36
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58285aa3cf515274fac96593e40201c6
+      internalID: 890197652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_37
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d729d54529bf63b43bbda9e30cacfd4a
+      internalID: -1607385054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_38
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb59c4bd9cc63c747aa47f3526d0a801
+      internalID: -1550570701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_39
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d7182837d37a73499606e581a58d2dd
+      internalID: 83351221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_40
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 144
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad5defab7975c9440b7bcc6f90a3bc55
+      internalID: 1193365244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_41
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54f5c71439eec1a42994f9f0bdfa3cd5
+      internalID: -43928661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_42
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca10b12f74aef7f419f166d0f2fd71e6
+      internalID: 577890524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_43
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8439f75c451b81d4c8221c68ac5d8550
+      internalID: -1338697197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_44
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2069463ebd97f714882fa4a50d9cd915
+      internalID: -1408837351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_45
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d28bb017496277249881dc121452c3ff
+      internalID: 569639543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_46
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a06f67364b3bb7d4390894c86685a0b9
+      internalID: -603551939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_47
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5595ea2757d5aba45a4c9a04e8b1d616
+      internalID: 1438149037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_48
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0e712b9e541a764aaf128e1776dbf2b
+      internalID: -1258414192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_49
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77193596dc9b3e7448ec63a018b9d2e3
+      internalID: -58977444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_50
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82d11deb0e351d440944df4c5a4635e7
+      internalID: 1575182301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_51
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bbb15d2932d5854ba575aaf5c53f61d
+      internalID: -1853224152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: isometricTiles_52
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 112
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.75}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0f9c4ad014006d4e9cd26ab410fb8d7
+      internalID: -1694800272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: dbfd0c6596f96d3468df3a895aff2c79
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":16.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.75},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":9,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      isometricTiles_0: 1560795083
+      isometricTiles_1: 1178488227
+      isometricTiles_10: 1077733078
+      isometricTiles_11: 1807457115
+      isometricTiles_12: 849043528
+      isometricTiles_13: -446577218
+      isometricTiles_14: -1155829395
+      isometricTiles_15: 480540016
+      isometricTiles_16: -2086362078
+      isometricTiles_17: -1131822478
+      isometricTiles_18: -1375119603
+      isometricTiles_19: 530411712
+      isometricTiles_2: 296598723
+      isometricTiles_20: 557365242
+      isometricTiles_21: 1880143762
+      isometricTiles_22: 1762762016
+      isometricTiles_23: -1917061882
+      isometricTiles_24: -1605684457
+      isometricTiles_25: 1082619376
+      isometricTiles_26: 588702519
+      isometricTiles_27: -447948424
+      isometricTiles_28: -741692445
+      isometricTiles_29: 2102479098
+      isometricTiles_3: 789030512
+      isometricTiles_30: 1405097589
+      isometricTiles_31: -1918195005
+      isometricTiles_32: 261782687
+      isometricTiles_33: 1902757951
+      isometricTiles_34: 92405184
+      isometricTiles_35: 928077992
+      isometricTiles_36: 890197652
+      isometricTiles_37: -1607385054
+      isometricTiles_38: -1550570701
+      isometricTiles_39: 83351221
+      isometricTiles_4: 1189136591
+      isometricTiles_40: 1193365244
+      isometricTiles_41: -43928661
+      isometricTiles_42: 577890524
+      isometricTiles_43: -1338697197
+      isometricTiles_44: -1408837351
+      isometricTiles_45: 569639543
+      isometricTiles_46: -603551939
+      isometricTiles_47: 1438149037
+      isometricTiles_48: -1258414192
+      isometricTiles_49: -58977444
+      isometricTiles_5: -892015610
+      isometricTiles_50: 1575182301
+      isometricTiles_51: -1853224152
+      isometricTiles_52: -1694800272
+      isometricTiles_6: 1561281756
+      isometricTiles_7: -1297588479
+      isometricTiles_8: -1371796576
+      isometricTiles_9: -1926433884
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

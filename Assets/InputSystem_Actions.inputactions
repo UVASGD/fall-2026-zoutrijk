@@ -1,0 +1,224 @@
+{
+    "version": 1,
+    "name": "InputSystem_Actions",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "df70fa95-8a34-4494-b137-73ab6b9c7d37",
+            "actions": [
+                {
+                    "name": "Scroll",
+                    "type": "Value",
+                    "id": "bd25d64b-9dcc-4231-a63e-ff50c7da6f4c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Middle Mouse Button",
+                    "type": "Button",
+                    "id": "ea126ee9-c7c9-4f8f-9019-9e6134afe63d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1c1249f4-cea0-41fc-9728-ace1b8dfb323",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Scroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8eb77db4-6931-40bf-991b-84a71a5ca4d6",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Middle Mouse Button",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "BattleBinds",
+            "id": "687cf5f4-9fef-4b28-b263-1bca0168b5a2",
+            "actions": [
+                {
+                    "name": "ToggleGroup",
+                    "type": "Button",
+                    "id": "66cfeccd-b60f-4298-99bd-95b0b65bc5bf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "3e639359-c141-4d38-9c7f-44c6da8d20cf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Command",
+                    "type": "Button",
+                    "id": "b278fd74-5709-4a86-bc2f-56e275fee5c4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CancelMovement",
+                    "type": "Button",
+                    "id": "040f4f3a-05c8-4f6c-853b-958fbb61bd08",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Ctrl-Click",
+                    "type": "Button",
+                    "id": "9ef4dc54-2cd8-4d54-b1f6-7e4a2e2c0669",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f89345a6-4967-403c-a2a9-9ae8b78b0bda",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleGroup",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5fe1b608-7283-4a1b-b7cc-58130c5a1c16",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5e68950a-dba0-4dff-92bc-174320279371",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Command",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "518b9573-35df-43ec-9eb2-7bf8e1200813",
+                    "path": "<Keyboard>/backspace",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CancelMovement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a6fbe96-b673-4180-ad69-4dbc03cd983a",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Ctrl-Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Keyboard&Mouse",
+            "bindingGroup": "Keyboard&Mouse",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Gamepad",
+            "bindingGroup": "Gamepad",
+            "devices": [
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Touch",
+            "bindingGroup": "Touch",
+            "devices": [
+                {
+                    "devicePath": "<Touchscreen>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Joystick",
+            "bindingGroup": "Joystick",
+            "devices": [
+                {
+                    "devicePath": "<Joystick>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "XR",
+            "bindingGroup": "XR",
+            "devices": [
+                {
+                    "devicePath": "<XRController>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

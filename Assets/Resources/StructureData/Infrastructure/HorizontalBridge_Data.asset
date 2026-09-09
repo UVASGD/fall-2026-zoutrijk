@@ -1,0 +1,204 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0fe864827acd244fb77439b19306752, type: 3}
+  m_Name: HorizontalBridge_Data
+  m_EditorClassIdentifier: Assembly-CSharp::StructureData
+  tilePalette:
+  - {fileID: 1560795083, guid: 605956ca47e57094ead722fe83bf8955, type: 3}
+  - {fileID: 21300000, guid: e434cb23ebdfe3644bfcfb5aaf5f2bbc, type: 3}
+  - {fileID: 21300000, guid: 54841c58f25e33f4fa19d464cbdbf08d, type: 3}
+  - {fileID: 1178488227, guid: 605956ca47e57094ead722fe83bf8955, type: 3}
+  - {fileID: 1189136591, guid: 605956ca47e57094ead722fe83bf8955, type: 3}
+  - {fileID: -1926433884, guid: 605956ca47e57094ead722fe83bf8955, type: 3}
+  - {fileID: -1371796576, guid: 605956ca47e57094ead722fe83bf8955, type: 3}
+  layers:
+  - columns:
+    - rows: 00000000ffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: 00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffff00000000ffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffff00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffff00000000ffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff01000000010000000100000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff01000000010000000100000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff01000000010000000100000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff01000000010000000100000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff01000000010000000100000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff01000000010000000100000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff01000000010000000100000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff01000000010000000100000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff01000000010000000100000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff01000000010000000000000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffff00000000ffffffff01000000010000000100000001000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff02000000020000000200000002000000ffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000300000003000000030000000300000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000000000000000000000000000000000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffff000000000400000004000000040000000400000000000000ffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffff00000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff05000000ffffffffffffffffffffffffffffffff06000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffff00000000ffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffff00000000ffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffff00000000ffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffff00000000
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    - rows: ffffffffffffffffffffffffffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffff00000000
+  footprint: {x: 19, y: 12}

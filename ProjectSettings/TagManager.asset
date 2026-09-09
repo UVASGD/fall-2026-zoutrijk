@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags: []
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - MapCity
+  - FieldArmy
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: MapBackground
+    uniqueID: 2957796055
+    locked: 0
+  - name: RegionSprite
+    uniqueID: 2415569295
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Subfloor
+    uniqueID: 1763110191
+    locked: 0
+  - name: Floor
+    uniqueID: 4143248927
+    locked: 0
+  - name: Floor Highlight
+    uniqueID: 4215411489
+    locked: 0
+  - name: Wall
+    uniqueID: 4080536525
+    locked: 0
+  - name: MapCityLayer
+    uniqueID: 2618659407
+    locked: 0
+  - name: MapArmyLayer
+    uniqueID: 932747593
+    locked: 0
+  - name: MapOverlayWorldspaceLayer
+    uniqueID: 263289375
+    locked: 0
+  m_RenderingLayers:
+  - Default
