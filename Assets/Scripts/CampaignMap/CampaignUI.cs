@@ -9,6 +9,7 @@ public class CampaignUI : MonoBehaviour
     #region UI elements
     [SerializeField] TMP_Text contextualHighlightText;
     [SerializeField] RegionDetailsMenu regionDetails;
+    [SerializeField] CharacterViewer characterViewer;
     [SerializeField] TMP_Text yearText;
     [SerializeField] int startingYear;    
     [SerializeField] GameObject highlightCursor; //a cursor gameobject that points at the current city/fieldarmy
@@ -33,7 +34,7 @@ public class CampaignUI : MonoBehaviour
     /// <param name="army"></param>
     public void UpdateHighlightedArmyUI(FieldArmy army)
     {
-        contextualHighlightText.text = army != null ? $"{army.General.NobleName}'s Army in {army.currentRegion.RegionName} ({army.owner.fBase.FactionAdjective})" : string.Empty;
+        contextualHighlightText.text = army != null ? $"{army.General.FullName}'s Army in {army.currentRegion.RegionName} ({army.owner.fBase.FactionAdjective})" : string.Empty;
     }
 
     /// <summary>
@@ -64,6 +65,24 @@ public class CampaignUI : MonoBehaviour
         regionDetails.EnableDetailsGraphics(false);
     }
     
+    /// <summary>
+    /// Displays a general's details in the character viewer UI. This includes their portrait, name, and traits.
+    /// </summary>
+    /// <param name="army"></param>
+    public void ShowGeneralDetails(FieldArmy army)
+    {
+        characterViewer.OpenMenu(true);
+        characterViewer.ViewCharacter(army.General);
+    }
+
+    /// <summary>
+    /// Close the general details menu.
+    /// </summary>
+    public void HideGeneralDetails()
+    {
+        characterViewer.OpenMenu(false);
+    }
+
     /// <summary>
     /// Takes an internal turncount from the campaignmanager and formats it as a year on the world's calendar.
     /// </summary>

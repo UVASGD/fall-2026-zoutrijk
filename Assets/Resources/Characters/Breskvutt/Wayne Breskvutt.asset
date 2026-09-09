@@ -19,4 +19,4 @@ MonoBehaviour:
   father: {fileID: 0}
   age: 45
   male: 1
-  portrait: {fileID: 0}
+  portrait: {fileID: 3182185537706818586, guid: 0aca12594feed144f8d71a6037f6bfe0, type: 3}

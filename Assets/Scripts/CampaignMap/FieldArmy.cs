@@ -7,9 +7,10 @@ public class FieldArmy : MonoBehaviour, IPointerEnterHandler
 {
     [SerializeField] public List<CampaignUnit> units;
     public Region currentRegion {get; private set;}
+    public Region targetingRegion {get; private set;} //the region that will be attacked at the end of the turn
     public MapFaction owner {get; private set;}
-    [SerializeField] private Noble general;
-    public Noble General => general; //for read-only UI purposes
+    [SerializeField] private General general;
+    public General General => general; //for read-only UI purposes
     
     [SerializeField] string startingRegion;
     [SerializeField] string startingOwner;

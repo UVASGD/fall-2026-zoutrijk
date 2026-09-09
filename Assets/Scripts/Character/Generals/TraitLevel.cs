@@ -12,6 +12,23 @@ public class TraitLevel
     [TextArea] public string flavorText;
     [SerializeField] public int requiredPoints;
     public List<StatModifier> Modifiers;
+
+    /// <summary>
+    /// Returns a string that describes the modifiers for the trait upon the general. Used in the characterViewer UI
+    /// </summary>
+    /// <returns></returns>
+    public string GetResultantString()
+    {
+        string result = string.Empty;
+        //get a list of the modifier int values and their associated stat types, then format them into a string.
+        foreach (var modifier in Modifiers)
+        {
+            string sign = modifier.Value >= 0 ? "+" : "-"; //whether or not to put a negative or positive in front
+            result += $"{sign}{Mathf.Abs(modifier.Value)} {modifier.Stat}"; //add the value to the string
+        }
+
+        return result;
+    }
 }
 
 [System.Serializable]

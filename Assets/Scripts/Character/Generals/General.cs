@@ -76,6 +76,15 @@ public class General : ScriptableObject
         if(Math.Abs(traitController.activeTraits[traitBuilder.traitName].CurrentLevel.requiredPoints) < Math.Abs(traitBuilder.traitPoints)) return false;
         else return true;
     }
+
+    /// <summary>
+    /// Returns a list of all active traits for this general.
+    /// </summary>
+    /// <returns></returns>
+    public List<Trait> GetAllTraits()
+    {
+        return new List<Trait>(traitController.activeTraits.Values);
+    }
 }
 
 /// <summary>

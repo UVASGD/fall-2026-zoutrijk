@@ -24,10 +24,10 @@ public class CampaignMapManager : MonoBehaviour
     public List<Region> regionList => regions;
     [SerializeField] Material defaultRegionMaterial; //should just be sprite unlit default
     public Material DefaultRegionMaterial => defaultRegionMaterial;
-    public FieldArmy selectedArmy {get; private set;} //an army that is currently selected
-    public MapCity selectedCity {get; private set;} //a settlement that is currently selected
-    public List<FieldArmy> fieldArmies {get; private set;}
-    public List<MapCity> cities {get; private set;}
+    public FieldArmy selectedArmy { get; private set; } //an army that is currently selected
+    public MapCity selectedCity { get; private set; } //a settlement that is currently selected
+    public List<FieldArmy> fieldArmies { get; private set; }
+    public List<MapCity> cities { get; private set; }
     #endregion
 
     #region Helper Scripts
@@ -59,14 +59,14 @@ public class CampaignMapManager : MonoBehaviour
         FieldArmy hoveredArmy = objectCollider != null ? objectCollider.GetComponent<FieldArmy>() : null;
 
         MapCity hoveredCity = hoveredArmy == null && (objectCollider != null) ? objectCollider.GetComponent<MapCity>() : null;
-        
+
         Region hoveredRegion = hoveredCity == null && (objectCollider != null) ? objectCollider.GetComponent<Region>() : null;
 
-        if(hoveredArmy != null && hoveredArmy != highlightedArmy)
+        if (hoveredArmy != null && hoveredArmy != highlightedArmy)
         {
             UpdateArmy(hoveredArmy);
         }
-        else if(hoveredCity != null && hoveredCity != highlightedCity)
+        else if (hoveredCity != null && hoveredCity != highlightedCity)
         {
             UpdateCity(hoveredCity);
         }
@@ -78,23 +78,32 @@ public class CampaignMapManager : MonoBehaviour
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
             if (hoveredRegion != null && selectedArmy == null && selectedCity == null)
+            {
                 campaignUI.ShowRegionDetails(hoveredRegion);
+            }
+            else if (hoveredArmy != null)
+            {
+                campaignUI.ShowGeneralDetails(hoveredArmy);
+            }
             else
+            {
                 campaignUI.HideRegionDetails();
+                campaignUI.HideGeneralDetails();
+            }
         }
         else if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             campaignUI.HideRegionDetails(); //should never show details after a left click
 
             //check if either an army or city are selected. If so, select the army.
-            if(highlightedArmy != null)
+            if (highlightedArmy != null)
             {
                 selectedArmy = highlightedArmy;
                 //null out the selected city in this scenario
                 selectedCity = null;
                 campaignUI.PlaceHighlightCursor(selectedArmy.transform);
             }
-            else if(highlightedCity != null)
+            else if (highlightedCity != null)
             {
                 selectedCity = highlightedCity;
                 campaignUI.PlaceHighlightCursor(selectedCity.transform);
@@ -185,14 +194,14 @@ public class CampaignMapManager : MonoBehaviour
             }
         }
 
-        foreach(var city in startingCities)
+        foreach (var city in startingCities)
         {
             city.InitCity();
             cities.Add(city);
         }
 
         //call init on all FieldArmies on the map.
-        foreach(var army in fieldArmies)
+        foreach (var army in fieldArmies)
         {
             army.InitializeArmy();
         }
@@ -218,7 +227,7 @@ public class CampaignMapManager : MonoBehaviour
 
     public Region getRegionByCode(string code)
     {
-        if(mapRegions.ContainsKey(code))
+        if (mapRegions.ContainsKey(code))
             return mapRegions[code];
         else return null;
     }
