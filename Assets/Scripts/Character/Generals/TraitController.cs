@@ -68,3 +68,13 @@ public class TraitController
         OnTraitsChanged?.Invoke();
     }
 }
+
+/// <summary>
+/// Can be used to refer to a trait without any overhead. Used in the SpeechSnippet logic
+/// </summary>
+[Serializable]
+public struct TraitBuilder
+{
+    public string traitName; //the string associated with the TraitDef
+    public int traitPoints; //the number of points on this trait
+}

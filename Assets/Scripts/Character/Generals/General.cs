@@ -64,6 +64,18 @@ public class General : ScriptableObject
 
         UpdateEpithet();
     }
+
+    /// <summary>
+    /// If this general has a trait at a specified level or higher. Used for the speech generator.
+    /// </summary>
+    /// <param name="traitBuilder"></param>
+    /// <returns></returns>
+    public bool hasTraitLevel(TraitBuilder traitBuilder)
+    {
+        if(!traitController.activeTraits.ContainsKey(traitBuilder.traitName)) return false;
+        if(Math.Abs(traitController.activeTraits[traitBuilder.traitName].CurrentLevel.requiredPoints) < Math.Abs(traitBuilder.traitPoints)) return false;
+        else return true;
+    }
 }
 
 /// <summary>
