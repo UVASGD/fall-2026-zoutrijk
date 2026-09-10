@@ -2545,6 +2545,7 @@ GameObject:
   - component: {fileID: 900382454}
   - component: {fileID: 900382453}
   - component: {fileID: 900382452}
+  - component: {fileID: 900382455}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2587,15 +2588,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.17864585
     y: 0
-    width: 1
+    width: 0.6428572
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2898,6 +2899,30 @@ MonoBehaviour:
     clip: {fileID: 0}
   sfxPlayer: {fileID: 900382453}
   musicPlayer: {fileID: 900382452}
+--- !u!114 &900382455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900382446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88f5cead0c0b2a4eb05b5900433f8d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.PixelPerfectCamera
+  m_ComponentVersion: 1
+  m_AssetsPPU: 16
+  m_RefResolutionX: 256
+  m_RefResolutionY: 224
+  m_CropFrame: 4
+  m_GridSnapping: 1
+  m_FilterMode: 1
+  m_UpscaleRT: 0
+  m_PixelSnapping: 0
+  m_CropFrameX: 0
+  m_CropFrameY: 0
+  m_StretchFill: 0
 --- !u!1 &901666524
 GameObject:
   m_ObjectHideFlags: 0
