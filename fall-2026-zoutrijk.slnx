@@ -1,8 +1,24 @@
 ﻿<Solution>
+  <Project Path="Unity.Timeline.csproj" />
+  <Project Path="Unity.InputSystem.csproj" />
+  <Project Path="Unity.RenderPipelines.GPUDriven.Runtime.csproj" />
+  <Project Path="Unity.PlasticSCM.Editor.csproj" />
+  <Project Path="Unity.2D.Aseprite.Editor.csproj" />
+  <Project Path="Unity.ShaderGraph.Editor.csproj" />
+  <Project Path="Unity.RenderPipelines.Core.Runtime.csproj" />
+  <Project Path="Unity.Timeline.Editor.csproj" />
+  <Project Path="Unity.RenderPipelines.Core.Editor.csproj" />
+  <Project Path="Unity.2D.Psdimporter.Editor.csproj" />
+  <Project Path="Unity.RenderPipelines.Universal.2D.Runtime.csproj" />
+  <Project Path="UnityEngine.UI.csproj" />
+  <Project Path="Unity.Collections.csproj" />
+  <Project Path="Unity.RenderPipelines.Universal.Runtime.csproj" />
+  <Project Path="Unity.2D.IK.Runtime.csproj" />
+  <Project Path="Unity.RenderPipelines.Universal.Editor.csproj" />
+  <Project Path="Unity.PerformanceTesting.Editor.csproj" />
+  <Project Path="UnityEngine.TestRunner.csproj" />
+  <Project Path="Unity.2D.Tilemap.Editor.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
-<<<<<<< Updated upstream
-  <Project Path="Assembly-CSharp-Editor.csproj" />
-=======
   <Project Path="Unity.2D.SpriteShape.Editor.csproj" />
   <Project Path="Unity.VisualStudio.Editor.csproj" />
   <Project Path="Unity.2D.Animation.Editor.csproj" />
@@ -111,5 +127,4 @@
   <Project Path="Unity.RenderPipelines.Universal.Config.Runtime.Player.csproj" />
   <Project Path="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.Player.csproj" />
   <Project Path="Unity.RenderPipelines.Core.ShaderLibrary.Player.csproj" />
->>>>>>> Stashed changes
 </Solution>
