@@ -12,6 +12,7 @@ public class CampaignMapManager : MonoBehaviour
     [SerializeField] List<MapCity> startingCities;
     private List<MapFaction> factions;
     private MapFaction playerFaction;
+    public MapFaction PlayerFaction => playerFaction;
     private int turnCount = 0; //starts at zero
     private Region highlightedRegion;
     private FieldArmy highlightedArmy;

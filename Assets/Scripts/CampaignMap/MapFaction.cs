@@ -7,6 +7,8 @@ public class MapFaction
     public string DisplayName => fBase.name;
     public List<Region> ownedRegions {get; private set;}
     public List<FieldArmy> fieldArmies {get; private set;}
+    [SerializeField] private int currentCurrency;
+
     /// <summary>
     /// Initializes a MapFaction using its base.
     /// </summary>
@@ -34,5 +36,10 @@ public class MapFaction
         {
             Debug.LogError("Tried to remove a region that does not belong to this faction");
         }
+    }
+
+    public void IncrementMoney(int change)
+    {
+        currentCurrency += change;
     }
 }

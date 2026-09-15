@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// A (abstract) city building is stored inside of a city, and makes up the blocks of a city's infrastructure and recuitment capabilities.
+/// A city building is stored inside of a city, and makes up the blocks of a city's infrastructure and recuitment capabilities.
 /// </summary>
-public abstract class CityBuilding : ScriptableObject
+[CreateAssetMenu(menuName = "CityBuilding/Create New CityBuilding")]
+public class CityBuilding : ScriptableObject
 {
     /// <summary>
     /// The visual icon of the building in the city building view.
@@ -19,30 +21,33 @@ public abstract class CityBuilding : ScriptableObject
     /// How many turns construction takes
     /// </summary>
     [SerializeField] int constructionTime;
-    
-    /// <summary>
-    /// Money cost per turn, deducted during the end turn balance changes
-    /// </summary>
-    [SerializeField] int buildingMaintenance;
 
     /// <summary>
-    /// The StructureData of the building.
+    /// The StructureData of the CityBuilding.
     /// </summary>
     [SerializeField] StructureData buildingData;
+
+    [Header("List of effects that happen after a turn is ended")]
+    [SerializeReference] List<GenericTurnEndEffect> TurnEndEffects = new List<GenericTurnEndEffect>(); //the list of effects cycled through when a turn is ended.
 
     /// <summary>
     /// Called at the end of a turn to see if it has some passive impact. Used for population growth, etc.
     /// </summary>
-    public abstract void endTurnImpact();
-
-    /// <summary>
-    /// called on a building when checking what it unlocks.
-    /// </summary>
-    public abstract void checkBuildingUnlocks();
+    public void EndTurnImpact(MapCity parentCity)
+    {
+        foreach(var effect in TurnEndEffects)
+        {
+            effect.OnEndTurnEffect(parentCity);
+        }
+    }
 
     public Sprite BuildingIcon {get {return buildingIcon;}}
     public int ConstructionCost {get {return constructionCost;}}
     public int ConstructionTime {get {return constructionTime;}}
-    public int BuildingMaintenance {get {return buildingMaintenance;}}
     public StructureData BuildingData {get {return buildingData;}}
+
+    public void AddOnTurnEndCause(GenericTurnEndEffect effect)
+    {
+        TurnEndEffects.Add(effect);
+    }
 }
