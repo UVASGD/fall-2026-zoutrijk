@@ -14,6 +14,12 @@ public class Trait
         CurrentPoints = 0;
     }
 
+    public Trait(TraitDefinition def, int startingPoints)
+    {
+        this.TraitDef = def;
+        CurrentPoints = startingPoints;
+    }
+
     public void AddPoints(int points)
     {
         CurrentPoints += points;

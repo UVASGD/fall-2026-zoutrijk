@@ -14,24 +14,19 @@ public class TraitController
     /// </summary>
     /// <param name="traitDef"></param>
     /// <param name="points"></param>
-    public void AddTraitPoints(TraitDefinition traitDef, int points)
+    public void AddTraitPoints(string traitID, int points)
     {
-        //Check mutual exclusivity
-        foreach (var exclusive in traitDef.mutallyExclusiveTraits)
+        //check if the traitID is already contained. If not, make a call to the TraitDB to get a copy of the traitDef.
+        if (activeTraits.ContainsKey(traitID))
         {
-            if (activeTraits.ContainsKey(exclusive))
-            {
-                //Don't add the exclusive trait point if another trait overrides it
-                return;
-            }
+            activeTraits[traitID].AddPoints(points);
         }
-
-        if (!activeTraits.ContainsKey(traitDef.TraitID))
+        else
         {
-            activeTraits[traitDef.TraitID] = new Trait(traitDef);
+            //call the singleton TraitDB
+            TraitDefinition newDef = TraitDB.i.GetTraitByID(traitID);
+            activeTraits.Add(traitID, new Trait(newDef, points)); //add to dictionary and apply the required points.
         }
-
-        activeTraits[traitDef.TraitID].AddPoints(points);
 
         RecalculateStats();
     }
@@ -61,7 +56,10 @@ public class TraitController
 
         return total;
     }
-
+    
+    /// <summary>
+    /// Recalculates the stats for a general, often after changing traits.
+    /// </summary>
     private void RecalculateStats()
     {
 

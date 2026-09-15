@@ -13,6 +13,9 @@ public class GlobalEditorSettings : MonoBehaviour
     }
 
     [Header("Debug")]
-    [SerializeField] private bool richDebugLogs = true; //how detailed logging is on the debug view. Disable for cleaner experience.
+    [SerializeField] private bool richDebugLogs = true;
+    /// <summary>
+    ///How detailed logging is on the debug view. Disable for cleaner dev console while playtesting.
+    /// </summary>
     public bool RichDebugLogs => richDebugLogs;
 }

@@ -70,7 +70,7 @@ public class General : ScriptableObject
     /// </summary>
     /// <param name="traitBuilder"></param>
     /// <returns></returns>
-    public bool hasTraitLevel(TraitBuilder traitBuilder)
+    public bool HasTraitLevel(TraitBuilder traitBuilder)
     {
         if(!traitController.activeTraits.ContainsKey(traitBuilder.traitName)) return false;
         if(Math.Abs(traitController.activeTraits[traitBuilder.traitName].CurrentLevel.requiredPoints) < Math.Abs(traitBuilder.traitPoints)) return false;
@@ -99,7 +99,7 @@ public enum StatType
 
 }
 
-[System.Serializable]
+[Serializable]
 public class StatModifier
 {
     public StatType Stat;

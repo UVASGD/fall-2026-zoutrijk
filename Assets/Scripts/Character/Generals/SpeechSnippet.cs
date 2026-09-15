@@ -29,7 +29,7 @@ public class SpeechSnippet : ScriptableObject
             //check if the general has any of the traits at this level or higher
             foreach(var trait in associatedTraits)
             {
-                if(orator.hasTraitLevel(trait)) return true;
+                if(orator.HasTraitLevel(trait)) return true;
             }
 
             return false;
