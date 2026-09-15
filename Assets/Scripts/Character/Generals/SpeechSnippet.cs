@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -9,33 +8,35 @@ using System.Collections.Generic;
 public class SpeechSnippet : ScriptableObject
 {
     [SerializeField] SnippetType snippetType; //whether the trait is intro, body, or outro text
-    [SerializeField] SnippetContext snippetContext; //if the snippet is based on a condition of the battle, or a trait the general has
-    
-    [TextArea(3,10)] [SerializeField] string snippetText; //the content of the snippet (formatted as a text area in the inspector)
-
-    [SerializeField] float snippetChance; //if the snippet's condition is met, the chance that it will be said.
-
-    [Header("Snippet trait: ONLY applies to trait-context snippets")]
-    [SerializeField] List<TraitBuilder> associatedTraits; //only applies if the snippet is trait-related
+    [TextArea] [SerializeField] List<string> snippetText; //the content of the snippet (formatted as a text area in the inspector)
+    [SerializeField] float snippetChance; //if all conditions are met, what is the chance that this snippet is chosen for a speech
+    [SerializeReference] List<SnippetCondition> conditions; //the conditions for causing the snippet to trigger
 
     /// <summary>
-    /// Checks if the snippet should fire based on the current orator and battle context.
+    /// Checks if the snippet should fire based on the list of snippet conditions.
     /// </summary>
     /// <param name="orator"></param>
-    public bool CheckSnippetCondition(General orator)
+    public bool CheckSnippetCondition(BattleContext context)
     {
-        if(snippetContext == SnippetContext.Trait)
+        foreach(var condition in conditions)
         {
-            //check if the general has any of the traits at this level or higher
-            foreach(var trait in associatedTraits)
+            bool conditionResult = condition.OnCauseCheck(context);
+            if((!conditionResult && !condition.ORCause) || conditionResult && condition.InvertLogic && !condition.ORCause)
             {
-                if(orator.HasTraitLevel(trait)) return true;
+                return false; //a condition failed that was not an OR cause
             }
-
-            return false;
+            else if((conditionResult && condition.ORCause) || (!conditionResult && condition.InvertLogic && condition.ORCause))
+            {
+                return true; //automatic pass due to an OR cause being met
+            }
         }
 
-        return false;
+        return true;
+    }
+
+    public void AddCondition(SnippetCondition condition)
+    {
+        conditions.Add(condition);
     }
 }
 
@@ -47,13 +48,4 @@ public enum SnippetType
     Intro,
     Body,
     Outro
-}
-
-/// <summary>
-/// For what reason this snippet is spoken. Trait = general trait, Combat = some detail about the current battle.
-/// </summary>
-public enum SnippetContext
-{
-    Trait,
-    Combat
 }

@@ -13,9 +13,18 @@ MonoBehaviour:
   m_Name: Madness_02
   m_EditorClassIdentifier: Assembly-CSharp::SpeechSnippet
   snippetType: 1
-  snippetContext: 0
-  snippetText: "Pathetic! I\u2019ve never seen such a sorry excuse for a parade in my life. Let us show ENEMYGENERAL how it\u2019s done."
-  snippetChance: 0.3
-  associatedTraits:
-  - traitName: MADNESS
-    traitPoints: 3
+  snippetText: []
+  snippetChance: 0
+  conditions:
+  - rid: 2180910256908664894
+  references:
+    version: 2
+    RefIds:
+    - rid: 2180910256908664894
+      type: {class: PlayerTraitReqSnippet, ns: , asm: Assembly-CSharp}
+      data:
+        conditionTitle: Has Madness
+        invertLogic: 0
+        orCause: 0
+        traitID: MADNESS
+        pointThreshold: 3
