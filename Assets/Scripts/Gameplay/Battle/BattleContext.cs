@@ -9,11 +9,14 @@ public class BattleContext
     public int enemyArmySize;
     public float relativeStrength => (float)playerArmySize/enemyArmySize;
 
-    public BattleContext(General player, General enemy, int playerSize, int enemySize)
+    public bool playerAttacking;
+
+    public BattleContext(General player, General enemy, int playerSize, int enemySize, bool playerAttacking)
     {
         playerGeneral = player;
         enemyGeneral = enemy;
         playerArmySize = playerSize;
         enemyArmySize = enemySize;
+        this.playerAttacking = playerAttacking;
     }
 }

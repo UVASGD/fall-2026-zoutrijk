@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Madness_01
   m_EditorClassIdentifier: Assembly-CSharp::SpeechSnippet
   snippetType: 1
-  snippetContext: 0
-  snippetText: Steeds! Your riders depend on your swiftness and pliance, do not deny it to them! Same goes for you, swords!
+  snippetText: []
   snippetChance: 0.3
-  associatedTraits:
-  - traitName: MADNESS
-    traitPoints: 3
+  conditions: []
+  references:
+    version: 2
+    RefIds: []
