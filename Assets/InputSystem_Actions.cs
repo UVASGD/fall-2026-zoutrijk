@@ -111,6 +111,16 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""Camera Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""cd078cb0-eabf-43d0-a9e0-24492c8819a3"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -135,6 +145,61 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Middle Mouse Button"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""d1b2cc67-c8b0-469d-829d-1cbe9cdac10a"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Camera Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""c1802738-936f-4a0a-81f6-bfc0cffbf788"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Camera Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""fd9d4af1-9a22-424c-8c57-ff0df2b76bff"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Camera Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""bfb9d287-b6c4-4ef4-8484-5887c768ca8c"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Camera Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""b4e231ef-9a62-4517-8930-907b51916126"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Camera Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -319,6 +384,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Scroll = m_Player.FindAction("Scroll", throwIfNotFound: true);
         m_Player_MiddleMouseButton = m_Player.FindAction("Middle Mouse Button", throwIfNotFound: true);
+        m_Player_CameraMovement = m_Player.FindAction("Camera Movement", throwIfNotFound: true);
         // BattleBinds
         m_BattleBinds = asset.FindActionMap("BattleBinds", throwIfNotFound: true);
         m_BattleBinds_ToggleGroup = m_BattleBinds.FindAction("ToggleGroup", throwIfNotFound: true);
@@ -409,6 +475,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Scroll;
     private readonly InputAction m_Player_MiddleMouseButton;
+    private readonly InputAction m_Player_CameraMovement;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -428,6 +495,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/MiddleMouseButton".
         /// </summary>
         public InputAction @MiddleMouseButton => m_Wrapper.m_Player_MiddleMouseButton;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CameraMovement".
+        /// </summary>
+        public InputAction @CameraMovement => m_Wrapper.m_Player_CameraMovement;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -460,6 +531,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @MiddleMouseButton.started += instance.OnMiddleMouseButton;
             @MiddleMouseButton.performed += instance.OnMiddleMouseButton;
             @MiddleMouseButton.canceled += instance.OnMiddleMouseButton;
+            @CameraMovement.started += instance.OnCameraMovement;
+            @CameraMovement.performed += instance.OnCameraMovement;
+            @CameraMovement.canceled += instance.OnCameraMovement;
         }
 
         /// <summary>
@@ -477,6 +551,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @MiddleMouseButton.started -= instance.OnMiddleMouseButton;
             @MiddleMouseButton.performed -= instance.OnMiddleMouseButton;
             @MiddleMouseButton.canceled -= instance.OnMiddleMouseButton;
+            @CameraMovement.started -= instance.OnCameraMovement;
+            @CameraMovement.performed -= instance.OnCameraMovement;
+            @CameraMovement.canceled -= instance.OnCameraMovement;
         }
 
         /// <summary>
@@ -736,6 +813,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMiddleMouseButton(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Camera Movement" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCameraMovement(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "BattleBinds" which allows adding and removing callbacks.

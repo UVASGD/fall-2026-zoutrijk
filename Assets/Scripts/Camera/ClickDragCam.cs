@@ -9,17 +9,18 @@ public class ClickDragCam : MonoBehaviour
     private InputSystem_Actions inputActions;
     private InputAction scrollAction;
     private InputAction middleMouseButtonAction;
+
+    private InputAction wasdMovementAction;
     private float pendingScrollDelta;
-
-
     [SerializeField] float scrollSpeed;
     [SerializeField] float minCamSize;
     [SerializeField] float maxCamSize;
+    [SerializeField] float camMoveSpeed;
 
     void Awake()
     {
         mainCamera = GetComponent<Camera>();
-        if(mainCamera == null)
+        if (mainCamera == null)
         {
             Debug.LogError("Main camera not found.");
         }
@@ -27,6 +28,7 @@ public class ClickDragCam : MonoBehaviour
         inputActions = new InputSystem_Actions();
         scrollAction = inputActions.Player.Scroll;
         middleMouseButtonAction = inputActions.Player.MiddleMouseButton;
+        wasdMovementAction = inputActions.Player.CameraMovement;
     }
 
     void OnEnable()
@@ -55,7 +57,7 @@ public class ClickDragCam : MonoBehaviour
 
         float scroll = pendingScrollDelta * scrollSpeed;
         pendingScrollDelta = 0f; //reset the pending delta
-        if(Mathf.Abs(scroll) > 0.01f)
+        if (Mathf.Abs(scroll) > 0.01f)
         {
             mainCamera.orthographicSize -= scroll;
             mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minCamSize, maxCamSize);
@@ -77,6 +79,11 @@ public class ClickDragCam : MonoBehaviour
         {
             Vector3 difference = dragOrigin - mainCamera.ScreenToWorldPoint(mousePosition);
             mainCamera.transform.position += difference;
+        }
+
+        if(wasdMovementAction.ReadValue<Vector2>().magnitude != 0f)
+        {
+            mainCamera.transform.position += (Vector3)wasdMovementAction.ReadValue<Vector2>().normalized * camMoveSpeed * Time.deltaTime;
         }
     }
 
