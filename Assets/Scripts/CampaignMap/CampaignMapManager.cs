@@ -82,6 +82,11 @@ public class CampaignMapManager : MonoBehaviour
             {
                 campaignUI.ShowRegionDetails(hoveredRegion);
             }
+            else if(hoveredRegion != null && selectedArmy != null) //if both the hovered region and selected army are valid
+            {
+                //make a movement using the selected army
+                selectedArmy.MoveArmy(hoveredRegion, worldPosition);
+            }
             else if (hoveredArmy != null)
             {
                 campaignUI.ShowGeneralDetails(hoveredArmy);
@@ -107,10 +112,13 @@ public class CampaignMapManager : MonoBehaviour
             else if (highlightedCity != null)
             {
                 selectedCity = highlightedCity;
+                selectedArmy = null;
                 campaignUI.PlaceHighlightCursor(selectedCity.transform);
             }
             else
             {
+                selectedArmy = null;
+                selectedCity = null;
                 campaignUI.DisableHighlightCursor();
             }
         }
@@ -138,6 +146,7 @@ public class CampaignMapManager : MonoBehaviour
         highlightedRegion = null;
         highlightedCity = null;
         campaignUI.UpdateHighlightedArmyUI(army);
+        army.OnUnitSelected(true);
     }
 
     /// <summary>
@@ -149,6 +158,8 @@ public class CampaignMapManager : MonoBehaviour
         highlightedCity = city;
         highlightedRegion = null;
         highlightedRegion = null;
+        highlightedArmy?.OnUnitSelected(false);
+        highlightedArmy = null;
         campaignUI.UpdateHighlightedCityUI(city);
     }
 
@@ -231,5 +242,19 @@ public class CampaignMapManager : MonoBehaviour
         if (mapRegions.ContainsKey(code))
             return mapRegions[code];
         else return null;
+    }
+
+    public void OnEndTurn()
+    {
+        foreach(var army in fieldArmies)
+        {
+            army.OnTurnStart();
+        }
+    }
+
+    public int IncrementTurnCounter()
+    {
+        turnCount++;
+        return turnCount;
     }
 }

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Stores behaviors pertaining to campaign UI. Exists as a means to prevent the CampaignMapManager from becoming ridiculously large in the future (encapsulation)
@@ -13,7 +14,18 @@ public class CampaignUI : MonoBehaviour
     [SerializeField] TMP_Text yearText;
     [SerializeField] int startingYear;    
     [SerializeField] GameObject highlightCursor; //a cursor gameobject that points at the current city/fieldarmy
+    [SerializeField] Button endTurnButton;
     #endregion
+
+    void OnEnable()
+    {
+        endTurnButton.onClick.AddListener(EndTurn);
+    }
+
+    void OnDisable()
+    {
+        endTurnButton.onClick.RemoveAllListeners();
+    }
 
     /// <summary>
     /// updates the highlighted region UI. Content changes based on the current mapmode.
@@ -108,5 +120,14 @@ public class CampaignUI : MonoBehaviour
     public void DisableHighlightCursor()
     {
         highlightCursor.SetActive(false);
+    }
+
+    /// <summary>
+    /// Tells the campaignMapManager to begin the end turn.
+    /// </summary>
+    public void EndTurn()
+    {
+        CampaignMapManager.i.OnEndTurn();
+        yearText.text = $"Turn {CampaignMapManager.i.IncrementTurnCounter()}";
     }
 }

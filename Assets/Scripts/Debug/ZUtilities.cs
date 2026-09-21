@@ -9,7 +9,7 @@ using UnityEngine.Rendering.Universal;
 public static class ZUtilities
 {
     #region fields
-    public const float BASE_MOVEMENT_RANGE = 30f;
+    public const float BASE_MOVEMENT_RANGE = 8f;
     public const float DISCIPLINE_MOVEMENT_RANGE_MULTIPLIER = 0.05f;
     #endregion fields
 
