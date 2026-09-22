@@ -56,77 +56,151 @@ public class CampaignMapManager : MonoBehaviour
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         Collider2D objectCollider = Physics2D.OverlapPoint(worldPosition);
 
-        //check for: army, then city, then region in that order.
-        FieldArmy hoveredArmy = objectCollider != null ? objectCollider.GetComponent<FieldArmy>() : null;
-
-        MapCity hoveredCity = hoveredArmy == null && (objectCollider != null) ? objectCollider.GetComponent<MapCity>() : null;
-
-        Region hoveredRegion = hoveredCity == null && (objectCollider != null) ? objectCollider.GetComponent<Region>() : null;
-
-        if (hoveredArmy != null && hoveredArmy != highlightedArmy)
-        {
-            UpdateArmy(hoveredArmy);
-        }
-        else if (hoveredCity != null && hoveredCity != highlightedCity)
-        {
-            UpdateCity(hoveredCity);
-        }
-        else if (hoveredRegion != null && hoveredRegion != highlightedRegion)
-        {
-            UpdateRegion(hoveredRegion);
-        }
+        ResolveHoveredObject(objectCollider, out FieldArmy hoveredArmy, out MapCity hoveredCity, out Region hoveredRegion);
+        UpdateHoveredObject(hoveredArmy, hoveredCity, hoveredRegion);
 
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
-            if (hoveredRegion != null && selectedArmy == null && selectedCity == null)
+            if (selectedArmy != null && hoveredRegion != null)
             {
-                campaignUI.ShowRegionDetails(hoveredRegion);
-            }
-            else if(hoveredRegion != null && selectedArmy != null) //if both the hovered region and selected army are valid
-            {
-                //make a movement using the selected army
+                CloseContextMenus();
                 selectedArmy.MoveArmy(hoveredRegion, worldPosition);
-            }
-            else if(hoveredCity != null)
-            {
-                campaignUI.ShowCityPanel(true, highlightedCity);
-            }
-            else if (hoveredArmy != null)
-            {
-                campaignUI.ShowGeneralDetails(hoveredArmy);
             }
             else
             {
-                campaignUI.ShowCityPanel(false);
-                campaignUI.HideRegionDetails();
-                campaignUI.HideGeneralDetails();
+                if (hoveredArmy == null && hoveredCity == null)
+                {
+                    ClearSelectedObject();
+                }
+                OpenContextMenu(hoveredArmy, hoveredCity, hoveredRegion);
             }
         }
         else if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            campaignUI.HideRegionDetails(); //should never show details after a left click
-
-            //check if either an army or city are selected. If so, select the army.
-            if (highlightedArmy != null)
-            {
-                selectedArmy = highlightedArmy;
-                //null out the selected city in this scenario
-                selectedCity = null;
-                campaignUI.PlaceHighlightCursor(selectedArmy.transform);
-            }
-            else if (highlightedCity != null)
-            {
-                selectedCity = highlightedCity;
-                selectedArmy = null;
-                campaignUI.PlaceHighlightCursor(selectedCity.transform);
-            }
-            else
-            {
-                selectedArmy = null;
-                selectedCity = null;
-                campaignUI.DisableHighlightCursor();
-            }
+            CloseContextMenus();
+            SelectHoveredObject();
         }
+    }
+
+    /// <summary>
+    /// Resolves the object under the cursor using army, city, then region priority.
+    /// </summary>
+    /// <param name="objectCollider">The collider currently under the cursor.</param>
+    /// <param name="army">The hovered army, if one was found.</param>
+    /// <param name="city">The hovered city, if no army was found.</param>
+    /// <param name="region">The hovered region, if no army or city was found.</param>
+    private void ResolveHoveredObject(Collider2D objectCollider, out FieldArmy army, out MapCity city, out Region region)
+    {
+        army = objectCollider != null ? objectCollider.GetComponent<FieldArmy>() : null;
+        city = army == null && objectCollider != null ? objectCollider.GetComponent<MapCity>() : null;
+        region = city == null && objectCollider != null ? objectCollider.GetComponent<Region>() : null;
+    }
+
+    /// <summary>
+    /// Updates the cached object under the cursor and clears stale hover state.
+    /// </summary>
+    /// <param name="army">The hovered army, if one was found.</param>
+    /// <param name="city">The hovered city, if one was found.</param>
+    /// <param name="region">The hovered region, if one was found.</param>
+    private void UpdateHoveredObject(FieldArmy army, MapCity city, Region region)
+    {
+        if (army != null && army != highlightedArmy)
+        {
+            UpdateArmy(army);
+        }
+        else if (city != null && city != highlightedCity)
+        {
+            UpdateCity(city);
+        }
+        else if (region != null && region != highlightedRegion)
+        {
+            UpdateRegion(region);
+        }
+        else if (army == null && city == null && region == null &&
+                 (highlightedArmy != null || highlightedCity != null || highlightedRegion != null))
+        {
+            ClearHoveredObject();
+        }
+    }
+
+    /// <summary>
+    /// Closes existing context menus and opens the highest-priority menu for the hovered object.
+    /// </summary>
+    /// <param name="army">The hovered army, if one was found.</param>
+    /// <param name="city">The hovered city, if one was found.</param>
+    /// <param name="region">The hovered region, if one was found.</param>
+    private void OpenContextMenu(FieldArmy army, MapCity city, Region region)
+    {
+        CloseContextMenus();
+
+        if (army != null)
+        {
+            campaignUI.ShowGeneralDetails(army);
+        }
+        else if (city != null)
+        {
+            campaignUI.ShowCityPanel(true, city);
+        }
+        else if (region != null)
+        {
+            campaignUI.ShowRegionDetails(region);
+        }
+    }
+
+    /// <summary>
+    /// Closes the city, region, and army context menus.
+    /// </summary>
+    private void CloseContextMenus()
+    {
+        campaignUI.ShowCityPanel(false);
+        campaignUI.HideRegionDetails();
+        campaignUI.HideGeneralDetails();
+    }
+
+    /// <summary>
+    /// Selects the cached army or city, or clears the current selection on empty space or a region.
+    /// </summary>
+    private void SelectHoveredObject()
+    {
+        if (highlightedArmy != null)
+        {
+            selectedArmy = highlightedArmy;
+            selectedCity = null;
+            campaignUI.PlaceHighlightCursor(selectedArmy.transform);
+        }
+        else if (highlightedCity != null)
+        {
+            selectedArmy?.OnUnitSelected(false);
+            selectedCity = highlightedCity;
+            selectedArmy = null;
+            campaignUI.PlaceHighlightCursor(selectedCity.transform);
+        }
+        else
+        {
+            ClearSelectedObject();
+        }
+    }
+
+    /// <summary>
+    /// Clears the selected army and city and disables the selection cursor.
+    /// </summary>
+    private void ClearSelectedObject()
+    {
+        selectedArmy?.OnUnitSelected(false);
+        selectedArmy = null;
+        selectedCity = null;
+        campaignUI.DisableHighlightCursor();
+    }
+
+    /// <summary>
+    /// Clears all cached hover targets and disables the army hover indicator.
+    /// </summary>
+    private void ClearHoveredObject()
+    {
+        highlightedArmy?.OnUnitSelected(false);
+        highlightedArmy = null;
+        highlightedCity = null;
+        highlightedRegion = null;
     }
 
     /// <summary>
@@ -135,6 +209,7 @@ public class CampaignMapManager : MonoBehaviour
     /// <param name="region"></param>
     public void UpdateRegion(Region region)
     {
+        highlightedArmy?.OnUnitSelected(false);
         highlightedRegion = region;
         highlightedArmy = null;
         highlightedCity = null;
@@ -155,13 +230,12 @@ public class CampaignMapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// caches the hovered upon city
     /// </summary>
     /// <param name="city"></param>
     public void UpdateCity(MapCity city)
     {
         highlightedCity = city;
-        highlightedRegion = null;
         highlightedRegion = null;
         highlightedArmy?.OnUnitSelected(false);
         highlightedArmy = null;

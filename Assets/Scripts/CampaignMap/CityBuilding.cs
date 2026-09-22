@@ -53,12 +53,11 @@ public class CityBuilding : ScriptableObject
 
     public string GetPanelDisplayText()
     {
-        string output = $"{name}:";
+        string output = $"{name}: \n";
         foreach(var effect in TurnEndEffects)
         {
             output += effect.EffectName + "\n";
         }
-
         return output;
     }
 }

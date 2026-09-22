@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class FieldArmy : MonoBehaviour, IPointerEnterHandler
+public class FieldArmy : MonoBehaviour
 {
     [SerializeField] public List<CampaignUnit> units;
     public Region currentRegion { get; private set; }
@@ -51,12 +51,6 @@ public class FieldArmy : MonoBehaviour, IPointerEnterHandler
         this.owner = CampaignMapManager.i.getFactionByCode(startingOwner);
         this.currentRegion = CampaignMapManager.i.getRegionByCode(startingRegion);
         OnTurnStart();
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        Debug.Log("FieldArmy mouse entered");
-        CampaignMapManager.i.UpdateArmy(this);
     }
 
     /// <summary>
