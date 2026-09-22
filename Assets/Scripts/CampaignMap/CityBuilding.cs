@@ -50,4 +50,15 @@ public class CityBuilding : ScriptableObject
     {
         TurnEndEffects.Add(effect);
     }
+
+    public string GetPanelDisplayText()
+    {
+        string output = $"{name}:";
+        foreach(var effect in TurnEndEffects)
+        {
+            output += effect.EffectName + "\n";
+        }
+
+        return output;
+    }
 }

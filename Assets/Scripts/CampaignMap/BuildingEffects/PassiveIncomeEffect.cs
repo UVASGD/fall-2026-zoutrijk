@@ -6,6 +6,6 @@ public class PassiveIncomeEffect : GenericTurnEndEffect
     [SerializeField] int passiveIncome;
     public override void OnEndTurnEffect(MapCity ownerCity)
     {
-        CampaignMapManager.i?.PlayerFaction.IncrementMoney(passiveIncome);
+        ownerCity.owner.IncrementMoney(passiveIncome);
     }
 }

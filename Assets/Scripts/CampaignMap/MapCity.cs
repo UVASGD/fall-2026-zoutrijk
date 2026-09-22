@@ -20,13 +20,15 @@ public class MapCity : MonoBehaviour
     [SerializeField] public List<CityBuilding> buildings;
     private List<Unit> garrison; //town watch that defends the city under siege.
     public List<Unit> Garrison => garrison;
+    private Noble governor;
+    public Noble Governor => governor;
+    private List<Noble> boardingNobles; //nobles currently staying in this city
 
     /// <summary>
     /// sets up a city for use on the campaign map
     /// </summary>
     public void InitCity()
     {
-        buildings = new List<CityBuilding>(); //initialize the list of buildings
         HomeRegion = CampaignMapManager.i.getRegionByCode(homeRegionCode); //assign its home region
         owner = HomeRegion.owner;
     }

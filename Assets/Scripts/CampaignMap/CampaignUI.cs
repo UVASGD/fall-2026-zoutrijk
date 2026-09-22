@@ -15,6 +15,7 @@ public class CampaignUI : MonoBehaviour
     [SerializeField] int startingYear;    
     [SerializeField] GameObject highlightCursor; //a cursor gameobject that points at the current city/fieldarmy
     [SerializeField] Button endTurnButton;
+    [SerializeField] CityPanel cityPanel;
     #endregion
 
     void OnEnable()
@@ -128,6 +129,17 @@ public class CampaignUI : MonoBehaviour
     public void EndTurn()
     {
         CampaignMapManager.i.OnEndTurn();
-        yearText.text = $"Turn {CampaignMapManager.i.IncrementTurnCounter()}";
+        yearText.text = $"{CampaignMapManager.i.IncrementTurnCounter() + 1000} P.E."; //if we are doing annual turns, adjust if seasonal
+    }
+
+    /// <summary>
+    /// Shows or hides the city panel UI
+    /// </summary>
+    /// <param name="show"></param>
+    /// <param name="city"></param>
+    public void ShowCityPanel(bool show, MapCity city = null) //default null value in case you just want to hide it 
+    {
+        if(city!=null) cityPanel.RefreshPanelData(city);
+        cityPanel.ShowCityPanel(show);
     }
 }

@@ -87,12 +87,17 @@ public class CampaignMapManager : MonoBehaviour
                 //make a movement using the selected army
                 selectedArmy.MoveArmy(hoveredRegion, worldPosition);
             }
+            else if(hoveredCity != null)
+            {
+                campaignUI.ShowCityPanel(true, highlightedCity);
+            }
             else if (hoveredArmy != null)
             {
                 campaignUI.ShowGeneralDetails(hoveredArmy);
             }
             else
             {
+                campaignUI.ShowCityPanel(false);
                 campaignUI.HideRegionDetails();
                 campaignUI.HideGeneralDetails();
             }
@@ -249,6 +254,14 @@ public class CampaignMapManager : MonoBehaviour
         foreach(var army in fieldArmies)
         {
             army.OnTurnStart();
+        }
+        
+        foreach(var city in cities)
+        {
+            foreach(var building in city.buildings)
+            {
+                building.EndTurnImpact(city);
+            }
         }
     }
 
