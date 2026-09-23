@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Unit is the class (not monobehavior) that is attached to a FieldCharacter for combat functions. It has a single UnitBase that it performs operations on. This architecture is borrowed from the other turn based RPG I made.
+/// Unit is the class (not monobehavior) that is associated with a FieldCharacter for combat functions. It has a single UnitBase that it performs operations on. This architecture is borrowed from the other turn based RPG I made.
 /// </summary>
 public class Unit
 {

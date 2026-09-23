@@ -34,3 +34,11 @@ MonoBehaviour:
       value:
         TraitDef: {fileID: 11400000, guid: 4fa5e99ada7680848889eb1185bef9fa, type: 2}
         CurrentPoints: -5
+    - key: EXPERIENCED_GENERAL
+      value:
+        TraitDef: {fileID: 11400000, guid: e90ae813f69e35a4cbc279cdf2af4298, type: 2}
+        CurrentPoints: 5
+    - key: SPEAKING_ABILITY
+      value:
+        TraitDef: {fileID: 11400000, guid: 486db191294215e4e87572c248a97ba9, type: 2}
+        CurrentPoints: 5
