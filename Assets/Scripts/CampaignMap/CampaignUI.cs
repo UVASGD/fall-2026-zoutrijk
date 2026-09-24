@@ -12,7 +12,8 @@ public class CampaignUI : MonoBehaviour
     [SerializeField] RegionDetailsMenu regionDetails;
     [SerializeField] CharacterViewer characterViewer;
     [SerializeField] TMP_Text yearText;
-    [SerializeField] int startingYear;    
+    [SerializeField] int startingYear;
+    [SerializeField] TMP_Text moneyText; //displays the player's current currency
     [SerializeField] GameObject highlightCursor; //a cursor gameobject that points at the current city/fieldarmy
     [SerializeField] Button endTurnButton;
     [SerializeField] CityPanel cityPanel;
@@ -103,6 +104,15 @@ public class CampaignUI : MonoBehaviour
     public void UpdateYearText(int turnCount)
     {
         yearText.text = $"{turnCount + startingYear} P.E.";
+    }
+
+    /// <summary>
+    /// Call whenever player currency changes for whatever reason, particularly on campaign start and at the beginning of each turn
+    /// </summary>
+    /// <param name="newCurrency"></param>
+    public void UpdateCurrencyText(int newCurrency)
+    {
+        moneyText.text = $"{newCurrency} ducats";
     }
 
     /// <summary>

@@ -8,6 +8,7 @@ public class MapFaction
     public List<Region> ownedRegions {get; private set;}
     public List<FieldArmy> fieldArmies {get; private set;}
     [SerializeField] private int currentCurrency;
+    public int CurrentCurrency => currentCurrency;
 
     /// <summary>
     /// Initializes a MapFaction using its base.

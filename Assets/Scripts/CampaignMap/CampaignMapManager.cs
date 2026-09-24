@@ -337,6 +337,8 @@ public class CampaignMapManager : MonoBehaviour
                 building.EndTurnImpact(city);
             }
         }
+
+        campaignUI.UpdateCurrencyText(playerFaction.CurrentCurrency);
     }
 
     public int IncrementTurnCounter()
