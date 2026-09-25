@@ -196,6 +196,98 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 57026185}
   m_CullTransparentMesh: 1
+--- !u!1 &73414638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 73414639}
+  - component: {fileID: 73414640}
+  m_Layer: 11
+  m_Name: test_rivers_Zoutrijk
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &73414639
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73414638}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 675922017}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &73414640
+SpriteRenderer:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73414638}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: -1879398001
+  m_SortingLayer: -1
+  m_SortingOrder: 1
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: ab0d70adc519a544395b4af81701be4c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 37.5, y: 28.125}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!1 &99685757
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,7 +953,7 @@ GameObject:
   - component: {fileID: 233787187}
   - component: {fileID: 233787189}
   - component: {fileID: 233787190}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Pobin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1153,7 +1245,7 @@ GameObject:
   - component: {fileID: 419798458}
   - component: {fileID: 419798460}
   - component: {fileID: 419798461}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Starais
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1563,7 +1655,7 @@ GameObject:
   - component: {fileID: 540691842}
   - component: {fileID: 540691844}
   - component: {fileID: 540691845}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Lirinode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1855,7 +1947,7 @@ GameObject:
   - component: {fileID: 585285947}
   - component: {fileID: 585285949}
   - component: {fileID: 585285950}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Doleb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2264,7 +2356,7 @@ GameObject:
   m_Component:
   - component: {fileID: 675922017}
   - component: {fileID: 675922016}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Tactics Gamemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2343,7 +2435,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 73414639}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &711396968
@@ -2358,7 +2451,7 @@ GameObject:
   - component: {fileID: 711396969}
   - component: {fileID: 711396971}
   - component: {fileID: 711396972}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Mean
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2861,6 +2954,61 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &813845826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 813845831}
+  - component: {fileID: 813845827}
+  m_Layer: 0
+  m_Name: TerrainSampler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &813845827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813845826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2cc6e3efe9fe6479d3e5640a931568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TerrainSampler
+  targetSortingLayers:
+  - MapRivers
+  - RegionSprite
+  campaignPixelsPerUnit: 16
+  colorTolerance: 64
+  testSampleSizeN: 64
+  showPixelGridLines: 1
+  showSampledDataOverlay: 1
+  overlayOpacity: 0.9
+--- !u!4 &813845831
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813845826}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.933, y: 9.24, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1174279160}
+  - {fileID: 1661705540}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &841881027
 GameObject:
   m_ObjectHideFlags: 0
@@ -2873,7 +3021,7 @@ GameObject:
   - component: {fileID: 841881028}
   - component: {fileID: 841881030}
   - component: {fileID: 841881031}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Toleis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3520,7 +3668,7 @@ GameObject:
   - component: {fileID: 951247716}
   - component: {fileID: 951247718}
   - component: {fileID: 951247719}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Mollsrad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3841,7 +3989,7 @@ GameObject:
   - component: {fileID: 959488576}
   - component: {fileID: 959488578}
   - component: {fileID: 959488579}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Silas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4562,7 +4710,7 @@ GameObject:
   - component: {fileID: 1111526041}
   - component: {fileID: 1111526043}
   - component: {fileID: 1111526044}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Terra Incognita
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4856,6 +5004,89 @@ Transform:
   - {fileID: 711396970}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1174279159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1174279160}
+  - component: {fileID: 1174279161}
+  m_Layer: 0
+  m_Name: HiddenMapSampleCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1174279160
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174279159}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 813845831}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &1174279161
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174279159}
+  m_Enabled: 0
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.1
+  far clip plane: 50
+  field of view: 60
+  orthographic: 1
+  orthographic size: 2
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &1300408958
 GameObject:
   m_ObjectHideFlags: 0
@@ -5037,7 +5268,7 @@ GameObject:
   - component: {fileID: 1346816247}
   - component: {fileID: 1346816249}
   - component: {fileID: 1346816250}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Qolin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5439,7 +5670,7 @@ GameObject:
   - component: {fileID: 1493580215}
   - component: {fileID: 1493580217}
   - component: {fileID: 1493580218}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Eriny
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5921,7 +6152,7 @@ GameObject:
   - component: {fileID: 1607979084}
   - component: {fileID: 1607979086}
   - component: {fileID: 1607979087}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Samosthe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6098,6 +6329,89 @@ MonoBehaviour:
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+--- !u!1 &1661705539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1661705540}
+  - component: {fileID: 1661705541}
+  m_Layer: 0
+  m_Name: HiddenMapSampleCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1661705540
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661705539}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 813845831}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &1661705541
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661705539}
+  m_Enabled: 0
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.1
+  far clip plane: 50
+  field of view: 60
+  orthographic: 1
+  orthographic size: 2
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &1680095060
 GameObject:
   m_ObjectHideFlags: 0
@@ -6304,7 +6618,7 @@ GameObject:
   - component: {fileID: 1696291316}
   - component: {fileID: 1696291318}
   - component: {fileID: 1696291319}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Alazac
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6643,7 +6957,7 @@ GameObject:
   - component: {fileID: 1840962780}
   - component: {fileID: 1840962782}
   - component: {fileID: 1840962783}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Valken
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7537,3 +7851,4 @@ SceneRoots:
   - {fileID: 1525017738}
   - {fileID: 445097056}
   - {fileID: 468168413}
+  - {fileID: 813845831}

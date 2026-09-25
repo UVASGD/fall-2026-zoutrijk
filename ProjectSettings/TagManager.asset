@@ -16,7 +16,7 @@ TagManager:
   - 
   - MapCity
   - FieldArmy
-  - 
+  - Sampler
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   m_SortingLayers:
   - name: MapBackground
     uniqueID: 2957796055
+    locked: 0
+  - name: MapRivers
+    uniqueID: 2007091985
     locked: 0
   - name: RegionSprite
     uniqueID: 2415569295
@@ -70,3 +73,4 @@ TagManager:
     locked: 0
   m_RenderingLayers:
   - Default
+  m_MigratedRenderPipelines: []
