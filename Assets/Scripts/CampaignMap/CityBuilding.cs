@@ -8,11 +8,6 @@ using UnityEngine;
 public class CityBuilding : ScriptableObject
 {
     /// <summary>
-    /// The visual icon of the building in the city building view.
-    /// </summary>
-    [SerializeField] Sprite buildingIcon;
-
-    /// <summary>
     /// Upfront cost to constructing the building
     /// </summary>
     [SerializeField] int constructionCost;
@@ -41,7 +36,6 @@ public class CityBuilding : ScriptableObject
         }
     }
 
-    public Sprite BuildingIcon {get {return buildingIcon;}}
     public int ConstructionCost {get {return constructionCost;}}
     public int ConstructionTime {get {return constructionTime;}}
     public StructureData BuildingData {get {return buildingData;}}

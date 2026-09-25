@@ -9,7 +9,7 @@ public class TextHoverTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExi
 {
     public static event Action<string> onHoverEnter;
     public static event Action onHoverExit;
-    public string tooltipText; //public so it can be assigned upon instantiation of the prefab by whichever viewer.
+    [TextArea(1,3)] [SerializeField] public string tooltipText; //public so it can be assigned upon instantiation of the prefab by whichever viewer.
 
     public void UpdateTooltipText(string newText)
     {

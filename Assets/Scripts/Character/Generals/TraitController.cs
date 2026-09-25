@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 
 [Serializable]
@@ -48,7 +49,7 @@ public class TraitController
                     if (mod.Stat == stat)
                     {
                         total += mod.Value;
-                        Debug.Log($"{stat} modified by {mod.Value} due to trait {trait.CurrentLevel.levelName}");
+                        if(GlobalEditorSettings.i.RichDebugLogs) Debug.Log($"{stat} modified by {mod.Value} due to trait {trait.CurrentLevel.levelName}");
                     }
                 }
             }

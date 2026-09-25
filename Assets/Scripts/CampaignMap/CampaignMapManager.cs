@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class CampaignMapManager : MonoBehaviour
@@ -42,7 +43,8 @@ public class CampaignMapManager : MonoBehaviour
 
         SetupCampaign("BRE");
 
-        campaignUI.UpdateYearText(turnCount);
+        campaignUI.UpdateTurncountText(turnCount);
+        campaignUI.UpdateCurrencyText(playerFaction.CurrentCurrency);
     }
 
     void Update()
@@ -61,6 +63,11 @@ public class CampaignMapManager : MonoBehaviour
 
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                return; //so clicking on a city/general UI is possible
+            }
+
             if (selectedArmy != null && hoveredRegion != null)
             {
                 CloseContextMenus();
@@ -77,6 +84,11 @@ public class CampaignMapManager : MonoBehaviour
         }
         else if (Mouse.current.leftButton.wasPressedThisFrame)
         {
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+
             CloseContextMenus();
             SelectHoveredObject();
         }
@@ -268,6 +280,8 @@ public class CampaignMapManager : MonoBehaviour
         foreach (var faction in factionBases)
         {
             MapFaction mFaction = new MapFaction(faction); //construct a new faction from its base
+            
+            mFaction.IncrementMoney(faction.StartingMoney); //set their starting wealth
 
             //check if this faction is the player faction
             if (playerFaction.Equals(faction.FactionTag))
@@ -339,6 +353,14 @@ public class CampaignMapManager : MonoBehaviour
         }
 
         campaignUI.UpdateCurrencyText(playerFaction.CurrentCurrency);
+
+        //then, start a new turn at the end of this function.
+        OnStartTurn();
+    }
+
+    private void OnStartTurn()
+    {
+        campaignUI.OnTurnStart();
     }
 
     public int IncrementTurnCounter()

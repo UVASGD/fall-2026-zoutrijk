@@ -18,6 +18,7 @@ public class StructureData : ScriptableObject
     /// Dimensions of the building, in tiles.
     /// </summary>
     [SerializeField] public Vector2 footprint;
+    [SerializeField] public Sprite icon;
 }
 
 //Some structs to get around Unity inspector quirks

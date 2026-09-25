@@ -25,7 +25,7 @@ public class CityPanel : MonoBehaviour
         {
             GameObject pref = Instantiate(buildingIconPrefab, buildingIconParent);
             BuildingIcon icon = pref.GetComponent<BuildingIcon>();
-            icon.iconImage.sprite = building.BuildingIcon;
+            icon.iconImage.sprite = building.BuildingData.icon;
             icon.textHoverTrigger.UpdateTooltipText(building.GetPanelDisplayText());
         }
     }

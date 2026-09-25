@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using System.IO;
 
 /// <summary>
 /// An editor evelopment tool used to bake a prefab building into a useable format for procedural buildings.
@@ -130,6 +131,8 @@ public class StructureBaker
             string defaultPath = "Assets/Resources/StructureData/" + selectedPrefab.name + "_Data.asset";
             string uniquePath = AssetDatabase.GenerateUniqueAssetPath(defaultPath); //create a unique path for the asset
 
+            structureData.icon = CreateStructureIcon(tempInstance, uniquePath);
+
             AssetDatabase.CreateAsset(structureData, uniquePath);
             AssetDatabase.SaveAssets();
 
@@ -140,6 +143,94 @@ public class StructureBaker
             //destroy the temporary instance, especially if an error happens.
             Object.DestroyImmediate(tempInstance);
         }
+    }
+
+    private static Sprite CreateStructureIcon(GameObject structureInstance, string structureDataPath)
+    {
+        Renderer[] renderers = structureInstance.GetComponentsInChildren<Renderer>();
+        Bounds structureBounds = new Bounds();
+        bool hasBounds = false;
+
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer is TilemapRenderer && renderer.enabled)
+            {
+                if (!hasBounds)
+                {
+                    structureBounds = renderer.bounds;
+                    hasBounds = true;
+                }
+                else
+                {
+                    structureBounds.Encapsulate(renderer.bounds);
+                }
+            }
+        }
+
+        if (!hasBounds)
+        {
+            Debug.LogWarning("Could not create structure icon because the prefab has no visible tilemap bounds.");
+            return null;
+        }
+
+        const int maximumTextureSize = 256;
+        const float boundsPadding = 1.1f;
+        float width = Mathf.Max(structureBounds.size.x, 0.01f);
+        float height = Mathf.Max(structureBounds.size.y, 0.01f);
+        float aspect = width / height;
+        int textureWidth = aspect >= 1f ? maximumTextureSize : Mathf.Max(1, Mathf.RoundToInt(maximumTextureSize * aspect));
+        int textureHeight = aspect >= 1f ? Mathf.Max(1, Mathf.RoundToInt(maximumTextureSize / aspect)) : maximumTextureSize;
+
+        GameObject cameraObject = new GameObject("Structure Icon Camera");
+        cameraObject.hideFlags = HideFlags.HideAndDontSave;
+        Camera iconCamera = cameraObject.AddComponent<Camera>();
+        iconCamera.clearFlags = CameraClearFlags.SolidColor;
+        iconCamera.backgroundColor = Color.clear;
+        iconCamera.orthographic = true;
+        iconCamera.aspect = aspect;
+        iconCamera.orthographicSize = Mathf.Max(height, width / aspect) * boundsPadding / 2f;
+        iconCamera.transform.position = new Vector3(structureBounds.center.x, structureBounds.center.y, structureBounds.center.z - 10f);
+        iconCamera.cullingMask = ~0;
+
+        RenderTexture renderTexture = new RenderTexture(textureWidth, textureHeight, 24, RenderTextureFormat.ARGB32);
+        renderTexture.Create();
+        iconCamera.targetTexture = renderTexture;
+        iconCamera.Render();
+
+        RenderTexture previousActiveTexture = RenderTexture.active;
+        RenderTexture.active = renderTexture;
+        Texture2D iconTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
+        iconTexture.ReadPixels(new Rect(0, 0, textureWidth, textureHeight), 0, 0);
+        iconTexture.Apply();
+        RenderTexture.active = previousActiveTexture;
+
+        const string iconFolder = "Assets/Resources/StructureIcons";
+        if (!AssetDatabase.IsValidFolder(iconFolder))
+        {
+            AssetDatabase.CreateFolder("Assets/Resources", "StructureIcons");
+        }
+
+        string iconFileName = Path.GetFileNameWithoutExtension(structureDataPath) + ".png";
+        string iconPath = AssetDatabase.GenerateUniqueAssetPath(iconFolder + "/" + iconFileName);
+        File.WriteAllBytes(iconPath, iconTexture.EncodeToPNG());
+
+        Object.DestroyImmediate(iconTexture);
+        iconCamera.targetTexture = null;
+        renderTexture.Release();
+        Object.DestroyImmediate(renderTexture);
+        Object.DestroyImmediate(cameraObject);
+
+        AssetDatabase.ImportAsset(iconPath, ImportAssetOptions.ForceUpdate);
+        TextureImporter importer = AssetImporter.GetAtPath(iconPath) as TextureImporter;
+        if (importer != null)
+        {
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spriteImportMode = SpriteImportMode.Single;
+            importer.alphaIsTransparency = true;
+            importer.SaveAndReimport();
+        }
+
+        return AssetDatabase.LoadAssetAtPath<Sprite>(iconPath);
     }
 
     [MenuItem("Assets/Bake Prefab to Structure Data", true)]

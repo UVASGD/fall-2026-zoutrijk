@@ -21,7 +21,7 @@ public class CampaignUI : MonoBehaviour
 
     void OnEnable()
     {
-        endTurnButton.onClick.AddListener(EndTurn);
+        endTurnButton.onClick.AddListener(OnEndTurn);
     }
 
     void OnDisable()
@@ -36,9 +36,9 @@ public class CampaignUI : MonoBehaviour
     /// <param name="currentMode"></param>
     public void UpdateHighlightedRegionUI(Region region, Mapmode currentMode)
     {
-        if(currentMode == Mapmode.political)
+        if (currentMode == Mapmode.political)
             contextualHighlightText.text = region != null ? $"{region.RegionName} ({region.owner.fBase.FactionAdjective})" : string.Empty;
-        else if(currentMode == Mapmode.terrain)
+        else if (currentMode == Mapmode.terrain)
             contextualHighlightText.text = region != null ? $"{region.RegionName} : {region.RegionalTerrain.TerrainName}" : string.Empty;
     }
 
@@ -78,7 +78,7 @@ public class CampaignUI : MonoBehaviour
     {
         regionDetails.EnableDetailsGraphics(false);
     }
-    
+
     /// <summary>
     /// Displays a general's details in the character viewer UI. This includes their portrait, name, and traits.
     /// </summary>
@@ -101,9 +101,18 @@ public class CampaignUI : MonoBehaviour
     /// Takes an internal turncount from the campaignmanager and formats it as a year on the world's calendar.
     /// </summary>
     /// <param name="turnCount"></param>
-    public void UpdateYearText(int turnCount)
+    public void UpdateTurncountText(int turnCount)
     {
-        yearText.text = $"{turnCount + startingYear} P.E.";
+        //check if even or odd. Even is Summer, Odd is winter.
+        if (turnCount % 2 == 0)
+        {
+            yearText.text = $"Summer, {(turnCount / 2) + startingYear} P.A.";
+        }
+        else
+        {
+            yearText.text = $"Winter, {turnCount / 2 + startingYear} P.A.";
+        }
+
     }
 
     /// <summary>
@@ -136,10 +145,17 @@ public class CampaignUI : MonoBehaviour
     /// <summary>
     /// Tells the campaignMapManager to begin the end turn.
     /// </summary>
-    public void EndTurn()
+    public void OnEndTurn()
     {
         CampaignMapManager.i.OnEndTurn();
-        yearText.text = $"{CampaignMapManager.i.IncrementTurnCounter() + 1000} P.E."; //if we are doing annual turns, adjust if seasonal
+    }
+
+    /// <summary>
+    /// Refresh of the UI whenever a new turn is started.
+    /// </summary>
+    public void OnTurnStart()
+    {
+        UpdateTurncountText(CampaignMapManager.i.IncrementTurnCounter());
     }
 
     /// <summary>
@@ -149,7 +165,7 @@ public class CampaignUI : MonoBehaviour
     /// <param name="city"></param>
     public void ShowCityPanel(bool show, MapCity city = null) //default null value in case you just want to hide it 
     {
-        if(city!=null) cityPanel.RefreshPanelData(city);
+        if (city != null) cityPanel.RefreshPanelData(city);
         cityPanel.ShowCityPanel(show);
     }
 }

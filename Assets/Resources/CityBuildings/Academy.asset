@@ -15,7 +15,7 @@ MonoBehaviour:
   buildingIcon: {fileID: 0}
   constructionCost: 200
   constructionTime: 1
-  buildingData: {fileID: 0}
+  buildingData: {fileID: 11400000, guid: 045dda92f0ac9cf4a8fd379f6fc31aff, type: 2}
   TurnEndEffects:
   - rid: 2180910244511875136
   - rid: 2180910244511875137

@@ -709,7 +709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87d90ccadfa574b4abc8beafa35dfe8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextHoverTrigger
-  tooltipText: P.A. stands for "Proditio Alastoki", and measures years since the Yeomen betrayed Alastakos
+  tooltipText: '"Proditio Alastoki" (P.A.) measures the number of years since the Yeomen betrayed their creator Alastakos.'
 --- !u!1 &177691863
 GameObject:
   m_ObjectHideFlags: 0
@@ -4497,12 +4497,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
+  m_fontSize: 33.95
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 10
-  m_fontSizeMax: 24
+  m_fontSizeMax: 70
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
@@ -5771,7 +5771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58a4df543682b05439f0f6b66941b1f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GlobalEditorSettings
-  richDebugLogs: 1
+  richDebugLogs: 0
 --- !u!1 &1579837094
 GameObject:
   m_ObjectHideFlags: 0

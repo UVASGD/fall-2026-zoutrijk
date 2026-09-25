@@ -12,6 +12,7 @@ public class MapFactionBase : ScriptableObject
     [SerializeField] Color mapColor;
     [SerializeField] Color secondaryColor;
     [SerializeField] List<CultureType> acceptedCultures;
+    [SerializeField] int startingMoney;
 
     //getters
     public string FactionTag => factionTag;
@@ -22,6 +23,7 @@ public class MapFactionBase : ScriptableObject
     public Color MapColor => mapColor;
     public Color SecondaryColor => secondaryColor;
     public List<CultureType> AcceptedCultures => acceptedCultures;
+    public int StartingMoney => startingMoney;
 }
 public enum CultureType
 {
