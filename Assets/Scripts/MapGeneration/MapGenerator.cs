@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 /// <summary>
@@ -9,22 +10,29 @@ using UnityEngine.Tilemaps;
 public class ProceduralCityGenerator : MonoBehaviour
 {
     public enum CellType { Empty, River, Wall, Gate, Road, Building, Tower }
-    public enum RiverDirection { North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest }
 
-    [Header("City Dimensions (Must be multiples of 4)")]
-    public int cityWidth = 64;
-    public int cityLength = 64;
+    [Header("Map Dimensions (Must be multiples of 4)")]
+    [FormerlySerializedAs("cityWidth")] public int mapWidth = 64;
+    [FormerlySerializedAs("cityLength")] public int mapLength = 64;
 
-    [Header("Outskirt and Terrain Settings")]
-    [SerializeField] Vector2Int landSize;
-    [SerializeField] BiomePalette biomePalette;
+    [Header("City Bounds (Must be multiples of 4)")]
+    public int cityMinX = 16;
+    public int cityMaxX = 48;
+    public int cityMinY = 16;
+    public int cityMaxY = 48;
 
-    [Header("River Settings")]
-    [SerializeField] bool riverEnabled = true;
-    public RiverDirection riverDirection = RiverDirection.North;
-    [Range(0f, 1f)]
-    [Tooltip("Probability of the river turning perpendicularly. Diagonals meander automatically.")]
-    public float riverMeanderChance = 0.2f;
+    [Header("Terrain Settings")]
+    [Tooltip("Drag a MapSeedObject here to test a saved terrain sample.")]
+    public MapSeedObject mapSeedObject;
+    [Tooltip("Number of tilemap tiles represented by one terrain-sample pixel.")]
+    [Min(1)] public int terrainPpu = 4;
+    [Tooltip("Terrain variants are selected with smooth Perlin noise within each sampled value.")]
+    [Min(0.001f)] public float terrainNoiseScale = 0.15f;
+    public int terrainNoiseSeed;
+    public List<StructureData> waterTerrainChunks = new List<StructureData>();
+    public List<StructureData> landTerrainChunks = new List<StructureData>();
+    [Tooltip("Fallback used when the seed has no biome and landTerrainChunks is empty.")]
+    public StructureData defaultLandChunk;
 
     [Header("4x4 Chunk Data")]
     public StructureData riverChunk; //4x4 water chunk for the river
@@ -60,6 +68,9 @@ public class ProceduralCityGenerator : MonoBehaviour
 
     private StructurePlacer placer;
     private CellType[,] cityGrid;
+    private BiomePalette seedBiome;
+
+    [SerializeField] private MapSeedObject testSeed;
 
     // A queue of instructions to hand to the Placer once the math is done
     private struct PlacementJob
@@ -73,14 +84,20 @@ public class ProceduralCityGenerator : MonoBehaviour
     {
         placer = GetComponent<StructurePlacer>();
     }
-
-    [ContextMenu("Generate City")]
-    public void GenerateCity()
+    public void GenerateCity(BattleMapSeedData seedData)
     {
         if (placer == null) placer = GetComponent<StructurePlacer>();
 
+        if (seedData == null || seedData.terrainSample == null)
+        {
+            Debug.LogWarning("Cannot generate a city without BattleMapSeedData.terrainSample.");
+            return;
+        }
+
+        seedBiome = seedData.biome;
+
         // Initialize empty grid
-        cityGrid = new CellType[cityWidth, cityLength];
+        cityGrid = new CellType[mapWidth, mapLength];
         placementQueue.Clear();
 
         // Clear existing tilemaps before generating
@@ -89,14 +106,11 @@ public class ProceduralCityGenerator : MonoBehaviour
             if (tm != null) tm.ClearAllTiles();
         }
 
+        // Terrain must claim water before walls, roads, and buildings are generated.
+        GenerateTerrain(seedData);
+
         // Generate Layout Math
-        if (riverEnabled) GenerateRiver();
         if (walledCity) GenerateWallsAndGates();
-        
-        if (biomePalette != null && biomePalette.GroundComposition != null && biomePalette.GroundComposition.tilePatterns != null)
-        {
-            GenerateGround();
-        }
 
         GenerateMainRoads();
         GenerateBuildings();
@@ -110,211 +124,189 @@ public class ProceduralCityGenerator : MonoBehaviour
         Debug.Log($"City generated with {placementQueue.Count} total structures.");
     }
 
-    private void GenerateGround()
+    [ContextMenu("Test Current Map Seed Object")]
+    private void GenerateCityFromInspector()
     {
-        if (biomePalette == null || biomePalette.GroundComposition == null) return;
-
-        var patterns = biomePalette.GroundComposition.tilePatterns;
-        var percentages = biomePalette.GroundComposition.percentages;
-
-        // Safety check to ensure arrays align
-        if (patterns == null || percentages == null || patterns.Count == 0 || patterns.Count != percentages.Count)
+        MapSeedObject seedToTest = mapSeedObject != null ? mapSeedObject : testSeed;
+        if (seedToTest == null)
         {
-            Debug.LogWarning("BiomePalette tile patterns and percentages are mismatched or empty.");
+            Debug.LogWarning("Assign a MapSeedObject to either mapSeedObject or testSeed before testing the current map seed.");
             return;
         }
 
-        // If landSize is left at (0,0), safely fallback to the city bounds
-        int width = landSize.x > 0 ? landSize.x : cityWidth;
-        int length = landSize.y > 0 ? landSize.y : cityLength;
-
-        // Create a temporary list to hold ground jobs
-        List<PlacementJob> groundJobs = new List<PlacementJob>();
-
-        // Iterate through the terrain footprint in 4x4 chunks
-        for (int x = 0; x < width; x += 4)
+        Debug.Log($"Testing map seed object '{seedToTest.name}'.");
+        BattleMapSeedData seedData = seedToTest.CreateSeedData();
+        if (seedData == null)
         {
-            for (int y = 0; y < length; y += 4)
+            Debug.LogWarning($"Map seed object '{seedToTest.name}' does not contain a valid terrain sample.");
+            return;
+        }
+
+        GenerateCity(seedData);
+    }
+
+    private void GenerateTerrain(BattleMapSeedData seedData)
+    {
+        int[,] terrainSample = seedData.terrainSample;
+        int sampleScale = Mathf.Max(1, terrainPpu);
+        int sampleRegionCountX = Mathf.Max(1, Mathf.CeilToInt(mapWidth / (float)sampleScale));
+        int sampleRegionCountY = Mathf.Max(1, Mathf.CeilToInt(mapLength / (float)sampleScale));
+        List<StructureData> waterChunks = GetWaterTerrainChunks();
+        List<StructureData> landChunks = GetLandTerrainChunks();
+
+        if (waterChunks.Count == 0)
+        {
+            Debug.LogWarning("No water terrain chunks are assigned. Assign waterTerrainChunks or riverChunk.");
+        }
+        if (landChunks.Count == 0)
+        {
+            Debug.LogWarning("No land terrain chunks are assigned. Assign landTerrainChunks, a biome on the seed, or defaultLandChunk.");
+        }
+
+        // The city dimensions are independent from the sample dimensions. Each
+        // sample value covers terrainPpu tiles, split into adjacent 4x4 chunks.
+        for (int x = 0; x < mapWidth; x += 4)
+        {
+            for (int y = 0; y < mapLength; y += 4)
             {
-                // Ensure we don't check outside the internal city bounds
-                bool isRiver = false;
-                if (x < cityWidth && y < cityLength)
+                int regionX = x / sampleScale;
+                int regionY = y / sampleScale;
+                int sampleX = Mathf.Min(
+                    Mathf.FloorToInt(regionX * terrainSample.GetLength(0) / (float)sampleRegionCountX),
+                    terrainSample.GetLength(0) - 1);
+                int sampleY = Mathf.Min(
+                    Mathf.FloorToInt(regionY * terrainSample.GetLength(1) / (float)sampleRegionCountY),
+                    terrainSample.GetLength(1) - 1);
+                int terrainValue = terrainSample[sampleX, sampleY];
+                bool isWater = terrainValue == 0;
+                StructureData terrainChunk = SelectTerrainChunk(isWater, sampleX, sampleY, waterChunks, landChunks);
+
+                if (isWater)
                 {
-                    // Since both ground and river chunks are aligned to the 4x4 grid, 
-                    // checking the origin tile of the chunk is sufficient.
-                    if (cityGrid[x, y] == CellType.River)
+                    ClaimGrid(x, y, 4, 4, CellType.River);
+                    if (terrainChunk != null)
                     {
-                        isRiver = true;
+                        placementQueue.Add(new PlacementJob
+                        {
+                            data = terrainChunk,
+                            position = new Vector3Int(x, y, 0)
+                        });
                     }
                 }
-
-                // If a river exists here, do not place ground so the lower layer shows through
-                if (isRiver) continue;
-
-                // Roll a weighted random number (0 to 99)
-                int roll = Random.Range(0, 100);
-                int cumulative = 0;
-                StructureData selectedPattern = patterns[0]; // Fallback to first pattern
-
-                for (int i = 0; i < percentages.Count; i++)
+                else if (terrainChunk != null)
                 {
-                    cumulative += percentages[i];
-                    if (roll < cumulative)
+                    placementQueue.Add(new PlacementJob
                     {
-                        selectedPattern = patterns[i];
-                        break;
-                    }
-                }
-
-                if (selectedPattern != null)
-                {
-                    // Add to our temporary ground queue
-                    groundJobs.Add(new PlacementJob
-                    {
-                        data = selectedPattern,
+                        data = terrainChunk,
                         position = new Vector3Int(x, y, 0)
                     });
                 }
             }
         }
-
-        //Stamp the ground first, then add the rest of the placement queue on top of it. This ensures that ground tiles are always below other structures.
-        groundJobs.AddRange(placementQueue);
-        placementQueue = groundJobs;
     }
 
-    private void GenerateRiver()
+    private List<StructureData> GetLandTerrainChunks()
     {
-        if (!riverEnabled) return;
-
-        int startX = 0, startY = 0;
-        
-        // Calculate the maximum chunk index limits
-        int maxW = (cityWidth / 4) - 1;
-        int maxH = (cityLength / 4) - 1;
-
-        // Determine starting location based on overall flow direction
-        switch (riverDirection)
+        if (landTerrainChunks != null && landTerrainChunks.Count > 0)
         {
-            case RiverDirection.North:
-                startX = Random.Range(2, maxW - 1) * 4;
-                startY = 0;
-                break;
-            case RiverDirection.South:
-                startX = Random.Range(2, maxW - 1) * 4;
-                startY = maxH * 4;
-                break;
-            case RiverDirection.East:
-                startX = 0;
-                startY = Random.Range(2, maxH - 1) * 4;
-                break;
-            case RiverDirection.West:
-                startX = maxW * 4;
-                startY = Random.Range(2, maxH - 1) * 4;
-                break;
-            case RiverDirection.NorthEast:
-                if (Random.value < 0.5f) { startX = Random.Range(0, maxW / 4) * 4; startY = 0; }
-                else { startX = 0; startY = Random.Range(0, maxH / 4) * 4; }
-                break;
-            case RiverDirection.NorthWest:
-                if (Random.value < 0.5f) { startX = Random.Range(maxW - (maxW / 4), maxW) * 4; startY = 0; }
-                else { startX = maxW * 4; startY = Random.Range(0, maxH / 4) * 4; }
-                break;
-            case RiverDirection.SouthEast:
-                if (Random.value < 0.5f) { startX = Random.Range(0, maxW / 4) * 4; startY = maxH * 4; }
-                else { startX = 0; startY = Random.Range(maxH - (maxH / 4), maxH) * 4; }
-                break;
-            case RiverDirection.SouthWest:
-                if (Random.value < 0.5f) { startX = Random.Range(maxW - (maxW / 4), maxW) * 4; startY = maxH * 4; }
-                else { startX = maxW * 4; startY = Random.Range(maxH - (maxH / 4), maxH) * 4; }
-                break;
+            return landTerrainChunks;
         }
 
-        int x = startX;
-        int y = startY;
-        Vector2Int lastStep = Vector2Int.zero;
-        int failsafe = 0;
-
-        // Plot the river course until it wanders completely off the grid limits
-        while (x >= 0 && x < cityWidth && y >= 0 && y < cityLength && failsafe < 1000)
+        if (seedBiome != null && seedBiome.GroundComposition != null &&
+            seedBiome.GroundComposition.tilePatterns != null &&
+            seedBiome.GroundComposition.tilePatterns.Count > 0)
         {
-            failsafe++;
+            return seedBiome.GroundComposition.tilePatterns;
+        }
 
-            // Claim the 4x4 spot if it hasn't been claimed by overlapping river bends
-            if (cityGrid[x, y] != CellType.River)
+        List<StructureData> fallback = new List<StructureData>();
+        if (defaultLandChunk != null) fallback.Add(defaultLandChunk);
+
+        if (fallback.Count == 0)
+        {
+            StructureData[] resourceChunks = Resources.LoadAll<StructureData>("StructureData/TerrainElements");
+            foreach (StructureData resourceChunk in resourceChunks)
             {
-                MarkGridAndQueue(x, y, 4, 4, CellType.River, riverChunk);
+                if (resourceChunk != null &&
+                    resourceChunk.name.IndexOf("water", System.StringComparison.OrdinalIgnoreCase) < 0)
+                {
+                    fallback.Add(resourceChunk);
+                }
             }
+        }
 
-            Vector2Int step = Vector2Int.zero;
-            int attempt = 0;
-            do
+        return fallback;
+    }
+
+    private List<StructureData> GetWaterTerrainChunks()
+    {
+        if (waterTerrainChunks != null && waterTerrainChunks.Count > 0)
+        {
+            return waterTerrainChunks;
+        }
+
+        List<StructureData> fallback = new List<StructureData>();
+        if (riverChunk != null) fallback.Add(riverChunk);
+
+        if (fallback.Count == 0)
+        {
+            StructureData resourceChunk = Resources.Load<StructureData>(
+                "StructureData/TerrainElements/WaterChunk_Data");
+            if (resourceChunk != null) fallback.Add(resourceChunk);
+        }
+
+        return fallback;
+    }
+
+    private StructureData SelectTerrainChunk(
+        bool isWater,
+        int sampleX,
+        int sampleY,
+        List<StructureData> waterChunks,
+        List<StructureData> landChunks)
+    {
+        List<StructureData> chunks = isWater ? waterChunks : landChunks;
+        if (chunks == null || chunks.Count == 0) return null;
+
+        float noise = Mathf.PerlinNoise(
+            (sampleX + terrainNoiseSeed) * terrainNoiseScale,
+            (sampleY + terrainNoiseSeed) * terrainNoiseScale);
+        int index = Mathf.Clamp(Mathf.FloorToInt(noise * chunks.Count), 0, chunks.Count - 1);
+        return chunks[index];
+    }
+
+    private void ClaimGrid(int startX, int startY, int width, int height, CellType type)
+    {
+        if (startX < 0 || startY < 0 || startX + width > mapWidth || startY + height > mapLength) return;
+
+        for (int x = startX; x < startX + width; x++)
+        {
+            for (int y = startY; y < startY + height; y++)
             {
-                step = GetNextRiverStep(riverDirection);
-                attempt++;
+                cityGrid[x, y] = type;
             }
-            while (attempt < 10 && step == -lastStep); // Prevent it from instantly turning 180 degrees back on itself
-
-            lastStep = step;
-            x += step.x;
-            y += step.y;
         }
     }
 
-    private Vector2Int GetNextRiverStep(RiverDirection dir)
+    private void GetCityBounds(out int minX, out int maxX, out int minY, out int maxY)
     {
-        float r = Random.value;
+        int maximumX = Mathf.Max(4, mapWidth - 4);
+        int maximumY = Mathf.Max(4, mapLength - 4);
 
-        switch (dir)
-        {
-            case RiverDirection.North:
-                if (r < riverMeanderChance / 2f) return new Vector2Int(-4, 0); // Wobble Left
-                if (r < riverMeanderChance) return new Vector2Int(4, 0);      // Wobble Right
-                return new Vector2Int(0, 4);                                  // Main direction
-
-            case RiverDirection.South:
-                if (r < riverMeanderChance / 2f) return new Vector2Int(-4, 0);
-                if (r < riverMeanderChance) return new Vector2Int(4, 0);
-                return new Vector2Int(0, -4);
-
-            case RiverDirection.East:
-                if (r < riverMeanderChance / 2f) return new Vector2Int(0, -4);
-                if (r < riverMeanderChance) return new Vector2Int(0, 4);
-                return new Vector2Int(4, 0);
-
-            case RiverDirection.West:
-                if (r < riverMeanderChance / 2f) return new Vector2Int(0, -4);
-                if (r < riverMeanderChance) return new Vector2Int(0, 4);
-                return new Vector2Int(-4, 0);
-
-            // Diagonals meander naturally by randomly deciding which orthogonal step to take next.
-            // This naturally produces a "staircase" path moving in the diagonal direction!
-            case RiverDirection.NorthEast:
-                return Random.value < 0.5f ? new Vector2Int(4, 0) : new Vector2Int(0, 4);
-            case RiverDirection.NorthWest:
-                return Random.value < 0.5f ? new Vector2Int(-4, 0) : new Vector2Int(0, 4);
-            case RiverDirection.SouthEast:
-                return Random.value < 0.5f ? new Vector2Int(4, 0) : new Vector2Int(0, -4);
-            case RiverDirection.SouthWest:
-                return Random.value < 0.5f ? new Vector2Int(-4, 0) : new Vector2Int(0, -4);
-        }
-
-        return new Vector2Int(0, 4); // Fallback
+        minX = Mathf.Clamp(cityMinX - cityMinX % 4, 0, maximumX - 4);
+        maxX = Mathf.Clamp(cityMaxX - cityMaxX % 4, minX + 4, maximumX);
+        minY = Mathf.Clamp(cityMinY - cityMinY % 4, 0, maximumY - 4);
+        maxY = Mathf.Clamp(cityMaxY - cityMaxY % 4, minY + 4, maximumY);
     }
 
     private void GenerateWallsAndGates()
     {
-        //Calculate macro chunk boundary coordinates (Multiples of 4)
-        int minMacroX = 4;
-        int maxMacroX = (cityWidth / 4) - 2; // Last chunk index available for walls
-        int minMacroY = 4;
-        int maxMacroY = (cityLength / 4) - 2;
+        GetCityBounds(out int minX, out int maxX, out int minY, out int maxY);
 
-        //Convert those chunk origins into absolute tile coordinates
-        int minX = minMacroX * 4;
-        int maxX = maxMacroX * 4;
-        int minY = minMacroY * 4;
-        int maxY = maxMacroY * 4;
+        int minMacroX = minX / 4;
+        int maxMacroX = maxX / 4;
+        int minMacroY = minY / 4;
+        int maxMacroY = maxY / 4;
 
         //Find the midpoints for the gates (must remain snapped to 4x4)
         int midX = ((minMacroX + maxMacroX) / 2) * 4;
@@ -511,7 +503,7 @@ public class ProceduralCityGenerator : MonoBehaviour
         {
             for (int y = startY; y < startY + 4; y++)
             {
-                if (x < 0 || y < 0 || x >= cityWidth || y >= cityLength) return;
+                if (x < 0 || y < 0 || x >= mapWidth || y >= mapLength) return;
 
                 if (cityGrid[x, y] == CellType.River || cityGrid[x, y] == CellType.Gate || cityGrid[x, y] == CellType.Road || cityGrid[x, y] == CellType.Building || cityGrid[x, y] == CellType.Tower)
                 {
@@ -525,21 +517,15 @@ public class ProceduralCityGenerator : MonoBehaviour
 
     private void GenerateMainRoads()
     {
-        // Calculate macro chunk boundary coordinates (identical to walls)
-        int minMacroX = 4;
-        int maxMacroX = (cityWidth / 4) - 2;
-        int minMacroY = 4;
-        int maxMacroY = (cityLength / 4) - 2;
-
-        // Find the exact same midpoints
-        int midX = ((minMacroX + maxMacroX) / 2) * 4;
-        int midY = ((minMacroY + maxMacroY) / 2) * 4;
+        GetCityBounds(out int cityMin, out int cityMax, out int cityBottom, out int cityTop);
+        int midX = ((cityMin / 4 + cityMax / 4) / 2) * 4;
+        int midY = ((cityBottom / 4 + cityTop / 4) / 2) * 4;
 
         // Roads start just inside the gates
-        int minX = (minMacroX + 1) * 4;
-        int maxX = (maxMacroX - 1) * 4;
-        int minY = (minMacroY + 1) * 4;
-        int maxY = (maxMacroY - 1) * 4;
+        int minX = cityMin + 4;
+        int maxX = cityMax - 4;
+        int minY = cityBottom + 4;
+        int maxY = cityTop - 4;
 
         // Vertical Road
         for (int y = minY; y <= maxY; y += 4)
@@ -585,20 +571,17 @@ public class ProceduralCityGenerator : MonoBehaviour
             int w = (int)building.footprint.x;
             int h = (int)building.footprint.y;
 
-            bool placed = false;
-
             // Try to find a spot N times
             for (int attempt = 0; attempt < placementAttemptsPerBuilding; attempt++)
             {
                 // Pick a random internal coordinate (inside the walls)
-                int x = Random.Range(8, cityWidth - 8 - w);
-                int y = Random.Range(8, cityLength - 8 - h);
+                int x = Random.Range(cityMinX + 4, cityMaxX - 4 - w + 1);
+                int y = Random.Range(cityMinY + 4, cityMaxY - 4 - h + 1);
 
                 if (CheckAreaEmpty(x, y, w, h))
                 {
                     // Success! It fits perfectly.
                     MarkGridAndQueue(x, y, w, h, CellType.Building, building);
-                    placed = true;
                     buildingsPlaced++;
                     break; 
                 }
@@ -641,7 +624,7 @@ public class ProceduralCityGenerator : MonoBehaviour
         if (data == null) return;
 
         // Prevent arrays from going out of bounds if an extreme offset pushes placement too far!
-        if (startX < 0 || startY < 0 || startX + width > cityWidth || startY + height > cityLength) return;
+        if (startX < 0 || startY < 0 || startX + width > mapWidth || startY + height > mapLength) return;
 
         //Claim the area on our virtual math grid so nothing else spawns here
         for (int x = startX; x < startX + width; x++)

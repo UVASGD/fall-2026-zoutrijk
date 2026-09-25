@@ -14,6 +14,10 @@ public class TerrainSampler : MonoBehaviour
 
     [SerializeField] private int testSampleSizeN;
 
+    [Header("Map Seed")]
+    [Tooltip("Biome stored with the next MapSeedObject created from this sampler.")]
+    [SerializeField] private BiomePalette seedBiome;
+
     private Camera _sampleCam; //auto-created in script
 
     public bool showPixelGridLines = true;
@@ -57,6 +61,38 @@ public class TerrainSampler : MonoBehaviour
         _lastSampledGrid = null;
 #if UNITY_EDITOR
         UnityEditor.SceneView.RepaintAll();
+#endif
+    }
+
+    [ContextMenu("Save Most Recent Sample As Map Seed")]
+    private void SaveMostRecentSampleAsMapSeed()
+    {
+        if (_lastSampledGrid == null || _lastSampledN <= 0)
+        {
+            Debug.LogWarning("There is no recent terrain sample to save.");
+            return;
+        }
+
+#if UNITY_EDITOR
+        const string folderPath = "Assets/GeneratedMapSeeds";
+        if (!UnityEditor.AssetDatabase.IsValidFolder(folderPath))
+        {
+            UnityEditor.AssetDatabase.CreateFolder("Assets", "GeneratedMapSeeds");
+        }
+
+        MapSeedObject mapSeed = ScriptableObject.CreateInstance<MapSeedObject>();
+        mapSeed.SetSeedData(new BattleMapSeedData(_lastSampledGrid, seedBiome, null));
+
+        string assetPath = UnityEditor.AssetDatabase.GenerateUniqueAssetPath(
+            $"{folderPath}/MapSeed_{_lastSampledN}x{_lastSampledN}.asset");
+        UnityEditor.AssetDatabase.CreateAsset(mapSeed, assetPath);
+        UnityEditor.AssetDatabase.SaveAssets();
+        UnityEditor.EditorUtility.FocusProjectWindow();
+        UnityEditor.Selection.activeObject = mapSeed;
+
+        Debug.Log($"Saved terrain sample as {assetPath}.");
+#else
+        Debug.LogWarning("Saving MapSeedObject assets is only available in the Unity Editor.");
 #endif
     }
 
@@ -226,6 +262,10 @@ public class TerrainSampler : MonoBehaviour
                 grid[x, y] = ClassifyPixel(c);
             }
         }
+
+        _lastSampledGrid = grid;
+        _lastSampledCenter = worldCenter;
+        _lastSampledN = n;
 
         return grid;
     }
