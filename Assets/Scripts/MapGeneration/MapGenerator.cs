@@ -30,6 +30,7 @@ public class ProceduralCityGenerator : MonoBehaviour
     [Min(0.001f)] public float terrainNoiseScale = 0.15f;
     public int terrainNoiseSeed;
     public List<StructureData> waterTerrainChunks = new List<StructureData>();
+    public List<StructureData> coastlineTerrainChunks = new List<StructureData>();
     public List<StructureData> landTerrainChunks = new List<StructureData>();
     [Tooltip("Fallback used when the seed has no biome and landTerrainChunks is empty.")]
     public StructureData defaultLandChunk;
@@ -152,7 +153,23 @@ public class ProceduralCityGenerator : MonoBehaviour
         int sampleRegionCountX = Mathf.Max(1, Mathf.CeilToInt(mapWidth / (float)sampleScale));
         int sampleRegionCountY = Mathf.Max(1, Mathf.CeilToInt(mapLength / (float)sampleScale));
         List<StructureData> waterChunks = GetWaterTerrainChunks();
+        List<StructureData> coastlineChunks = GetCoastlineTerrainChunks();
         List<StructureData> landChunks = GetLandTerrainChunks();
+        int chunkCountX = Mathf.CeilToInt(mapWidth / 4f);
+        int chunkCountY = Mathf.CeilToInt(mapLength / 4f);
+        bool[,] waterChunkGrid = new bool[chunkCountX, chunkCountY];
+
+        for (int chunkX = 0; chunkX < chunkCountX; chunkX++)
+        {
+            for (int chunkY = 0; chunkY < chunkCountY; chunkY++)
+            {
+                int sampleX = GetTerrainSampleX(
+                    chunkX * 4, sampleScale, terrainSample.GetLength(0), sampleRegionCountX);
+                int sampleY = GetTerrainSampleY(
+                    chunkY * 4, sampleScale, terrainSample.GetLength(1), sampleRegionCountY);
+                waterChunkGrid[chunkX, chunkY] = terrainSample[sampleX, sampleY] == 0;
+            }
+        }
 
         if (waterChunks.Count == 0)
         {
@@ -169,17 +186,14 @@ public class ProceduralCityGenerator : MonoBehaviour
         {
             for (int y = 0; y < mapLength; y += 4)
             {
-                int regionX = x / sampleScale;
-                int regionY = y / sampleScale;
-                int sampleX = Mathf.Min(
-                    Mathf.FloorToInt(regionX * terrainSample.GetLength(0) / (float)sampleRegionCountX),
-                    terrainSample.GetLength(0) - 1);
-                int sampleY = Mathf.Min(
-                    Mathf.FloorToInt(regionY * terrainSample.GetLength(1) / (float)sampleRegionCountY),
-                    terrainSample.GetLength(1) - 1);
-                int terrainValue = terrainSample[sampleX, sampleY];
-                bool isWater = terrainValue == 0;
-                StructureData terrainChunk = SelectTerrainChunk(isWater, sampleX, sampleY, waterChunks, landChunks);
+                int sampleX = GetTerrainSampleX(
+                    x, sampleScale, terrainSample.GetLength(0), sampleRegionCountX);
+                int sampleY = GetTerrainSampleY(
+                    y, sampleScale, terrainSample.GetLength(1), sampleRegionCountY);
+                bool isWater = waterChunkGrid[x / 4, y / 4];
+                bool isCoastline = !isWater && IsCoastline(waterChunkGrid, x / 4, y / 4);
+                StructureData terrainChunk = SelectTerrainChunk(
+                    isWater, isCoastline, sampleX, sampleY, waterChunks, coastlineChunks, landChunks);
 
                 if (isWater)
                 {
@@ -203,6 +217,22 @@ public class ProceduralCityGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    private int GetTerrainSampleX(int tilePosition, int sampleScale, int sampleWidth, int sampleRegionCount)
+    {
+        int region = tilePosition / sampleScale;
+        return Mathf.Min(
+            Mathf.FloorToInt(region * sampleWidth / (float)sampleRegionCount),
+            sampleWidth - 1);
+    }
+
+    private int GetTerrainSampleY(int tilePosition, int sampleScale, int sampleHeight, int sampleRegionCount)
+    {
+        int region = tilePosition / sampleScale;
+        return Mathf.Min(
+            Mathf.FloorToInt(region * sampleHeight / (float)sampleRegionCount),
+            sampleHeight - 1);
     }
 
     private List<StructureData> GetLandTerrainChunks()
@@ -258,14 +288,44 @@ public class ProceduralCityGenerator : MonoBehaviour
         return fallback;
     }
 
+    private List<StructureData> GetCoastlineTerrainChunks()
+    {
+        if (coastlineTerrainChunks != null && coastlineTerrainChunks.Count > 0)
+        {
+            return coastlineTerrainChunks;
+        }
+
+        List<StructureData> fallback = new List<StructureData>();
+        StructureData resourceChunk = Resources.Load<StructureData>(
+            "StructureData/TerrainElements/SandChunk_Data");
+        if (resourceChunk != null) fallback.Add(resourceChunk);
+
+        return fallback;
+    }
+
     private StructureData SelectTerrainChunk(
         bool isWater,
+        bool isCoastline,
         int sampleX,
         int sampleY,
         List<StructureData> waterChunks,
+        List<StructureData> coastlineChunks,
         List<StructureData> landChunks)
     {
-        List<StructureData> chunks = isWater ? waterChunks : landChunks;
+        List<StructureData> chunks;
+        if (isWater)
+        {
+            chunks = waterChunks;
+        }
+        else if (isCoastline)
+        {
+            chunks = coastlineChunks;
+        }
+        else
+        {
+            chunks = landChunks;
+        }
+
         if (chunks == null || chunks.Count == 0) return null;
 
         float noise = Mathf.PerlinNoise(
@@ -273,6 +333,28 @@ public class ProceduralCityGenerator : MonoBehaviour
             (sampleY + terrainNoiseSeed) * terrainNoiseScale);
         int index = Mathf.Clamp(Mathf.FloorToInt(noise * chunks.Count), 0, chunks.Count - 1);
         return chunks[index];
+    }
+
+    private bool IsCoastline(bool[,] waterChunkGrid, int chunkX, int chunkY)
+    {
+        for (int offsetX = -1; offsetX <= 1; offsetX++)
+        {
+            for (int offsetY = -1; offsetY <= 1; offsetY++)
+            {
+                if (offsetX == 0 && offsetY == 0) continue;
+
+                int neighborX = chunkX + offsetX;
+                int neighborY = chunkY + offsetY;
+                if (neighborX >= 0 && neighborX < waterChunkGrid.GetLength(0) &&
+                    neighborY >= 0 && neighborY < waterChunkGrid.GetLength(1) &&
+                    waterChunkGrid[neighborX, neighborY])
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void ClaimGrid(int startX, int startY, int width, int height, CellType type)

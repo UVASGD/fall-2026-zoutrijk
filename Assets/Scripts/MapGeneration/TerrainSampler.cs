@@ -305,7 +305,21 @@ public class TerrainSampler : MonoBehaviour
         if (isBlack)
             return 1;
 
-        // finally, default any unrecognized color to land
+        //now for mountains: if color is (255,0,0), or pure red
+        bool isRed = c.r >= 255 - colorTolerance &&
+                    c.b <= colorTolerance &&
+                    c.g <= colorTolerance;
+        if (isRed)
+            return 2;
+
+        //now for city origin placement: should be pure green
+        bool isGreen = c.r <= colorTolerance &&
+                       c.b <= colorTolerance &&
+                       c.g >= 255 - colorTolerance;
+        if(isGreen)
+            return 3;
+
+        // otherwise, default any unrecognized color to land for safety
         return 1;
     }
 
