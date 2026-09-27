@@ -6343,6 +6343,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b6d04a4acccb9834eb433ad9be0b68b7, type: 2}
   landTerrainChunks:
   - {fileID: 11400000, guid: 1920eeaab85dabc458ab21bc400bdcca, type: 2}
+  farmTerrainChunks:
+  - {fileID: 11400000, guid: b416b9d2960365d4aa48f1d671b08dbf, type: 2}
+  mountainTerrainChunks:
+  - {fileID: 11400000, guid: 7226ab54967febc4aa0fc0bc9ddbed87, type: 2}
+  cityOriginTerrainChunks:
+  - {fileID: 11400000, guid: 5bc0d341e6fdad443aa59d6d83031baf, type: 2}
   defaultLandChunk: {fileID: 11400000, guid: 1920eeaab85dabc458ab21bc400bdcca, type: 2}
   riverChunk: {fileID: 11400000, guid: 6946013f736249e4284627f6e506198d, type: 2}
   wallChunk: {fileID: 11400000, guid: 2174ccb03e37b3f4b9997e9b031a7d21, type: 2}
@@ -6350,8 +6356,25 @@ MonoBehaviour:
   gatehouseChunk: {fileID: 11400000, guid: 2deea364ac2a5a44dbc79f8293cdf0a5, type: 2}
   invertedGatehouseChunk: {fileID: 11400000, guid: 44e32053cdf8d2d46bcbdc94c3b733f3, type: 2}
   roadChunk: {fileID: 11400000, guid: 4cf8a6423920a21429a3df127c996c31, type: 2}
+  roadChunksByMask:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   sideRoadChunk: {fileID: 11400000, guid: 2f3b6c63ebbffe845b5fbb64c19e4654, type: 2}
-  bridgeChunk: {fileID: 11400000, guid: 4cf8a6423920a21429a3df127c996c31, type: 2}
+  bridgeChunk: {fileID: 11400000, guid: a74d7802b94d4b34cb3cb510a9481fd9, type: 2}
   towerSpacing: 16
   enableIncrementalTowers: 0
   enableOutcroppings: 0

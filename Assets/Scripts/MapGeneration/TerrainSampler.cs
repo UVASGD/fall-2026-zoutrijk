@@ -1,34 +1,28 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TerrainSampler : MonoBehaviour
 {
-    private string samplerLayerName = "Sampler";
+    [Header("Logic Texture")]
+    [Tooltip("Readable texture containing every terrain color used by the campaign map.")]
+    [SerializeField] private Texture2D logicLayerTexture;
+    [Tooltip("World-space position of the texture's bottom-left pixel.")]
+    [SerializeField] private Vector2 logicTextureWorldOrigin;
+    [Tooltip("Flip the texture vertically when its source image uses a top-left origin.")]
+    [SerializeField] private bool flipTextureY;
+    [Min(0.001f)] [SerializeField] private float campaignPixelsPerUnit = 16f;
 
-    public string[] targetSortingLayers = new string[] { "RegionSprite" };
-
-    [SerializeField] private float campaignPixelsPerUnit = 16f;
-
-    [Tooltip("How much tolerance in an RGB value counts for terrain sampling")]
+    [Tooltip("How much tolerance in an RGB value counts for terrain sampling.")]
     [SerializeField] private float colorTolerance = 15f;
-
     [SerializeField] private int testSampleSizeN;
 
     [Header("Map Seed")]
     [Tooltip("Biome stored with the next MapSeedObject created from this sampler.")]
     [SerializeField] private BiomePalette seedBiome;
 
-    private Camera _sampleCam; //auto-created in script
-
     public bool showPixelGridLines = true;
-
-    [Tooltip("Draw the last sampled 0 (Water) and 1 (Land) results as colored tiles.")]
     public bool showSampledDataOverlay = true;
+    [Range(0.1f, 0.9f)] public float overlayOpacity = 0.45f;
 
-    [Range(0.1f, 0.9f)]
-    public float overlayOpacity = 0.45f;
-
-    // Cached state from the most recent sample so OnDrawGizmos can render it in Edit Mode
     private int[,] _lastSampledGrid;
     private Vector2 _lastSampledCenter;
     private int _lastSampledN;
@@ -36,21 +30,16 @@ public class TerrainSampler : MonoBehaviour
     [ContextMenu("Test Sample At Current Position")]
     public void TestSampleContextMenu()
     {
-        Vector2 center = transform.position;
-        _lastSampledGrid = SampleSquareToGrid(center, testSampleSizeN);
-        _lastSampledCenter = center;
-        _lastSampledN = testSampleSizeN;
-
+        _lastSampledGrid = SampleSquareToGrid(transform.position, testSampleSizeN);
         int landCount = 0;
-        for (int y = 0; y < testSampleSizeN; y++)
-            for (int x = 0; x < testSampleSizeN; x++)
+        for (int y = 0; y < _lastSampledN; y++)
+            for (int x = 0; x < _lastSampledN; x++)
                 if (_lastSampledGrid[x, y] == 1) landCount++;
 
-        Debug.Log($"[MapSampler] Sampled {testSampleSizeN}x{testSampleSizeN} at {center}: " +
-                  $"{landCount} Land (1) pixels, {(testSampleSizeN * testSampleSizeN) - landCount} Water (0) pixels.");
-
+        Debug.Log($"[MapSampler] Sampled {_lastSampledN}x{_lastSampledN}: " +
+                  $"{landCount} Land (1) pixels, " +
+                  $"{(_lastSampledN * _lastSampledN) - landCount} other pixels.");
 #if UNITY_EDITOR
-        // force a repaint so new gizmos appear if in editor
         UnityEditor.SceneView.RepaintAll();
 #endif
     }
@@ -72,25 +61,20 @@ public class TerrainSampler : MonoBehaviour
             Debug.LogWarning("There is no recent terrain sample to save.");
             return;
         }
-
 #if UNITY_EDITOR
         const string folderPath = "Assets/GeneratedMapSeeds";
         if (!UnityEditor.AssetDatabase.IsValidFolder(folderPath))
-        {
             UnityEditor.AssetDatabase.CreateFolder("Assets", "GeneratedMapSeeds");
-        }
 
         MapSeedObject mapSeed = ScriptableObject.CreateInstance<MapSeedObject>();
         mapSeed.SetSeedData(new BattleMapSeedData(_lastSampledGrid, seedBiome, null));
-
         string assetPath = UnityEditor.AssetDatabase.GenerateUniqueAssetPath(
             $"{folderPath}/MapSeed_{_lastSampledN}x{_lastSampledN}.asset");
         UnityEditor.AssetDatabase.CreateAsset(mapSeed, assetPath);
         UnityEditor.AssetDatabase.SaveAssets();
         UnityEditor.EditorUtility.FocusProjectWindow();
         UnityEditor.Selection.activeObject = mapSeed;
-
-        Debug.Log($"Saved terrain sample as {assetPath}.");
+        Debug.Log($"Saved map seed as {assetPath}.");
 #else
         Debug.LogWarning("Saving MapSeedObject assets is only available in the Unity Editor.");
 #endif
@@ -100,261 +84,135 @@ public class TerrainSampler : MonoBehaviour
     {
         if (campaignPixelsPerUnit <= 0f || testSampleSizeN <= 0) return;
 
-        float pixelWorldSize = 1f / campaignPixelsPerUnit;
-        float totalWorldWidth = testSampleSizeN * pixelWorldSize;
+        float pixelSize = 1f / campaignPixelsPerUnit;
+        float sampleSize = testSampleSizeN * pixelSize;
+        Vector3 center = transform.position;
+        Vector3 bottomLeft = center - new Vector3(sampleSize * 0.5f, sampleSize * 0.5f);
 
-        Vector3 liveCenter = new Vector3(transform.position.x, transform.position.y, 0f);
-        Vector3 boxSize = new Vector3(totalWorldWidth, totalWorldWidth, 0.01f);
-
-        //draw yellow outer bounds
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(liveCenter, boxSize);
+        Gizmos.DrawWireCube(center, new Vector3(sampleSize, sampleSize, 0.01f));
 
-        //draw light white gridlines
-        if (showPixelGridLines && testSampleSizeN <= 128) // Cap at 128 so Scene View doesn't lag
+        if (showPixelGridLines && testSampleSizeN <= 128)
         {
             Gizmos.color = new Color(1f, 1f, 1f, 0.2f);
-            Vector3 bottomLeft = liveCenter - new Vector3(totalWorldWidth * 0.5f, totalWorldWidth * 0.5f, 0f);
-
             for (int i = 1; i < testSampleSizeN; i++)
             {
-                float offset = i * pixelWorldSize;
-
-                Gizmos.DrawLine(
-                    bottomLeft + new Vector3(offset, 0f, 0f),
-                    bottomLeft + new Vector3(offset, totalWorldWidth, 0f)
-                );
-
-                Gizmos.DrawLine(
-                    bottomLeft + new Vector3(0f, offset, 0f),
-                    bottomLeft + new Vector3(totalWorldWidth, offset, 0f)
-                );
+                float offset = i * pixelSize;
+                Gizmos.DrawLine(bottomLeft + new Vector3(offset, 0f), bottomLeft + new Vector3(offset, sampleSize));
+                Gizmos.DrawLine(bottomLeft + new Vector3(0f, offset), bottomLeft + new Vector3(sampleSize, offset));
             }
         }
 
-        //draw the cached [0, 1] classification overlay from the last sample
-        if (showSampledDataOverlay && _lastSampledGrid != null && _lastSampledN > 0)
+        if (!showSampledDataOverlay || _lastSampledGrid == null || _lastSampledN <= 0) return;
+
+        float sampledSize = _lastSampledN * pixelSize;
+        Vector3 sampledBottomLeft = new Vector3(
+            _lastSampledCenter.x - sampledSize * 0.5f,
+            _lastSampledCenter.y - sampledSize * 0.5f,
+            0f);
+        Vector3 cellSize = new Vector3(pixelSize * 0.9f, pixelSize * 0.9f, 0.01f);
+
+        for (int y = 0; y < _lastSampledN; y++)
         {
-            float sampledWorldWidth = _lastSampledN * pixelWorldSize;
-            Vector3 sampledBottomLeft = new Vector3(
-                _lastSampledCenter.x - sampledWorldWidth * 0.5f,
-                _lastSampledCenter.y - sampledWorldWidth * 0.5f,
-                0f
-            );
-
-            //inset the cube so each cell is visually distinct
-            Vector3 cellCubeSize = new Vector3(pixelWorldSize * 0.9f, pixelWorldSize * 0.9f, 0.01f);
-
-            for (int y = 0; y < _lastSampledN; y++)
+            for (int x = 0; x < _lastSampledN; x++)
             {
-                for (int x = 0; x < _lastSampledN; x++)
-                {
-                    bool isLand = _lastSampledGrid[x, y] == 1;
-
-                    // land is green, color is blue
-                    Gizmos.color = isLand
-                        ? new Color(0.1f, 0.9f, 0.2f, overlayOpacity)
-                        : new Color(0.0f, 0.5f, 1.0f, overlayOpacity);
-
-                    // center of pixel (x, y) is (x + 0.5, y + 0.5) * pixelWorldSize from bottom-left
-                    Vector3 cellCenter = sampledBottomLeft + new Vector3(
-                        (x + 0.5f) * pixelWorldSize,
-                        (y + 0.5f) * pixelWorldSize,
-                        0f
-                    );
-
-                    Gizmos.DrawCube(cellCenter, cellCubeSize);
-                }
+                Gizmos.color = GetOverlayColor(_lastSampledGrid[x, y]);
+                Vector3 cellCenter = sampledBottomLeft + new Vector3(
+                    (x + 0.5f) * pixelSize, (y + 0.5f) * pixelSize, 0f);
+                Gizmos.DrawCube(cellCenter, cellSize);
             }
         }
     }
 
     public int[,] TestTerrainSampleAtPosition(Vector2 position, int sampleSize)
     {
-        transform.position = position; //move this gameobject to set position
-        return SampleSquareToGrid(transform.position, sampleSize);
+        return SampleSquareToGrid(position, sampleSize);
     }
 
-    /// <summary>
-    /// Main driver function that takes a position, samples a square n pixels around it, and returns the water/land distribution around it. Incredibly complicated with a ton of camera setup boilerplate.
-    /// </summary>
-    /// <param name="worldCenter"></param>
-    /// <param name="n"></param>
-    /// <returns></returns>
-    public int[,] SampleSquareToGrid(Vector2 worldCenter, int n) //where n is the dimension of the array
+    public int[,] SampleSquareToGrid(Vector2 worldCenter, int n)
     {
-        int sampleLayer = LayerMask.NameToLayer(samplerLayerName);
-        if (sampleLayer == -1)
-        {
-            Debug.LogError($"Layer {samplerLayerName} could not be found for terrain sampling");
-            return new int[n, n];
-        }
-
-        EnsureSampleCamera(sampleLayer);
-
-        //convert the sorting layers to a hashset for convenience. May remove during optimization if the small overhead isn't worth it
-        HashSet<int> targetSortingLayerIDs = new HashSet<int>();
-        foreach (string layerName in targetSortingLayers)
-        {
-            targetSortingLayerIDs.Add(SortingLayer.NameToID(layerName));
-        }
-
-        //remove all renderers on the target temporarily for clean sample
-        Renderer[] allRenderers = FindObjectsByType<Renderer>();
-        Dictionary<GameObject, int> originalLayers = new Dictionary<GameObject, int>();
-
-        foreach (Renderer rend in allRenderers)
-        {
-            if (rend.enabled && targetSortingLayerIDs.Contains(rend.sortingLayerID))
-            {
-                GameObject go = rend.gameObject;
-                if (!originalLayers.ContainsKey(go))
-                {
-                    originalLayers[go] = go.layer;
-                    go.layer = sampleLayer;
-                }
-            }
-        }
-
-        //now configure the camera's position
-        _sampleCam.transform.position = new Vector3(worldCenter.x, worldCenter.y, -10f);
-        _sampleCam.orthographicSize = (n / campaignPixelsPerUnit) * 0.5f;
-
-        //now render a renderTex from that camera
-        RenderTexture rt = RenderTexture.GetTemporary(n, n, 16, RenderTextureFormat.ARGB32);
-        rt.filterMode = FilterMode.Point; //with point mode for no bilinear filtering (if some designer has the wrong import setting)
-
-        RenderTexture previousActive = RenderTexture.active;
-        _sampleCam.targetTexture = rt;
-
-        //aaaaand render!
-        _sampleCam.Render();
-
-        //now read the pixels
-        RenderTexture.active = rt;
-        Texture2D readTex = new Texture2D(n, n, TextureFormat.RGBA32, false);
-        readTex.ReadPixels(new Rect(0, 0, n, n), 0, 0);
-        readTex.Apply();
-
-        //and clean up, restoring GO layers
-        _sampleCam.targetTexture = null;
-        RenderTexture.active = previousActive;
-        RenderTexture.ReleaseTemporary(rt);
-
-        foreach (var kvp in originalLayers) //clear the hashset
-        {
-            if (kvp.Key != null)
-                kvp.Key.layer = kvp.Value;
-        }
-
-        //now solve each pixel's state and return
-        Color32[] pixels = readTex.GetPixels32();
-        DestroyImmediate(readTex); //prevent a mem leak if we do this a lot
-
+        n = Mathf.Max(1, n);
         int[,] grid = new int[n, n];
+        if (logicLayerTexture == null)
+        {
+            Debug.LogError("Assign a logicLayerTexture before sampling terrain.");
+            return grid;
+        }
+
+        float pixelsPerUnit = Mathf.Max(0.001f, campaignPixelsPerUnit);
+        int outOfBoundsPixels = 0;
 
         for (int y = 0; y < n; y++)
         {
             for (int x = 0; x < n; x++)
             {
-                Color32 c = pixels[y * n + x];
-                grid[x, y] = ClassifyPixel(c);
+                float worldX = worldCenter.x + (x - n * 0.5f + 0.5f) / pixelsPerUnit;
+                float worldY = worldCenter.y + (y - n * 0.5f + 0.5f) / pixelsPerUnit;
+                int textureX = Mathf.FloorToInt((worldX - logicTextureWorldOrigin.x) * pixelsPerUnit);
+                int textureY = Mathf.FloorToInt((worldY - logicTextureWorldOrigin.y) * pixelsPerUnit);
+                bool outsideTexture = textureX < 0 || textureY < 0 ||
+                    textureX >= logicLayerTexture.width || textureY >= logicLayerTexture.height;
+                if (outsideTexture)
+                {
+                    outOfBoundsPixels++;
+                    grid[x, y] = 0;
+                    continue;
+                }
+
+                if (flipTextureY) textureY = logicLayerTexture.height - 1 - textureY;
+                grid[x, y] = ClassifyPixel(logicLayerTexture.GetPixel(textureX, textureY));
             }
+        }
+
+        if (outOfBoundsPixels > 0)
+        {
+            Debug.LogWarning($"[MapSampler] {outOfBoundsPixels}/{n * n} sampled pixels were outside " +
+                             "logicLayerTexture and defaulted to water. Check logicTextureWorldOrigin.");
         }
 
         _lastSampledGrid = grid;
         _lastSampledCenter = worldCenter;
         _lastSampledN = n;
-
-        CleanupSampleCameraInEditMode();
-
         return grid;
     }
 
-    /// <summary>
-    /// Sorts a pixel's value into either water or land. May be expanded to add mountain or road later. Note that use of a Color32, as this is a texture sampling operation and not a Unity colored one.
-    /// </summary>
-    /// <param name="c"></param>
-    /// <returns></returns>
-    private int ClassifyPixel(Color32 c)
+    //determines what type of gen based on the color of the pixel
+    private int ClassifyPixel(Color pixel)
     {
-        //bear with me for the weird bool formatting, it indents nice and cleanly
+        float tolerance = colorTolerance / 255f;
+        bool red = pixel.r >= 1f - tolerance && pixel.g <= tolerance && pixel.b <= tolerance;
+        bool green = pixel.r <= tolerance && pixel.g >= 1f - tolerance && pixel.b <= tolerance;
+        bool blue = pixel.r <= tolerance && pixel.g <= tolerance && pixel.b >= 1f - tolerance;
+        bool white = pixel.r >= 1f - tolerance && pixel.g >= 1f - tolerance && pixel.b >= 1f - tolerance;
+        bool black = pixel.r <= tolerance && pixel.g <= tolerance && pixel.b <= tolerance;
+        bool yellow = pixel.r >= 1f - tolerance && pixel.g >= 1f - tolerance && pixel.b <= tolerance;
+        bool pink = pixel.r >= 1f - tolerance && pixel.g <= tolerance && pixel.b >= 1f - tolerance;
 
-        // transparent is water
-        if (c.a <= colorTolerance)
-            return 0;
-
-        // perfect blue is also water (0,0,255)
-        bool isBlue = c.r <= colorTolerance &&
-                      c.g <= colorTolerance &&
-                      c.b >= (255 - colorTolerance);
-        if (!isBlue) isBlue = c.b - c.g > 10 && c.b - c.r > 10; //if the blue check fails, see if blue is 20 or greater than the other ones.
-        if (isBlue)
-            return 0;
-
-        // white is land
-        bool isWhite = c.r >= (255 - colorTolerance) &&
-                       c.g >= (255 - colorTolerance) &&
-                       c.b >= (255 - colorTolerance);
-        if (isWhite)
-            return 1;
-
-        // black is also land
-        bool isBlack = c.r <= colorTolerance &&
-                       c.g <= colorTolerance &&
-                       c.b <= colorTolerance;
-        if (isBlack)
-            return 1;
-
-        //now for mountains: if color is (255,0,0), or pure red
-        bool isRed = c.r >= 255 - colorTolerance &&
-                    c.b <= colorTolerance &&
-                    c.g <= colorTolerance;
-        if (isRed)
-            return 2;
-
-        //now for city origin placement: should be pure green
-        bool isGreen = c.r <= colorTolerance &&
-                       c.b <= colorTolerance &&
-                       c.g >= 255 - colorTolerance;
-        if(isGreen)
-            return 3;
-
-        // otherwise, default any unrecognized color to land for safety
+        if (blue) return 0; //water
+        if (white) return 1; //land
+        if (black) return 2; //road
+        if (red) return 3; //city origin
+        if (green) return 4; //farm
+        if (yellow) return 5; //mountain
+        if (pink) return 6; //bridge
         return 1;
     }
-
-    /// <summary>
-    /// Creates a temporary, culled, square camera pointed at a set position for terrain sampling
-    /// </summary>
-    /// <param name="sampleLayer"></param>
-    private void EnsureSampleCamera(int sampleLayer)
+    
+    
+    private Color GetOverlayColor(int terrainType)
     {
-        if (_sampleCam != null) return;
-
-        GameObject camObj = new GameObject("HiddenMapSampleCamera");
-        camObj.transform.SetParent(this.transform);
-
-        _sampleCam = camObj.AddComponent<Camera>();
-        _sampleCam.orthographic = true;
-        _sampleCam.aspect = 1f; // Forces a 1:1 aspect ratio
-        _sampleCam.nearClipPlane = 0.1f;
-        _sampleCam.farClipPlane = 50f;
-
-        // Make transparent so blank registers properly
-        _sampleCam.clearFlags = CameraClearFlags.SolidColor;
-        _sampleCam.backgroundColor = new Color(0f, 0f, 0f, 0f);
-
-        _sampleCam.cullingMask = 1 << sampleLayer;
-
-        _sampleCam.enabled = false;
-    }
-
-    private void CleanupSampleCameraInEditMode()
-    {
-        if (Application.isPlaying || _sampleCam == null) return;
-
-        DestroyImmediate(_sampleCam.gameObject);
-        _sampleCam = null;
+        Color color = terrainType switch
+        {
+            0 => new Color(0f, 0.5f, 1f),
+            1 => new Color(0.1f, 0.9f, 0.2f),
+            2 => Color.gray,
+            3 => Color.red,
+            4 => Color.green,
+            5 => Color.yellow,
+            6 => new Color(1f, 0f, 1f),
+            _ => Color.white
+        };
+        color.a = overlayOpacity;
+        return color;
     }
 }

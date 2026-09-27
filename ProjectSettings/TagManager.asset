@@ -17,7 +17,7 @@ TagManager:
   - MapCity
   - FieldArmy
   - Sampler
-  - 
+  - LogicLayer
   - 
   - 
   - 
@@ -70,6 +70,9 @@ TagManager:
     locked: 0
   - name: MapOverlayWorldspaceLayer
     uniqueID: 263289375
+    locked: 0
+  - name: EditorOnly
+    uniqueID: 1177985683
     locked: 0
   m_RenderingLayers:
   - Default

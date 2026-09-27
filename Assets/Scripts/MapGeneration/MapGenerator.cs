@@ -32,6 +32,9 @@ public class ProceduralCityGenerator : MonoBehaviour
     public List<StructureData> waterTerrainChunks = new List<StructureData>();
     public List<StructureData> coastlineTerrainChunks = new List<StructureData>();
     public List<StructureData> landTerrainChunks = new List<StructureData>();
+    public List<StructureData> farmTerrainChunks = new List<StructureData>();
+    public List<StructureData> mountainTerrainChunks = new List<StructureData>();
+    public List<StructureData> cityOriginTerrainChunks = new List<StructureData>();
     [Tooltip("Fallback used when the seed has no biome and landTerrainChunks is empty.")]
     public StructureData defaultLandChunk;
 
@@ -41,9 +44,13 @@ public class ProceduralCityGenerator : MonoBehaviour
     public StructureData towerChunk; //4x4 chunk used for wall towers
     public StructureData gatehouseChunk; //chunk used for the gatehouse structure
     public StructureData invertedGatehouseChunk; //chunk used on the left/right gatehouses.
-    public StructureData roadChunk; //4x4 chunk for the large road
+    [Tooltip("4x4 chunk used for regular road tiles.")]
+    public StructureData roadChunk;
+    [Tooltip("Road variants indexed by neighbor mask: left=1, right=2, down=4, up=8. Assign straight, corner, endpoint, T-junction, and cross variants as needed.")]
+    public StructureData[] roadChunksByMask = new StructureData[16];
     public StructureData sideRoadChunk; //1x1 chunk that connects the main roads to placed structures.
-    public StructureData bridgeChunk; //4x4 for the road crossing over the river.
+    [Tooltip("4x4 chunk used where roads cross rivers.")]
+    public StructureData bridgeChunk;
 
     [Tooltip("How many tiles to skip between wall tower placements. Values are snapped to the 4x4 grid.")]
     [Min(4)] public int towerSpacing = 16;
@@ -168,6 +175,7 @@ public class ProceduralCityGenerator : MonoBehaviour
         List<StructureData> landChunks = GetLandTerrainChunks();
         int chunkCountX = Mathf.CeilToInt(mapWidth / 4f);
         int chunkCountY = Mathf.CeilToInt(mapLength / 4f);
+        int[,] terrainTypeGrid = new int[chunkCountX, chunkCountY];
         bool[,] waterChunkGrid = new bool[chunkCountX, chunkCountY];
 
         for (int chunkX = 0; chunkX < chunkCountX; chunkX++)
@@ -178,7 +186,8 @@ public class ProceduralCityGenerator : MonoBehaviour
                     chunkX * 4, sampleScale, terrainSample.GetLength(0), sampleRegionCountX);
                 int sampleY = GetTerrainSampleY(
                     chunkY * 4, sampleScale, terrainSample.GetLength(1), sampleRegionCountY);
-                waterChunkGrid[chunkX, chunkY] = terrainSample[sampleX, sampleY] == 0;
+                terrainTypeGrid[chunkX, chunkY] = terrainSample[sampleX, sampleY];
+                waterChunkGrid[chunkX, chunkY] = terrainTypeGrid[chunkX, chunkY] == 0;
             }
         }
 
@@ -201,14 +210,48 @@ public class ProceduralCityGenerator : MonoBehaviour
                     x, sampleScale, terrainSample.GetLength(0), sampleRegionCountX);
                 int sampleY = GetTerrainSampleY(
                     y, sampleScale, terrainSample.GetLength(1), sampleRegionCountY);
+                int terrainType = terrainTypeGrid[x / 4, y / 4];
                 bool isWater = waterChunkGrid[x / 4, y / 4];
                 bool isCoastline = !isWater && IsCoastline(waterChunkGrid, x / 4, y / 4);
-                StructureData terrainChunk = SelectTerrainChunk(
-                    isWater, isCoastline, sampleX, sampleY, waterChunks, coastlineChunks, landChunks);
+                StructureData terrainChunk;
+
+                if (terrainType == 2)
+                {
+                    int roadMask = GetTerrainRoadMask(terrainTypeGrid, x / 4, y / 4);
+                    terrainChunk = GetRoadChunkForMask(roadMask);
+                }
+                else if (terrainType == 6)
+                {
+                    terrainChunk = bridgeChunk;
+                }
+                else
+                {
+                    terrainChunk = SelectTerrainChunk(
+                        terrainType,
+                        isWater,
+                        isCoastline,
+                        sampleX,
+                        sampleY,
+                        waterChunks,
+                        coastlineChunks,
+                        landChunks);
+                }
 
                 if (isWater)
                 {
                     ClaimGrid(x, y, 4, 4, CellType.River);
+                    if (terrainChunk != null)
+                    {
+                        placementQueue.Add(new PlacementJob
+                        {
+                            data = terrainChunk,
+                            position = new Vector3Int(x, y, 0)
+                        });
+                    }
+                }
+                else if (terrainType == 2 || terrainType == 6)
+                {
+                    ClaimGrid(x, y, 4, 4, CellType.Road);
                     if (terrainChunk != null)
                     {
                         placementQueue.Add(new PlacementJob
@@ -228,6 +271,21 @@ public class ProceduralCityGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    private int GetTerrainRoadMask(int[,] terrainTypeGrid, int chunkX, int chunkY)
+    {
+        int mask = 0;
+        if (chunkX > 0 && IsRoadTerrainType(terrainTypeGrid[chunkX - 1, chunkY])) mask |= 1;
+        if (chunkX + 1 < terrainTypeGrid.GetLength(0) && IsRoadTerrainType(terrainTypeGrid[chunkX + 1, chunkY])) mask |= 2;
+        if (chunkY > 0 && IsRoadTerrainType(terrainTypeGrid[chunkX, chunkY - 1])) mask |= 4;
+        if (chunkY + 1 < terrainTypeGrid.GetLength(1) && IsRoadTerrainType(terrainTypeGrid[chunkX, chunkY + 1])) mask |= 8;
+        return mask;
+    }
+
+    private bool IsRoadTerrainType(int terrainType)
+    {
+        return terrainType == 2 || terrainType == 6;
     }
 
     private int GetTerrainSampleX(int tilePosition, int sampleScale, int sampleWidth, int sampleRegionCount)
@@ -315,6 +373,7 @@ public class ProceduralCityGenerator : MonoBehaviour
     }
 
     private StructureData SelectTerrainChunk(
+        int terrainType,
         bool isWater,
         bool isCoastline,
         int sampleX,
@@ -331,6 +390,18 @@ public class ProceduralCityGenerator : MonoBehaviour
         else if (isCoastline)
         {
             chunks = coastlineChunks;
+        }
+        else if (terrainType == 4 && farmTerrainChunks != null && farmTerrainChunks.Count > 0)
+        {
+            chunks = farmTerrainChunks;
+        }
+        else if (terrainType == 5 && mountainTerrainChunks != null && mountainTerrainChunks.Count > 0)
+        {
+            chunks = mountainTerrainChunks;
+        }
+        else if (terrainType == 3 && cityOriginTerrainChunks != null && cityOriginTerrainChunks.Count > 0)
+        {
+            chunks = cityOriginTerrainChunks;
         }
         else
         {
@@ -613,6 +684,9 @@ public class ProceduralCityGenerator : MonoBehaviour
         GetCityBounds(out int cityMin, out int cityMax, out int cityBottom, out int cityTop);
         int midX = ((cityMin / 4 + cityMax / 4) / 2) * 4;
         int midY = ((cityBottom / 4 + cityTop / 4) / 2) * 4;
+        int macroWidth = Mathf.CeilToInt(mapWidth / 4f);
+        int macroHeight = Mathf.CeilToInt(mapLength / 4f);
+        bool[,] roadCells = new bool[macroWidth, macroHeight];
 
         // Roads start just inside the gates
         int minX = cityMin + 4;
@@ -620,23 +694,56 @@ public class ProceduralCityGenerator : MonoBehaviour
         int minY = cityBottom + 4;
         int maxY = cityTop - 4;
 
-        // Vertical Road
+        // First calculate the complete road network so every cell can see its neighbors.
         for (int y = minY; y <= maxY; y += 4)
         {
-            if (cityGrid[midX, y] == CellType.River)
-                MarkGridAndQueue(midX, y, 4, 4, CellType.Road, bridgeChunk); // Bridge over river
-            else if (cityGrid[midX, y] == CellType.Empty)
-                MarkGridAndQueue(midX, y, 4, 4, CellType.Road, roadChunk);
+            if (cityGrid[midX, y] == CellType.River || cityGrid[midX, y] == CellType.Empty)
+                roadCells[midX / 4, y / 4] = true;
         }
 
-        // Horizontal Road
         for (int x = minX; x <= maxX; x += 4)
         {
-            if (cityGrid[x, midY] == CellType.River)
-                MarkGridAndQueue(x, midY, 4, 4, CellType.Road, bridgeChunk); // Bridge over river
-            else if (cityGrid[x, midY] == CellType.Empty)
-                MarkGridAndQueue(x, midY, 4, 4, CellType.Road, roadChunk);
+            if (cityGrid[x, midY] == CellType.River || cityGrid[x, midY] == CellType.Empty)
+                roadCells[x / 4, midY / 4] = true;
         }
+
+        for (int macroX = 0; macroX < macroWidth; macroX++)
+        {
+            for (int macroY = 0; macroY < macroHeight; macroY++)
+            {
+                if (!roadCells[macroX, macroY]) continue;
+
+                int roadMask = GetRoadNeighborMask(roadCells, macroX, macroY);
+                int tileX = macroX * 4;
+                int tileY = macroY * 4;
+                StructureData roadData = cityGrid[tileX, tileY] == CellType.River
+                    ? bridgeChunk
+                    : GetRoadChunkForMask(roadMask);
+
+                MarkGridAndQueue(tileX, tileY, 4, 4, CellType.Road, roadData);
+            }
+        }
+    }
+
+    private int GetRoadNeighborMask(bool[,] roadCells, int macroX, int macroY)
+    {
+        int mask = 0;
+        if (macroX > 0 && roadCells[macroX - 1, macroY]) mask |= 1;
+        if (macroX + 1 < roadCells.GetLength(0) && roadCells[macroX + 1, macroY]) mask |= 2;
+        if (macroY > 0 && roadCells[macroX, macroY - 1]) mask |= 4;
+        if (macroY + 1 < roadCells.GetLength(1) && roadCells[macroX, macroY + 1]) mask |= 8;
+        return mask;
+    }
+
+    private StructureData GetRoadChunkForMask(int roadMask)
+    {
+        if (roadChunksByMask != null && roadMask >= 0 && roadMask < roadChunksByMask.Length &&
+            roadChunksByMask[roadMask] != null)
+        {
+            return roadChunksByMask[roadMask];
+        }
+
+        return roadChunk;
     }
 
     private void GenerateBuildings()
