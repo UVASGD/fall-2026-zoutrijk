@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0fe864827acd244fb77439b19306752, type: 3}
+  m_Name: Gravel_Data
+  m_EditorClassIdentifier: Assembly-CSharp::StructureData
+  tilePalette:
+  - {fileID: 21300000, guid: b01ebc3da0b9ac441bb882cfcb478428, type: 3}
+  - {fileID: 21300000, guid: a4d1121b2376e364982a9b0d1a659b23, type: 3}
+  layers:
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: 00000000000000000000000000000000i
+    - rows: 00000000000000000000000000000000i
+    - rows: 00000000000000000000000000000000i
+    - rows: 00000000000000000000000000000000i
+  - columns:
+    - rows: 00000000000000000000000000000000i
+    - rows: 00000000000000000000000000000000i
+    - rows: 00000000000000000000000000000000i
+    - rows: 00000000000000000000000000000000i
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: 01000000010000000100000001000000i
+    - rows: 01000000010000000100000001000000i
+    - rows: 01000000010000000100000001000000i
+    - rows: 01000000010000000100000001000000i
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  - columns:
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+    - rows: ffffffffffffffffffffffffffffffffi
+  footprint: {x: 4, y: 4}
+  icon: {fileID: 21300000, guid: 4e49b4e70cc167744890222435ca8eaa, type: 3}
