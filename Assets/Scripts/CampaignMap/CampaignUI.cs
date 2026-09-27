@@ -130,8 +130,9 @@ public class CampaignUI : MonoBehaviour
     /// <param name="target"></param>
     public void PlaceHighlightCursor(Transform target)
     {
+        highlightCursor.transform.SetParent(target, false);
+        highlightCursor.transform.localPosition = Vector3.zero;
         highlightCursor.SetActive(true);
-        highlightCursor.transform.position = new Vector3(target.localPosition.x, target.localPosition.y, 0);
     }
 
     /// <summary>
@@ -139,6 +140,7 @@ public class CampaignUI : MonoBehaviour
     /// </summary>
     public void DisableHighlightCursor()
     {
+        highlightCursor.transform.SetParent(null, true);
         highlightCursor.SetActive(false);
     }
 
