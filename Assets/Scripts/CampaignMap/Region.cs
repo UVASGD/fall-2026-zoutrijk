@@ -14,13 +14,17 @@ public class Region : MonoBehaviour
     public MapFaction owner { get; private set; }
     [SerializeField] RegionalTerrain regionalTerrain;
     public RegionalTerrain RegionalTerrain => regionalTerrain;
-
+    [SerializeField] BiomePalette biomePalette;
+    public BiomePalette BiomePalette => biomePalette;
     [SerializeField] int startingPopulation;
     [SerializeField] Sprite regionalBanner;
     public Sprite RegionalBanner => regionalBanner;
     public int currentPopulation;
     [SerializeField] Noble localNoble;
     public Noble LocalNoble => localNoble;
+
+    [SerializeField] MapCity regionCapital;
+    public MapCity RegionCapital => regionCapital;
 
     /// <summary>
     /// sets up the region for use in the campaign map.

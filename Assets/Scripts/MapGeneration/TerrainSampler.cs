@@ -169,11 +169,10 @@ public class TerrainSampler : MonoBehaviour
         }
     }
 
-
-    [ContextMenu("Test Terrain Sampling")]
-    private void TestTerrainSampleAtPosition()
+    public int[,] TestTerrainSampleAtPosition(Vector2 position, int sampleSize)
     {
-        int[,] results = SampleSquareToGrid(transform.position, testSampleSizeN);
+        transform.position = position; //move this gameobject to set position
+        return SampleSquareToGrid(transform.position, sampleSize);
     }
 
     /// <summary>
@@ -267,6 +266,8 @@ public class TerrainSampler : MonoBehaviour
         _lastSampledCenter = worldCenter;
         _lastSampledN = n;
 
+        CleanupSampleCameraInEditMode();
+
         return grid;
     }
 
@@ -347,5 +348,13 @@ public class TerrainSampler : MonoBehaviour
         _sampleCam.cullingMask = 1 << sampleLayer;
 
         _sampleCam.enabled = false;
+    }
+
+    private void CleanupSampleCameraInEditMode()
+    {
+        if (Application.isPlaying || _sampleCam == null) return;
+
+        DestroyImmediate(_sampleCam.gameObject);
+        _sampleCam = null;
     }
 }

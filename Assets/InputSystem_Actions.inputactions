@@ -35,6 +35,16 @@
                     "interactions": "",
                     "initialStateCheck": true,
                     "priority": 0
+                },
+                {
+                    "name": "TestLoadMap",
+                    "type": "Button",
+                    "id": "d4de4ae5-836a-470b-a72e-b9d04101a97c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -114,6 +124,17 @@
                     "action": "Camera Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "34b5fdf5-a2cb-46da-a4dd-9d0e346440a0",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TestLoadMap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

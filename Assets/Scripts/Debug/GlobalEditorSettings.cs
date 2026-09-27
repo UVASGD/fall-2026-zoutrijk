@@ -14,8 +14,14 @@ public class GlobalEditorSettings : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] private bool richDebugLogs = true;
+    [SerializeField] private bool mapGenTester = true;
     /// <summary>
     ///How detailed logging is on the debug view. Disable for cleaner dev console while playtesting.
     /// </summary>
     public bool RichDebugLogs => richDebugLogs;
+
+    /// <summary>
+    /// Whether or not pressing tab will generate and load map based on the current mouse position
+    /// </summary>
+    public bool MapGenTester => mapGenTester;
 }

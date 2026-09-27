@@ -121,6 +121,16 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": true,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""TestLoadMap"",
+                    ""type"": ""Button"",
+                    ""id"": ""d4de4ae5-836a-470b-a72e-b9d04101a97c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -200,6 +210,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Camera Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""34b5fdf5-a2cb-46da-a4dd-9d0e346440a0"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TestLoadMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -385,6 +406,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Scroll = m_Player.FindAction("Scroll", throwIfNotFound: true);
         m_Player_MiddleMouseButton = m_Player.FindAction("Middle Mouse Button", throwIfNotFound: true);
         m_Player_CameraMovement = m_Player.FindAction("Camera Movement", throwIfNotFound: true);
+        m_Player_TestLoadMap = m_Player.FindAction("TestLoadMap", throwIfNotFound: true);
         // BattleBinds
         m_BattleBinds = asset.FindActionMap("BattleBinds", throwIfNotFound: true);
         m_BattleBinds_ToggleGroup = m_BattleBinds.FindAction("ToggleGroup", throwIfNotFound: true);
@@ -476,6 +498,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Scroll;
     private readonly InputAction m_Player_MiddleMouseButton;
     private readonly InputAction m_Player_CameraMovement;
+    private readonly InputAction m_Player_TestLoadMap;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -499,6 +522,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/CameraMovement".
         /// </summary>
         public InputAction @CameraMovement => m_Wrapper.m_Player_CameraMovement;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/TestLoadMap".
+        /// </summary>
+        public InputAction @TestLoadMap => m_Wrapper.m_Player_TestLoadMap;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -534,6 +561,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @CameraMovement.started += instance.OnCameraMovement;
             @CameraMovement.performed += instance.OnCameraMovement;
             @CameraMovement.canceled += instance.OnCameraMovement;
+            @TestLoadMap.started += instance.OnTestLoadMap;
+            @TestLoadMap.performed += instance.OnTestLoadMap;
+            @TestLoadMap.canceled += instance.OnTestLoadMap;
         }
 
         /// <summary>
@@ -554,6 +584,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @CameraMovement.started -= instance.OnCameraMovement;
             @CameraMovement.performed -= instance.OnCameraMovement;
             @CameraMovement.canceled -= instance.OnCameraMovement;
+            @TestLoadMap.started -= instance.OnTestLoadMap;
+            @TestLoadMap.performed -= instance.OnTestLoadMap;
+            @TestLoadMap.canceled -= instance.OnTestLoadMap;
         }
 
         /// <summary>
@@ -820,6 +853,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCameraMovement(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "TestLoadMap" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTestLoadMap(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "BattleBinds" which allows adding and removing callbacks.

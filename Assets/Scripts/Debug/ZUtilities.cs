@@ -54,9 +54,9 @@ public static class ZUtilities
     /// <param name="toMove"></param>
     /// <param name="targetPos"></param>
     /// <param name="lerpTime"></param>
-    public static void Generic2DLerp(this MonoBehaviour runner, GameObject toMove, Vector2 targetPos, float lerpTime)
+    public static void Generic2DLerp(this MonoBehaviour runner, GameObject toMove, Vector2 targetPos, float lerpTime, AnimationCurve animationCurve = null)
     {
-        runner.StartCoroutine(LerpHelper(toMove, targetPos, lerpTime));
+        runner.StartCoroutine(LerpHelper(toMove, targetPos, lerpTime, animationCurve));
     }
 
     /// <summary>
@@ -66,17 +66,18 @@ public static class ZUtilities
     /// <param name="lerpTime"></param>
     /// <param name="runner"></param>
     /// <returns></returns>
-    private static IEnumerator LerpHelper(GameObject moving, Vector2 targetPos, float lerpTime)
+    private static IEnumerator LerpHelper(GameObject moving, Vector2 targetPos, float lerpTime, AnimationCurve animationCurve)
     {
         float elapsed = 0f;
         Vector2 startingPos = moving.transform.position;
 
-        while(elapsed < lerpTime)
+        while (elapsed < lerpTime)
         {
             elapsed += Time.deltaTime;
-            float percentage = elapsed / lerpTime;
+            float percent = elapsed / lerpTime;
 
-            moving.transform.position = Vector2.Lerp(startingPos, targetPos, percentage);
+            if (animationCurve != null) moving.transform.position = Vector2.Lerp(startingPos, targetPos, animationCurve.Evaluate(percent));
+            else moving.transform.position = Vector2.Lerp(startingPos, targetPos, percent);
 
             yield return null;
         }

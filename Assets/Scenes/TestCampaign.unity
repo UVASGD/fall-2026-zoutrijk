@@ -439,6 +439,94 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextHoverTrigger
   tooltipText: One Mollish Ducat is 3.5 grams of gold, or about a month of a commoner's labor.
+--- !u!1 &120401194
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 120401195}
+  - component: {fileID: 120401198}
+  - component: {fileID: 120401197}
+  - component: {fileID: 120401196}
+  m_Layer: 5
+  m_Name: Fader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &120401195
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120401194}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 871272122}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &120401196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120401194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3baff577c87490d45912f40c7272a8ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Fader
+--- !u!114 &120401197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120401194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &120401198
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120401194}
+  m_CullTransparentMesh: 1
 --- !u!1 &123211151
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,93 +1224,12 @@ MonoBehaviour:
   regionName: Pobin
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: b9f122a45e885624dabc4f5256eab69b, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 570000
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
---- !u!1 &299860966
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 299860967}
-  - component: {fileID: 299860968}
-  m_Layer: 0
-  m_Name: HiddenMapSampleCamera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &299860967
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 299860966}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 813845831}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &299860968
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 299860966}
-  m_Enabled: 0
-  serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
-  m_Aperture: 16
-  m_FocusDistance: 10
-  m_FocalLength: 50
-  m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
-  m_BarrelClipping: 0.25
-  m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.1
-  far clip plane: 50
-  field of view: 60
-  orthographic: 1
-  orthographic size: 0.9375
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
+  regionCapital: {fileID: 0}
 --- !u!1 &366522317
 GameObject:
   m_ObjectHideFlags: 0
@@ -1521,10 +1528,12 @@ MonoBehaviour:
   regionName: Starais
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: 2346c0a2b8b868a43b802cedef357db8, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 3000
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &445097055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1903,10 +1912,12 @@ MonoBehaviour:
   regionName: Lirinonde
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: 2346c0a2b8b868a43b802cedef357db8, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 3000
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1001 &556142977
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2242,10 +2253,12 @@ MonoBehaviour:
   regionName: Doleb
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: 584df521867d21f47984d352991d26d1, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 120000
   regionalBanner: {fileID: 21300000, guid: 648d5e9414a22a149bb19fc32e6d75a5, type: 3}
   currentPopulation: 120000
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &608158459
 GameObject:
   m_ObjectHideFlags: 0
@@ -2491,8 +2504,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1879398001
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: a000f7cb1f0ff704b86162d4a45eb8e5, type: 3}
@@ -2721,10 +2734,12 @@ MonoBehaviour:
   regionName: Mean
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: 584df521867d21f47984d352991d26d1, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 3000
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &716901499
 GameObject:
   m_ObjectHideFlags: 0
@@ -2738,6 +2753,7 @@ GameObject:
   - component: {fileID: 716901500}
   - component: {fileID: 716901503}
   - component: {fileID: 716901504}
+  - component: {fileID: 716901505}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2879,6 +2895,61 @@ MonoBehaviour:
   minCamSize: 1
   maxCamSize: 15
   camMoveSpeed: 25
+--- !u!114 &716901505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 716901499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e221b87edb4ac34c9db2e5485a53aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraEffects
+  zoomTimingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.24338683
+      value: 0.07551432
+      inSlope: 0.7852473
+      outSlope: 0.7852473
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.35533044
+    - serializedVersion: 3
+      time: 0.6494382
+      value: 0.86240727
+      inSlope: 1.0190891
+      outSlope: 1.0190891
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.19600514
+      outWeight: 0.6947085
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  camera: {fileID: 716901501}
 --- !u!1 &803544365
 GameObject:
   m_ObjectHideFlags: 0
@@ -3071,7 +3142,7 @@ MonoBehaviour:
   - RegionSprite
   campaignPixelsPerUnit: 16
   colorTolerance: 64
-  testSampleSizeN: 30
+  testSampleSizeN: 64
   seedBiome: {fileID: 11400000, guid: 26dbac92147f6e741a488fb8c5225545, type: 2}
   showPixelGridLines: 1
   showSampledDataOverlay: 1
@@ -3085,12 +3156,10 @@ Transform:
   m_GameObject: {fileID: 813845826}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.15, y: -10.67, z: -10}
+  m_LocalPosition: {x: -3.33, y: -10.78, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1109085931}
-  - {fileID: 299860967}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &841881027
@@ -3293,10 +3362,12 @@ MonoBehaviour:
   regionName: Toleis
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: b9f122a45e885624dabc4f5256eab69b, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 200000
   regionalBanner: {fileID: 0}
   currentPopulation: 200000
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &862799756
 GameObject:
   m_ObjectHideFlags: 0
@@ -3481,6 +3552,7 @@ RectTransform:
   - {fileID: 366522318}
   - {fileID: 608158460}
   - {fileID: 862799757}
+  - {fileID: 120401195}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3920,10 +3992,12 @@ MonoBehaviour:
   regionName: Mollsrad
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: b0a93b3d5310a67469f182965e3129af, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 3000
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &956912529
 GameObject:
   m_ObjectHideFlags: 0
@@ -4255,10 +4329,12 @@ MonoBehaviour:
   regionName: Silas
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: b0a93b3d5310a67469f182965e3129af, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 3000
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &969153455
 GameObject:
   m_ObjectHideFlags: 0
@@ -4782,89 +4858,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1100234987}
   m_CullTransparentMesh: 1
---- !u!1 &1109085930
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1109085931}
-  - component: {fileID: 1109085932}
-  m_Layer: 0
-  m_Name: HiddenMapSampleCamera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1109085931
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1109085930}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 813845831}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &1109085932
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1109085930}
-  m_Enabled: 0
-  serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
-  m_Aperture: 16
-  m_FocusDistance: 10
-  m_FocalLength: 50
-  m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
-  m_BarrelClipping: 0.25
-  m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.1
-  far clip plane: 50
-  field of view: 60
-  orthographic: 1
-  orthographic size: 0.46875
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
 --- !u!1 &1111526040
 GameObject:
   m_ObjectHideFlags: 0
@@ -5122,10 +5115,12 @@ MonoBehaviour:
   regionName: Terra Incognita
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: 248557cca2961b84292ea1226236247e, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: -1
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &1155775398
 GameObject:
   m_ObjectHideFlags: 0
@@ -5539,10 +5534,12 @@ MonoBehaviour:
   regionName: Qolin
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: a543ac9864e49b24b8f644fb3c2767e8, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 3000
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &1368022756
 GameObject:
   m_ObjectHideFlags: 0
@@ -5938,10 +5935,12 @@ MonoBehaviour:
   regionName: Eriny
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: b9f122a45e885624dabc4f5256eab69b, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 600000
   regionalBanner: {fileID: 0}
   currentPopulation: 600000
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &1525017737
 GameObject:
   m_ObjectHideFlags: 0
@@ -6050,6 +6049,9 @@ MonoBehaviour:
   cityParent: {fileID: 445097056}
   defaultRegionMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   campaignUI: {fileID: 871272123}
+  cameraEffects: {fileID: 716901505}
+  terrainSampler: {fileID: 813845827}
+  battleMapMessenger: {fileID: 1759856669}
 --- !u!114 &1551888695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6087,6 +6089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GlobalEditorSettings
   richDebugLogs: 0
+  mapGenTester: 1
 --- !u!1 &1579837094
 GameObject:
   m_ObjectHideFlags: 0
@@ -6409,10 +6412,12 @@ MonoBehaviour:
   regionName: Samosthe
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: b9f122a45e885624dabc4f5256eab69b, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 3000
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &1680095060
 GameObject:
   m_ObjectHideFlags: 0
@@ -6805,10 +6810,58 @@ MonoBehaviour:
   regionName: Alazac
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: b0a93b3d5310a67469f182965e3129af, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 150000
   regionalBanner: {fileID: 0}
   currentPopulation: 150000
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
+--- !u!1 &1759856667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1759856668}
+  - component: {fileID: 1759856669}
+  m_Layer: 0
+  m_Name: BattlemapMessenger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1759856668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759856667}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1759856669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759856667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7c3221e2122f874299032ba972cb73e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleMapMessenger
+  seedData:
+    biome: {fileID: 0}
 --- !u!1 &1823521960
 GameObject:
   m_ObjectHideFlags: 0
@@ -7149,10 +7202,12 @@ MonoBehaviour:
   regionName: Valken
   borderingRegions: []
   regionalTerrain: {fileID: 11400000, guid: 2346c0a2b8b868a43b802cedef357db8, type: 2}
+  biomePalette: {fileID: 0}
   startingPopulation: 3000
   regionalBanner: {fileID: 0}
   currentPopulation: 0
   localNoble: {fileID: 11400000, guid: 159f10acca05b0b4f814b6707a1fb0ba, type: 2}
+  regionCapital: {fileID: 0}
 --- !u!1 &1858082766
 GameObject:
   m_ObjectHideFlags: 0
@@ -7853,3 +7908,4 @@ SceneRoots:
   - {fileID: 445097056}
   - {fileID: 468168413}
   - {fileID: 813845831}
+  - {fileID: 1759856668}

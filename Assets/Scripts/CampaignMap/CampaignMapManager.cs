@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -34,12 +35,24 @@ public class CampaignMapManager : MonoBehaviour
 
     #region Helper Scripts
     [SerializeField] CampaignUI campaignUI;
+    [SerializeField] CameraEffects cameraEffects;
+    [SerializeField] TerrainSampler terrainSampler;
+    [SerializeField] BattleMapMessenger battleMapMessenger;
     #endregion
+
+    private InputSystem_Actions inputActions;
+    private Coroutine battleMapTransitionCoroutine;
+    private bool isLoadingBattleTransition;
 
     void Awake()
     {
         if (i == null)
             i = this;
+
+        //Keyboard actions setup
+        inputActions = new InputSystem_Actions();
+        inputActions.Player.TestLoadMap.performed += OnTestLoadMap;
+        inputActions.Player.Enable();
 
         SetupCampaign("BRE");
 
@@ -47,6 +60,59 @@ public class CampaignMapManager : MonoBehaviour
         campaignUI.UpdateCurrencyText(playerFaction.CurrentCurrency);
     }
 
+    private void OnTestLoadMap(InputAction.CallbackContext context)
+    {
+        if (GlobalEditorSettings.i.MapGenTester && !isLoadingBattleTransition && battleMapTransitionCoroutine == null)
+        {
+            battleMapTransitionCoroutine = StartCoroutine(BattleMapTransitionTest());
+        }
+    }
+
+    public IEnumerator BattleMapTransitionTest()
+    {
+        Debug.Log("TestLoadMap input received.");
+
+        cameraEffects.LerpCamera(worldPosition, 1.5f);
+
+        //while this is happening, grab a sample of the to-be battle map and pack it into a seed data
+        BattleMapSeedData seedData = new BattleMapSeedData(terrainSampler.TestTerrainSampleAtPosition(worldPosition, 30), highlightedRegion.BiomePalette, highlightedRegion.RegionCapital);
+        battleMapMessenger.seedData = seedData;
+
+        yield return new WaitForSeconds(1.5f); //forced pause
+
+        yield return cameraEffects.ZoomCamera(1f, 2f, true); //zoom the camera in to the focus
+
+        yield return Fader.i.FadeImage(0.25f, true, Color.black); //fade out the image
+
+        LoadBattleTransition();
+    }
+
+    /// <summary>
+    /// Loads the transition between the campaign and battle map gen
+    /// </summary>
+    public void LoadBattleTransition()
+    {
+        if (isLoadingBattleTransition) return;
+
+        if (battleMapMessenger == null)
+        {
+            Debug.LogError("Cannot load the battle scene because BattleMapMessenger is not assigned.");
+            return;
+        }
+
+        isLoadingBattleTransition = true;
+
+        if (battleMapTransitionCoroutine != null)
+        {
+            StopCoroutine(battleMapTransitionCoroutine);
+            battleMapTransitionCoroutine = null;
+        }
+
+        SceneTransfer.LoadSceneWithObject("BlankCombatScene", battleMapMessenger.gameObject);
+    }
+
+    private Vector2 mousePosition;
+    private Vector3 worldPosition;
     void Update()
     {
         if (Mouse.current == null || Camera.main == null)
@@ -54,8 +120,8 @@ public class CampaignMapManager : MonoBehaviour
             return;
         }
 
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        mousePosition = Mouse.current.position.ReadValue();
+        worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         Collider2D objectCollider = Physics2D.OverlapPoint(worldPosition);
 
         ResolveHoveredObject(objectCollider, out FieldArmy hoveredArmy, out MapCity hoveredCity, out Region hoveredRegion);
@@ -280,7 +346,7 @@ public class CampaignMapManager : MonoBehaviour
         foreach (var faction in factionBases)
         {
             MapFaction mFaction = new MapFaction(faction); //construct a new faction from its base
-            
+
             mFaction.IncrementMoney(faction.StartingMoney); //set their starting wealth
 
             //check if this faction is the player faction
@@ -339,14 +405,14 @@ public class CampaignMapManager : MonoBehaviour
 
     public void OnEndTurn()
     {
-        foreach(var army in fieldArmies)
+        foreach (var army in fieldArmies)
         {
             army.OnTurnStart();
         }
-        
-        foreach(var city in cities)
+
+        foreach (var city in cities)
         {
-            foreach(var building in city.buildings)
+            foreach (var building in city.buildings)
             {
                 building.EndTurnImpact(city);
             }

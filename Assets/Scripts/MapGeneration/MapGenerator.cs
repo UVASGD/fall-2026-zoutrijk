@@ -54,10 +54,10 @@ public class ProceduralCityGenerator : MonoBehaviour
     [Header("Wall Outcroppings")]
     public bool enableOutcroppings = true;
     [Tooltip("How many outcroppings to attempt to place across all walls.")]
-    [Range(0,10)] public int numOutcroppings = 8;
-    [Range(0,32)] public int minOutcroppingLength = 6;
-    [Range(0, 32)]public int maxOutcroppingLength = 14;
-    [Range(0,16)] public int minOutcroppingDepth = 3;
+    [Range(0, 10)] public int numOutcroppings = 8;
+    [Range(0, 32)] public int minOutcroppingLength = 6;
+    [Range(0, 32)] public int maxOutcroppingLength = 14;
+    [Range(0, 16)] public int minOutcroppingDepth = 3;
     [Range(0, 16)] public int maxOutcroppingDepth = 6;
 
     [Header("Buildings")]
@@ -72,6 +72,17 @@ public class ProceduralCityGenerator : MonoBehaviour
     private BiomePalette seedBiome;
 
     [SerializeField] private MapSeedObject testSeed;
+
+    void Start()
+    {
+        BattleMapMessenger bMessenger = FindAnyObjectByType<BattleMapMessenger>();
+        if (bMessenger != null)
+        {
+            //if there is a battle map messenger at all
+            StartCoroutine(Fader.i.FadeImage(1f, false, Color.black));
+            GenerateCity(bMessenger.seedData);
+        }
+    }
 
     // A queue of instructions to hand to the Placer once the math is done
     private struct PlacementJob
@@ -407,18 +418,18 @@ public class ProceduralCityGenerator : MonoBehaviour
                 int side = Random.Range(0, 4); // 0=Bottom, 1=Top, 2=Left, 3=Right
                 int length = Random.Range(minOutcroppingLength, maxOutcroppingLength + 1);
                 int depth = Random.Range(minOutcroppingDepth, maxOutcroppingDepth + 1);
-                
+
                 int arrayLen = (side == 0 || side == 1) ? bottomOffsets.Length : leftOffsets.Length;
-                
+
                 // Keep 4 tiles clear from the corners to prevent weird overlaps
                 if (arrayLen - length - 4 <= 4) continue; // Array too small for this feature
                 int startIdx = Random.Range(4, arrayLen - length - 4);
-                
+
                 // Protect the gatehouses! (Give them a 2 tile buffer)
                 int gateStart = (side == 0 || side == 1) ? midX - minX : midY - minY;
                 int gateEnd = gateStart + 4;
                 if (startIdx < gateEnd + 2 && startIdx + length > gateStart - 2) continue;
-                
+
                 // Apply the depth offset to the array
                 int[] targetArray = side == 0 ? bottomOffsets : side == 1 ? topOffsets : side == 2 ? leftOffsets : rightOffsets;
                 for (int j = startIdx; j < startIdx + length; j++)
@@ -430,7 +441,7 @@ public class ProceduralCityGenerator : MonoBehaviour
 
         // bottom wall
         int prevY_Bottom = minY - bottomOffsets[0];
-        for (int x = minX; x <= maxX; x++) 
+        for (int x = minX; x <= maxX; x++)
         {
             int currentY = minY - bottomOffsets[x - minX];
 
@@ -442,13 +453,13 @@ public class ProceduralCityGenerator : MonoBehaviour
             }
 
             // Draw vertical 90-degree connecting walls if the offset changed
-            if (currentY < prevY_Bottom) 
+            if (currentY < prevY_Bottom)
             {
                 // Stepped outward (down)
                 for (int stepY = prevY_Bottom - 1; stepY >= currentY; stepY--)
                     if (cityGrid[x - 1, stepY] != CellType.River) MarkGridAndQueue(x - 1, stepY, 1, 1, CellType.Wall, wallChunk);
             }
-            else if (currentY > prevY_Bottom) 
+            else if (currentY > prevY_Bottom)
             {
                 // Stepped inward (up)
                 for (int stepY = prevY_Bottom; stepY < currentY; stepY++)
@@ -462,7 +473,7 @@ public class ProceduralCityGenerator : MonoBehaviour
 
         // top wall
         int prevY_Top = maxY + topOffsets[0];
-        for (int x = minX; x <= maxX; x++) 
+        for (int x = minX; x <= maxX; x++)
         {
             int currentY = maxY + topOffsets[x - minX];
 
@@ -473,12 +484,12 @@ public class ProceduralCityGenerator : MonoBehaviour
                 continue;
             }
 
-            if (currentY > prevY_Top) 
+            if (currentY > prevY_Top)
             {
                 for (int stepY = prevY_Top + 1; stepY <= currentY; stepY++)
                     if (cityGrid[x - 1, stepY] != CellType.River) MarkGridAndQueue(x - 1, stepY, 1, 1, CellType.Wall, wallChunk);
             }
-            else if (currentY < prevY_Top) 
+            else if (currentY < prevY_Top)
             {
                 for (int stepY = prevY_Top; stepY > currentY; stepY--)
                     if (cityGrid[x, stepY] != CellType.River) MarkGridAndQueue(x, stepY, 1, 1, CellType.Wall, wallChunk);
@@ -517,8 +528,8 @@ public class ProceduralCityGenerator : MonoBehaviour
         }
 
         //right wall
-        int prevX_Right = maxX; 
-        for (int y = minY + 1; y < maxY; y++) 
+        int prevX_Right = maxX;
+        for (int y = minY + 1; y < maxY; y++)
         {
             int currentX = maxX + rightOffsets[y - minY];
 
@@ -637,7 +648,7 @@ public class ProceduralCityGenerator : MonoBehaviour
 
         // Sort buildings from largest footprint to smallest. 
         // Placing big buildings first is the secret to good procedural generation!
-        buildingPrefabs.Sort((StructureData a, StructureData b) => 
+        buildingPrefabs.Sort((StructureData a, StructureData b) =>
         {
             float areaA = a.footprint.x * a.footprint.y;
             float areaB = b.footprint.x * b.footprint.y;
@@ -665,10 +676,10 @@ public class ProceduralCityGenerator : MonoBehaviour
                     // Success! It fits perfectly.
                     MarkGridAndQueue(x, y, w, h, CellType.Building, building);
                     buildingsPlaced++;
-                    break; 
+                    break;
                 }
             }
-            
+
             // If we couldn't place it after many attempts, the city might be getting full.
         }
     }
@@ -678,7 +689,7 @@ public class ProceduralCityGenerator : MonoBehaviour
     /// </summary>
     private void GenerateSmallRoads(List<RectInt> buildings)
     {
-        if(sideRoadChunk == null) return;
+        if (sideRoadChunk == null) return;
 
         //foreach(RectInt)
     }
