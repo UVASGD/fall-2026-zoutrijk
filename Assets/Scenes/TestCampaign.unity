@@ -811,7 +811,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -837,6 +837,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &132039600
 SpriteRenderer:
   serializedVersion: 3
@@ -1259,7 +1261,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -1285,6 +1287,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &227937326
 SpriteRenderer:
   serializedVersion: 3
@@ -1417,7 +1421,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -1443,6 +1447,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &229425215
 SpriteRenderer:
   serializedVersion: 3
@@ -1869,7 +1875,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -1895,6 +1901,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &389537590
 SpriteRenderer:
   serializedVersion: 3
@@ -2451,7 +2459,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -2477,6 +2485,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &512791920
 SpriteRenderer:
   serializedVersion: 3
@@ -3863,6 +3873,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!61 &803544369
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3901,7 +3913,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -3981,7 +3993,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -4007,6 +4019,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &808724764
 SpriteRenderer:
   serializedVersion: 3
@@ -5769,7 +5783,7 @@ MonoBehaviour:
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 10
-  m_fontSizeMax: 70
+  m_fontSizeMax: 25
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
@@ -6152,7 +6166,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -6178,6 +6192,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &1129372308
 SpriteRenderer:
   serializedVersion: 3
@@ -6355,7 +6371,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -6381,6 +6397,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &1199112583
 SpriteRenderer:
   serializedVersion: 3
@@ -7288,7 +7306,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -7314,6 +7332,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &1508974395
 SpriteRenderer:
   serializedVersion: 3
@@ -7923,7 +7943,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -7949,6 +7969,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &1631470973
 SpriteRenderer:
   serializedVersion: 3
@@ -8275,7 +8297,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -8301,6 +8323,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &1690020058
 SpriteRenderer:
   serializedVersion: 3
@@ -9245,7 +9269,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -9271,6 +9295,8 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  availableToBuildBuildings: []
+  recruitableUnits: []
 --- !u!212 &1976968097
 SpriteRenderer:
   serializedVersion: 3

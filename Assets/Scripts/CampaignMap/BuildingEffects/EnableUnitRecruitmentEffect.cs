@@ -7,7 +7,13 @@ public class EnableUnitRecruitmentEffect : GenericTurnEndEffect
 
     public override void OnEndTurnEffect(MapCity ownerCity)
     {
-        throw new System.NotImplementedException();
+        foreach(var recruitableUnit in allowedUnitRecruitment)
+        {
+            if (!ownerCity.recruitableUnits.Contains(recruitableUnit))
+            {
+                ownerCity.recruitableUnits.Add(recruitableUnit);
+            }
+        }
     }
 }
 

@@ -412,10 +412,7 @@ public class CampaignMapManager : MonoBehaviour
 
         foreach (var city in cities)
         {
-            foreach (var building in city.buildings)
-            {
-                building.EndTurnImpact(city);
-            }
+            city.OnEndTurn();
         }
 
         campaignUI.UpdateCurrencyText(playerFaction.CurrentCurrency);

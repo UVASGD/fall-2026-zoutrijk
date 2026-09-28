@@ -27,6 +27,8 @@ public class UnitBase : ScriptableObject
     [SerializeField] float attackDelay = 0.5f;
 
     [SerializeField] int unitMaintenance;
+    [SerializeField] int recruitmentCost; //how much the upstart cost is to muster
+    [SerializeField] int recruitmentTime; //how long a batch of this unit takes to conscript
 
     [Header("Base Equipment")]
     [SerializeField] UnitArmor startingArmor;
@@ -48,8 +50,10 @@ public class UnitBase : ScriptableObject
     public int Agility { get { return agility; } }
     public int Strength { get { return strength; } }
     public float AttackDelay { get { return attackDelay; } }
-    public int UnitMaintenance => unitMaintenance;
 
+    public int RecruitmentCost => recruitmentCost;
+    public int UnitMaintenance => unitMaintenance;
+    public int RecruitmentTime => recruitmentTime; 
     public UnitArmor StartingArmor { get { return startingArmor; } }
 }
 

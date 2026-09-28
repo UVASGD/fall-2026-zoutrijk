@@ -29,3 +29,23 @@ public class Unit
     public int dexterity {get; private set;}
     public int tactics {get; private set;}
 }
+
+public class UnitRecruiment
+{
+    public Unit unitToRecruit;
+    public int turnsRemaining;
+    public int batchSize; //how many of this unit we are recruiting
+    public UnitRecruiment(Unit toRecruit, int batchSize)
+    {
+        this.unitToRecruit = toRecruit;
+        this.turnsRemaining = toRecruit._base.RecruitmentTime;
+        this.batchSize = batchSize;
+    }
+
+    public bool CheckRecruitmentProgress()
+    {
+        turnsRemaining--;
+        if(turnsRemaining <= 0) return true;
+        else return false;
+    }
+}

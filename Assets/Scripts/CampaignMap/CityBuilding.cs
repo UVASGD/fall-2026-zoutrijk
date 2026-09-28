@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
-
+using System.Collections.Generic;
 /// <summary>
 /// A city building is stored inside of a city, and makes up the blocks of a city's infrastructure and recuitment capabilities.
 /// </summary>
@@ -53,5 +52,27 @@ public class CityBuilding : ScriptableObject
             output += effect.EffectName + "\n";
         }
         return output;
+    }
+}
+
+/// <summary>
+/// Used for checking back on if a building construction is complete or not
+/// </summary>
+public class BuildingConstruction
+{
+    public CityBuilding buildingToConstruct;
+    public int turnsRemaining;
+
+    public BuildingConstruction(CityBuilding toBuild)
+    {
+        this.buildingToConstruct = toBuild;
+        turnsRemaining = toBuild.ConstructionTime;     
+    }
+
+    public bool CheckConstructionProgress()
+    {
+        turnsRemaining--;
+        if(turnsRemaining <= 0) return true; //construction is complete
+        else return false;
     }
 }
