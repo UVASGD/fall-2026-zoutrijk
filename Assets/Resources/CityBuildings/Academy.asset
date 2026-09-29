@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dc5aa08a340e9d42bb1f6debd212848, type: 3}
   m_Name: Academy
   m_EditorClassIdentifier: Assembly-CSharp::CityBuilding
-  buildingIcon: {fileID: 0}
   constructionCost: 200
   constructionTime: 1
   buildingData: {fileID: 11400000, guid: 045dda92f0ac9cf4a8fd379f6fc31aff, type: 2}
   TurnEndEffects:
   - rid: 2180910244511875136
   - rid: 2180910244511875137
+  - rid: 4350065579089723455
   references:
     version: 2
     RefIds:
@@ -34,3 +34,9 @@ MonoBehaviour:
         traitKey: EDUCATION
         incrementPoints: 1
         procChance: 0.75
+    - rid: 4350065579089723455
+      type: {class: UnlockBuildingConstructionEffect, ns: , asm: Assembly-CSharp}
+      data:
+        effectName: 'Unlocks the Construction of: Tax Office'
+        unlockedBuildings:
+        - {fileID: 11400000, guid: 5ea662eea36bfd54298b2de5fc231fe4, type: 2}

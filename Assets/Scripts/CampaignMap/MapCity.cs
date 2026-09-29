@@ -37,26 +37,35 @@ public class MapCity : MonoBehaviour
     {
         HomeRegion = CampaignMapManager.i.getRegionByCode(homeRegionCode); //assign its home region
         owner = HomeRegion.owner;
+        constructionQueue = new List<BuildingConstruction>();
+        recruitmentQueue = new List<UnitRecruiment>();
+        availableToBuildBuildings = new List<CityBuilding>();
     }
 
     public void OnEndTurn()
     {
         //progress the construction queue
-        if (constructionQueue[0].CheckConstructionProgress())
+        if (constructionQueue.Count > 0)
         {
-            buildings.Add(constructionQueue[0].buildingToConstruct); //add the building
-            constructionQueue.Remove(constructionQueue[0]);//now remove it from the front of the list
+            if (constructionQueue[0].CheckConstructionProgress())
+            {
+                buildings.Add(constructionQueue[0].buildingToConstruct); //add the building
+                constructionQueue.Remove(constructionQueue[0]);//now remove it from the front of the list
+            }
         }
 
         //now do the recruitment queue
-        if (recruitmentQueue[0].CheckRecruitmentProgress())
+        if (recruitmentQueue.Count > 0)
         {
-            //same logic as buildings, just adding multiple copies of the unit we just added using a for-loop
-            for (int i = 0; i < recruitmentQueue[0].batchSize; i++)
+            if (recruitmentQueue[0].CheckRecruitmentProgress())
             {
-                garrison.Add(recruitmentQueue[0].unitToRecruit);
+                //same logic as buildings, just adding multiple copies of the unit we just added using a for-loop
+                for (int i = 0; i < recruitmentQueue[0].batchSize; i++)
+                {
+                    garrison.Add(recruitmentQueue[0].unitToRecruit);
+                }
+                recruitmentQueue.Remove(recruitmentQueue[0]);
             }
-            recruitmentQueue.Remove(recruitmentQueue[0]);
         }
 
         foreach (var building in buildings)
@@ -88,12 +97,12 @@ public class MapCity : MonoBehaviour
         garrison.Add(newUnit);
     }
 
-    public void AddToBuildingQueue(CityBuilding building)
+    private void AddToBuildingQueue(CityBuilding building)
     {
         constructionQueue.Add(new BuildingConstruction(building));
     }
 
-    public void AddToRecruitmentQueue(UnitBase unitBase, int quantity)
+    private void AddToRecruitmentQueue(UnitBase unitBase, int quantity)
     {
         recruitmentQueue.Add(new UnitRecruiment(new Unit(unitBase), quantity));
     }
@@ -116,7 +125,7 @@ public class MapCity : MonoBehaviour
 
     public bool RequestAdditionToBuildingQueue(CityBuilding building)
     {
-        if(CampaignMapManager.i.PlayerFaction.CurrentCurrency > building.ConstructionCost)
+        if (CampaignMapManager.i.PlayerFaction.CurrentCurrency > building.ConstructionCost)
         {
             AddToBuildingQueue(building);
             return false;
