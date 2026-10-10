@@ -191,6 +191,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "DebugButton",
+                    "type": "Button",
+                    "id": "c00f53f5-5f69-4927-9dda-5add99ac8552",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -246,6 +256,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Ctrl-Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "585a6b3e-5568-4a7d-b806-ee8ad62d212f",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DebugButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

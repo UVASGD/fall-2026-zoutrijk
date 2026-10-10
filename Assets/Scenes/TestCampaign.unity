@@ -841,6 +841,7 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  - {fileID: 11400000, guid: 316b88fa64b9f8c4d81a1b4c5ba5a7c6, type: 2}
   availableToBuildBuildings: []
   recruitableUnits: []
 --- !u!212 &132039600
@@ -3877,6 +3878,7 @@ MonoBehaviour:
   regionalCapital: 1
   buildings:
   - {fileID: 11400000, guid: 01d1a91606d407e4aae493c73d429e08, type: 2}
+  - {fileID: 11400000, guid: 316b88fa64b9f8c4d81a1b4c5ba5a7c6, type: 2}
   availableToBuildBuildings: []
   recruitableUnits: []
 --- !u!61 &803544369
@@ -4133,7 +4135,7 @@ Transform:
   m_GameObject: {fileID: 813845826}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 13.33, y: 6.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

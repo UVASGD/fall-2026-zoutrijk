@@ -9,6 +9,8 @@ using UnityEngine;
 public class FieldCharacter : MonoBehaviour, ObjectHP
 {
     #region Fields
+    [SerializeField] bool isGeneral; //whether or not the fieldCharacter is a general
+    [SerializeField] General generalName; //used if the general dies in battle
     private OverlayTile tilePosition;
     public OverlayTile TilePosition => tilePosition;
     private OverlayTile targetTile;
@@ -605,6 +607,11 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         }
     }
 
+    /// <summary>
+    /// Sample animation where a unit bops towards another to signify an attack
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
     private IEnumerator BopTowardsTarget(FieldCharacter target)
     {
         if (target == null)
@@ -711,6 +718,21 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         tile.SetRestingObject(this);
     }
 
+    
+    /// <summary>
+    /// When attacked, a unit's current movement objective should be halted so they don't run through the lines
+    /// </summary>
+    public void InterruptUnit()
+    {
+        
+    }
+
+    public void LimboState()
+    {
+        this.CurrentBehavior = BehaviorState.Limbo;
+    }
+
+    
     /// <summary>
     /// Moves the character through a valid path without pausing at each tile. Occupancy is updated only when the next tile is reached.
     /// </summary>
@@ -855,7 +877,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         Idle,
         Moving,
         MeleeAttacking,
-        RangeAttacking
+        RangeAttacking,
+        Limbo //when a unit is temporarily stuck, wait for a surrounding tile to be cleared to allow for safe movement
     }
 
     private void FieldUnitDeath()
@@ -885,6 +908,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         CurrentBehavior = BehaviorState.Idle;
         attackTarget = null;
+
+        if(isGeneral) BattlefieldAnnouncer.i.BattlefieldAnnouncement($"General {generalName} has died");
 
         if (GlobalEditorSettings.i.RichDebugLogs) Debug.Log("Unit should die here");
     }

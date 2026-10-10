@@ -187,7 +187,6 @@ public class TerrainSampler : MonoBehaviour
         bool black = pixel.r <= tolerance && pixel.g <= tolerance && pixel.b <= tolerance;
         bool yellow = pixel.r >= 1f - tolerance && pixel.g >= 1f - tolerance && pixel.b <= tolerance;
         bool pink = pixel.r >= 1f - tolerance && pixel.g <= tolerance && pixel.b >= 1f - tolerance;
-
         if (blue) return 0; //water
         if (white) return 1; //land
         if (black) return 2; //road

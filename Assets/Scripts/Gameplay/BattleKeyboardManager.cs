@@ -17,6 +17,8 @@ public class BattleKeyboardManager : MonoBehaviour
         inputActions.BattleBinds.ToggleGroup.performed += ToggleGroup;
         inputActions.BattleBinds.Select.performed += ctx => MouseController.i.BeginSelection();
         inputActions.BattleBinds.Select.canceled += ctx => MouseController.i.EndSelection();
+        
+        inputActions.BattleBinds.DebugButton.performed += ctx => BattlefieldAnnouncer.i.TestBattlefieldAnnouncement();
     }
 
     public bool IsCtrlModifierHeld()

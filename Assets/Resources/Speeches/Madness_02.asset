@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpeechSnippet
   snippetType: 1
   snippetText: []
-  snippetChance: 0
+  snippetChance: 0.5
   conditions:
   - rid: 2180910256908664894
   references:
