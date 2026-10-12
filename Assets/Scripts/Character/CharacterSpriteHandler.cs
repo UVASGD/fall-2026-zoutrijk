@@ -6,6 +6,7 @@ public class CharacterSpriteHandler : MonoBehaviour
 {
     private Sprite currentSprite;
     private SpriteRenderer characterRenderer;
+    public SpriteRenderer CharacterRenderer => characterRenderer;
     
     public CharacterAnimationState animationState;
     

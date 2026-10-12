@@ -38,11 +38,14 @@ public class CampaignMapManager : MonoBehaviour
     [SerializeField] CameraEffects cameraEffects;
     [SerializeField] TerrainSampler terrainSampler;
     [SerializeField] BattleMapMessenger battleMapMessenger;
+    [SerializeField, Min(0.1f)] float battleEngagementDistance = 1f;
     #endregion
 
     private InputSystem_Actions inputActions;
     private Coroutine battleMapTransitionCoroutine;
     private bool isLoadingBattleTransition;
+    private FieldArmy pendingPlayerArmy;
+    private FieldArmy pendingEnemyArmy;
 
     void Awake()
     {
@@ -115,6 +118,11 @@ public class CampaignMapManager : MonoBehaviour
     private Vector3 worldPosition;
     void Update()
     {
+        if (pendingPlayerArmy != null || isLoadingBattleTransition)
+        {
+            return;
+        }
+
         if (Mouse.current == null || Camera.main == null)
         {
             return;
@@ -134,7 +142,28 @@ public class CampaignMapManager : MonoBehaviour
                 return; //so clicking on a city/general UI is possible
             }
 
-            if (selectedArmy != null && hoveredRegion != null)
+            if (selectedArmy != null && hoveredArmy != null && hoveredArmy != selectedArmy && hoveredArmy.StartingOwner != "BRE")
+            {
+                CloseContextMenus();
+                FieldArmy playerArmy = selectedArmy;
+                FieldArmy enemyArmy = hoveredArmy;
+                float engagementGap = Mathf.Max(0.1f, battleEngagementDistance);
+                float distanceToEnemy = Vector2.Distance(playerArmy.transform.position, enemyArmy.transform.position);
+
+                if (distanceToEnemy <= engagementGap)
+                {
+                    BeginBattle(playerArmy, enemyArmy);
+                }
+                else
+                {
+                    Vector2 engagementPosition = Vector2.MoveTowards(
+                        playerArmy.transform.position,
+                        enemyArmy.transform.position,
+                        distanceToEnemy - engagementGap);
+                    playerArmy.MoveArmy(enemyArmy.currentRegion, engagementPosition, () => BeginBattle(playerArmy, enemyArmy));
+                }
+            }
+            else if (selectedArmy != null && hoveredRegion != null)
             {
                 CloseContextMenus();
                 selectedArmy.MoveArmy(hoveredRegion, worldPosition);
@@ -158,6 +187,66 @@ public class CampaignMapManager : MonoBehaviour
             CloseContextMenus();
             SelectHoveredObject();
         }
+    }
+
+    private void BeginBattle(FieldArmy playerArmy, FieldArmy enemyArmy)
+    {
+        if (isLoadingBattleTransition || battleMapMessenger == null || playerArmy == null || enemyArmy == null)
+        {
+            return;
+        }
+
+        Region battleRegion = enemyArmy.currentRegion != null ? enemyArmy.currentRegion : highlightedRegion;
+        if (battleRegion == null || terrainSampler == null)
+        {
+            Debug.LogError("Cannot start army battle without a battle region and terrain sampler.");
+            return;
+        }
+
+        battleMapMessenger.playerArmy = playerArmy;
+        battleMapMessenger.enemyArmy = enemyArmy;
+        battleMapMessenger.seedData = new BattleMapSeedData(
+            terrainSampler.TestTerrainSampleAtPosition(enemyArmy.transform.position, 32),
+            battleRegion.BiomePalette,
+            battleRegion.RegionCapital);
+
+        pendingPlayerArmy = playerArmy;
+        pendingEnemyArmy = enemyArmy;
+        Vector2 battlePosition = (playerArmy.transform.position + enemyArmy.transform.position) * 0.5f;
+        cameraEffects.LerpCamera(battlePosition, 1.5f);
+        campaignUI.ShowBattleDecision(playerArmy, enemyArmy);
+    }
+
+    public void FightPendingBattle()
+    {
+        if (pendingPlayerArmy == null || pendingEnemyArmy == null || battleMapTransitionCoroutine != null)
+        {
+            return;
+        }
+
+        campaignUI.HideBattleDecision();
+        battleMapTransitionCoroutine = StartCoroutine(BattleMapTransitionToBattle());
+    }
+
+    private IEnumerator BattleMapTransitionToBattle()
+    {
+        yield return cameraEffects.ZoomCamera(1f, 2f, true);
+        yield return Fader.i.FadeImage(0.25f, true, Color.black);
+
+        LoadBattleTransition();
+    }
+
+    public void AutoresolvePendingBattle()
+    {
+        if (pendingPlayerArmy == null || pendingEnemyArmy == null)
+        {
+            return;
+        }
+
+        Debug.Log($"Autoresolving battle between {pendingPlayerArmy.name} and {pendingEnemyArmy.name}.");
+        pendingPlayerArmy = null;
+        pendingEnemyArmy = null;
+        campaignUI.HideBattleDecision();
     }
 
     /// <summary>
@@ -242,6 +331,7 @@ public class CampaignMapManager : MonoBehaviour
     {
         if (highlightedArmy != null)
         {
+            if(highlightedArmy.StartingOwner != "BRE") return; //only should apply for player armies.
             selectedArmy = highlightedArmy;
             selectedCity = null;
             campaignUI.PlaceHighlightCursor(selectedArmy.transform);

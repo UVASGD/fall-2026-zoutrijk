@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BiomePalette
   groundComposition:
     tilePatterns:
-    - {fileID: 11400000, guid: 1920eeaab85dabc458ab21bc400bdcca, type: 2}
+    - {fileID: 11400000, guid: e5714b6df7ce54340ad6db4573d46621, type: 2}
     percentages: 64000000i
   rocks: []
   trees: []
