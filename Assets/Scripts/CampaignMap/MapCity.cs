@@ -133,3 +133,10 @@ public class MapCity : MonoBehaviour
         else return false;
     }
 }
+
+public class CitySaveData
+{
+    public List<string> builtBuildings;
+    public int urbanPopulation;
+    public List<string> garrisonedUnits; //dependent on a UnitDB
+}
