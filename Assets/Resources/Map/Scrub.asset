@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1afc34a85f7a0f241be0d19158b4e7ed, type: 3}
   m_Name: Scrub
   m_EditorClassIdentifier: Assembly-CSharp::RegionalTerrain
-  regionalMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  regionalMaterial: {fileID: 2100000, guid: 4f570a6b3493e3b48839548aae46b620, type: 2}
   terrainName: Scrub
   backgroundColor: {r: 0.36900747, g: 0.4811321, b: 0.36538804, a: 1}

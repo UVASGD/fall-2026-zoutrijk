@@ -27,4 +27,6 @@ MonoBehaviour:
   - LIR
   mapColor: {r: 0.745283, g: 0.5730242, b: 0.73270935, a: 1}
   secondaryColor: {r: 1, g: 0.5707547, b: 0.96553516, a: 1}
-  acceptedCultures: 0300000000000000
+  mapMaterial: {fileID: 2100000, guid: 282e3347d4619cb4b91e725b2fef2a0b, type: 2}
+  acceptedCultures: 0300000000000000i
+  startingMoney: 0

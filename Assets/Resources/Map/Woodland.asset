@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1afc34a85f7a0f241be0d19158b4e7ed, type: 3}
   m_Name: Woodland
   m_EditorClassIdentifier: Assembly-CSharp::RegionalTerrain
-  regionalMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  regionalMaterial: {fileID: 2100000, guid: 1d7260dd7851a9b4ba838cb183185301, type: 2}
   terrainName: Woodland
   backgroundColor: {r: 0.09242612, g: 0.2924528, b: 0.09547566, a: 1}

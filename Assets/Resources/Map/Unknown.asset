@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1afc34a85f7a0f241be0d19158b4e7ed, type: 3}
   m_Name: Unknown
   m_EditorClassIdentifier: Assembly-CSharp::RegionalTerrain
-  regionalMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  regionalMaterial: {fileID: 2100000, guid: b7be5d6b98d809741bf68aba65f17d58, type: 2}
   terrainName: Unknown
   backgroundColor: {r: 0.8396226, g: 0.8396226, b: 0.8396226, a: 1}
