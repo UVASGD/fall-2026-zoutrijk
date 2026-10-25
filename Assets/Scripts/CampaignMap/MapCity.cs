@@ -132,4 +132,19 @@ public class MapCity : MonoBehaviour
         }
         else return false;
     }
+
+    /// <summary>
+    /// Turns a field army into a list of units that are added to the garrison list, and adds the general to boarding nobles.
+    /// </summary>
+    public void GarrisonArmy()
+    {
+        
+    }
+}
+
+public class CitySaveData
+{
+    public List<string> builtBuildings;
+    public int urbanPopulation;
+    public List<string> garrisonedUnits; //dependent on a UnitDB
 }

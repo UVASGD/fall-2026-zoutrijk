@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Madness_02
   m_EditorClassIdentifier: Assembly-CSharp::SpeechSnippet
   snippetType: 1
-  snippetText: []
-  snippetChance: 0
+  snippetText:
+  - 
+  snippetChance: 0.5
   conditions:
   - rid: 2180910256908664894
+  - rid: 3172787489865990206
   references:
     version: 2
     RefIds:
@@ -28,3 +30,10 @@ MonoBehaviour:
         orCause: 0
         traitID: MADNESS
         pointThreshold: 3
+    - rid: 3172787489865990206
+      type: {class: RelativeNumbersSnippet, ns: , asm: Assembly-CSharp}
+      data:
+        conditionTitle: Outnumbered by at least 50%
+        invertLogic: 0
+        orCause: 0
+        ratioThreshold: 0.67

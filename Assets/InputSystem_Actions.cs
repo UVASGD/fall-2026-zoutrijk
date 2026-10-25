@@ -277,6 +277,16 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""DebugButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""c00f53f5-5f69-4927-9dda-5add99ac8552"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -332,6 +342,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Ctrl-Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""585a6b3e-5568-4a7d-b806-ee8ad62d212f"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DebugButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -414,6 +435,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_BattleBinds_Command = m_BattleBinds.FindAction("Command", throwIfNotFound: true);
         m_BattleBinds_CancelMovement = m_BattleBinds.FindAction("CancelMovement", throwIfNotFound: true);
         m_BattleBinds_CtrlClick = m_BattleBinds.FindAction("Ctrl-Click", throwIfNotFound: true);
+        m_BattleBinds_DebugButton = m_BattleBinds.FindAction("DebugButton", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -629,6 +651,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_BattleBinds_Command;
     private readonly InputAction m_BattleBinds_CancelMovement;
     private readonly InputAction m_BattleBinds_CtrlClick;
+    private readonly InputAction m_BattleBinds_DebugButton;
     /// <summary>
     /// Provides access to input actions defined in input action map "BattleBinds".
     /// </summary>
@@ -660,6 +683,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "BattleBinds/CtrlClick".
         /// </summary>
         public InputAction @CtrlClick => m_Wrapper.m_BattleBinds_CtrlClick;
+        /// <summary>
+        /// Provides access to the underlying input action "BattleBinds/DebugButton".
+        /// </summary>
+        public InputAction @DebugButton => m_Wrapper.m_BattleBinds_DebugButton;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -701,6 +728,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @CtrlClick.started += instance.OnCtrlClick;
             @CtrlClick.performed += instance.OnCtrlClick;
             @CtrlClick.canceled += instance.OnCtrlClick;
+            @DebugButton.started += instance.OnDebugButton;
+            @DebugButton.performed += instance.OnDebugButton;
+            @DebugButton.canceled += instance.OnDebugButton;
         }
 
         /// <summary>
@@ -727,6 +757,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @CtrlClick.started -= instance.OnCtrlClick;
             @CtrlClick.performed -= instance.OnCtrlClick;
             @CtrlClick.canceled -= instance.OnCtrlClick;
+            @DebugButton.started -= instance.OnDebugButton;
+            @DebugButton.performed -= instance.OnDebugButton;
+            @DebugButton.canceled -= instance.OnDebugButton;
         }
 
         /// <summary>
@@ -903,5 +936,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCtrlClick(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "DebugButton" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDebugButton(InputAction.CallbackContext context);
     }
 }

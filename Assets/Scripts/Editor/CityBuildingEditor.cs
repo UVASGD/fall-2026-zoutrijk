@@ -1,6 +1,5 @@
 using System;
 using UnityEditor;
-using UnityEngine;
 [CustomEditor(typeof(CityBuilding))]
 public class CityBuildingEditor : ScriptableObjectButtonEditor<CityBuilding>
 {
@@ -10,13 +9,15 @@ public class CityBuildingEditor : ScriptableObjectButtonEditor<CityBuilding>
     {
         "Passive Income Effect",
         "Trait Chance Impact",
-        "Unlock New Construction"
+        "Unlock New Construction",
+        "Compound Investment"
     };
 
     protected override Action<CityBuilding>[] ButtonActions => new Action<CityBuilding>[]
     {
         (b) => b.AddOnTurnEndCause(new PassiveIncomeEffect()),
         (b) => b.AddOnTurnEndCause(new TraitChanceEffect()),
-        (b) => b.AddOnTurnEndCause(new UnlockBuildingConstructionEffect())
+        (b) => b.AddOnTurnEndCause(new UnlockBuildingConstructionEffect()),
+        (b) => b.AddOnTurnEndCause(new CompoundInterestEffect())
     };
 }

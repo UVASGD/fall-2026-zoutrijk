@@ -17,6 +17,7 @@ public class CampaignUI : MonoBehaviour
     [SerializeField] GameObject highlightCursor; //a cursor gameobject that points at the current city/fieldarmy
     [SerializeField] Button endTurnButton;
     [SerializeField] CityPanel cityPanel;
+    [SerializeField] BattlePreviewScreen previewScreen;
     #endregion
 
     void OnEnable()
@@ -169,5 +170,19 @@ public class CampaignUI : MonoBehaviour
     {
         if (city != null) cityPanel.RefreshPanelData(city);
         cityPanel.ShowCityPanel(show);
+    }
+
+    public void ShowBattleDecision(FieldArmy playerArmy, FieldArmy enemyArmy)
+    {
+        if (previewScreen != null)
+        {
+            previewScreen.PopulatePreviewScreen(playerArmy, enemyArmy, enemyArmy.currentRegion);
+            previewScreen.ToggleBattleUI(true);
+        }
+    }
+
+    public void HideBattleDecision()
+    {
+        previewScreen?.ToggleBattleUI(false);
     }
 }

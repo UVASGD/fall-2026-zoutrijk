@@ -20,7 +20,7 @@ public class BattleUI : MonoBehaviour
     [SerializeField] private Material movementPathMaterial;
     [SerializeField] private Color movementPathColor = new Color(0.2f, 0.85f, 1f, 1f);
     [SerializeField] private float movementPathWidth = 0.12f;
-    [SerializeField] private int movementPathSortingOrder = 10;
+    [SerializeField] private int movementPathSortingOrder = 10; 
     private readonly List<LineRenderer> activeMovementLines = new List<LineRenderer>();
 
     public List<FieldCharacter> HighlightedUnits => highlightedUnits;

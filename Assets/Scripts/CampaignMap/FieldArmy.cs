@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,6 +17,7 @@ public class FieldArmy : MonoBehaviour
 
     [SerializeField] string startingRegion;
     [SerializeField] string startingOwner;
+    public string StartingOwner => startingOwner;
     [SerializeField] GameObject movementRangeIndicator; //the aura that indicates remaining movement
     /// <summary>
     /// updates the current region the unit is in.
@@ -77,6 +79,11 @@ public class FieldArmy : MonoBehaviour
     /// <param name="targetPos"></param>
     public bool MoveArmy(Region highlightedRegion, Vector2 targetPos)
     {
+        return MoveArmy(highlightedRegion, targetPos, null);
+    }
+
+    public bool MoveArmy(Region highlightedRegion, Vector2 targetPos, Action onArrived)
+    {
         //first check if the position is too far away
         float distance = Vector2.Distance(targetPos, transform.position);
         if (distance > remainingMovement || highlightedRegion == null)
@@ -85,11 +92,27 @@ public class FieldArmy : MonoBehaviour
             return false; //null check on highlightedRegion prevents movement onto the sea. 
         }
 
-        ZUtilities.Generic2DLerp(this, gameObject, targetPos, 1f); //lerptime of 1 second
+        StartCoroutine(MoveArmyRoutine(targetPos, onArrived));
         remainingMovement -= distance;
         movementRangeIndicator.SetActive(false);
 
         return true;
+    }
+
+    private IEnumerator MoveArmyRoutine(Vector2 targetPos, Action onArrived)
+    {
+        Vector2 startingPosition = transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < 1f)
+        {
+            elapsed += Time.deltaTime;
+            transform.position = Vector2.Lerp(startingPosition, targetPos, Mathf.Clamp01(elapsed));
+            yield return null;
+        }
+
+        transform.position = targetPos;
+        onArrived?.Invoke();
     }
 
     /// <summary>
@@ -112,6 +135,7 @@ public class CampaignUnit
     [SerializeField] private UnitArmor armor;
     [SerializeField] private float unitHealth; //health of the unit after various battles
     [SerializeField] private UnitBase attachedUnit; //the associated unitBase for this CampaignUnit
+    public float UnitHealth => unitHealth;
 
     /// <summary>
     /// setter for the unit's armor.

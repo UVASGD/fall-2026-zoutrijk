@@ -117,15 +117,12 @@ public class MouseController : MonoBehaviour
         isSelecting = false;
         BattleUI.i.SetSelecting(false);
 
-        List<FieldCharacter> highlightedUnits = HighlightAllUnitsInRegion(HandleDragRange(BattleUI.i.SelectorOrigin, CurrentMousePos));
+        List<FieldCharacter> highlightedUnits = HighlightAllUnitsInRegion(BattleUI.i.SelectorOrigin, CurrentMousePos);
 
-        if (highlightedUnits.Count == 0 && clickedTile != null && clickedTile.RestingObject is FieldCharacter clickedCharacter && clickedCharacter.PlayerControlled)
+        FieldCharacter clickedCharacter = GetFieldCharacterAtMousePosition();
+        if (highlightedUnits.Count == 0 && clickedCharacter != null && clickedCharacter.PlayerControlled)
         {
             highlightedUnits = new List<FieldCharacter> { clickedCharacter };
-        }
-        else if (highlightedUnits.Count == 0 && hoveredTile != null && hoveredTile.RestingObject is FieldCharacter hoveredCharacter && hoveredCharacter.PlayerControlled)
-        {
-            highlightedUnits = new List<FieldCharacter> { hoveredCharacter };
         }
 
         bool addToSelection = BattleKeyboardManager.i != null
@@ -155,9 +152,9 @@ public class MouseController : MonoBehaviour
         {
             transform.position = focusedTile.transform.position;
             hoveredTile = focusedTile;
-
-            HandleFocusedTile(battleState);
         }
+
+        HandleFocusedTile(battleState);
     }
     private void HandleFocusedTile(BattleState battleState)
     {
@@ -166,12 +163,17 @@ public class MouseController : MonoBehaviour
             clickedTile = hoveredTile;
             clickedTile?.ShowTile();
 
-            if (clickedTile.RestingObject != null)
+            FieldCharacter clickedCharacter = GetFieldCharacterAtMousePosition();
+            MapObject clickedObject = clickedCharacter != null
+                ? clickedCharacter
+                : clickedTile != null ? clickedTile.RestingObject : null;
+
+            if (clickedObject != null)
             {
-                WorldObjectPreviewUI.i.OpenMenu(clickedTile.RestingObject);
+                WorldObjectPreviewUI.i.OpenMenu(clickedObject);
                 updateBattleState?.Invoke(BattleState.UnitSelected);
 
-                if (clickedTile.RestingObject is FieldCharacter fieldCharacter && fieldCharacter.PlayerControlled)
+                if (clickedCharacter != null && clickedCharacter.PlayerControlled)
                 {
                     bool addToSelection = BattleKeyboardManager.i != null
                         ? BattleKeyboardManager.i.IsCtrlModifierHeld()
@@ -179,11 +181,11 @@ public class MouseController : MonoBehaviour
 
                     if (addToSelection)
                     {
-                        AddToSelection(new List<FieldCharacter> { fieldCharacter });
+                        AddToSelection(new List<FieldCharacter> { clickedCharacter });
                     }
                     else
                     {
-                        ApplySelection(new List<FieldCharacter> { fieldCharacter });
+                        ApplySelection(new List<FieldCharacter> { clickedCharacter });
                     }
                 }
                 else if (BattleKeyboardManager.i == null || !BattleKeyboardManager.i.IsCtrlModifierHeld())
@@ -241,29 +243,74 @@ public class MouseController : MonoBehaviour
         }
     }
 
-    private List<FieldCharacter> HighlightAllUnitsInRegion(List<OverlayTile> tiles)
+    private List<FieldCharacter> HighlightAllUnitsInRegion(Vector2 origin, Vector2 destination)
     {
         List<FieldCharacter> highlightedUnits = new List<FieldCharacter>();
+        Vector2 min = Vector2.Min(origin, destination);
+        Rect selectionRect = new Rect(min, Vector2.Max(origin, destination) - min);
 
-        if (tiles == null)
+        foreach (FieldCharacter character in FindObjectsByType<FieldCharacter>())
         {
-            return highlightedUnits;
-        }
-
-        foreach (OverlayTile tile in tiles)
-        {
-            if (tile.RestingObject != null && tile.RestingObject is FieldCharacter)
+            if (character == null || !character.gameObject.activeInHierarchy || !character.PlayerControlled)
             {
-                FieldCharacter character = (FieldCharacter)tile.RestingObject;
-                if (character.PlayerControlled)
-                {
-                    tile.ShowTile();
-                    highlightedUnits.Add(character);
-                }
+                continue;
+            }
+
+            if (character.SpriteHandler == null || character.SpriteHandler.CharacterRenderer == null || character.SpriteHandler.CharacterRenderer.sprite == null)
+            {
+                continue;
+            }
+
+            if (GetCharacterScreenRect(character).Overlaps(selectionRect))
+            {
+                character.TilePosition?.ShowTile();
+                highlightedUnits.Add(character);
             }
         }
 
         return highlightedUnits;
+    }
+
+    private FieldCharacter GetFieldCharacterAtMousePosition()
+    {
+        if (Camera.main == null || Mouse.current == null)
+        {
+            return null;
+        }
+
+        Vector2 worldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        FieldCharacter selectedCharacter = null;
+        int highestSortingOrder = int.MinValue;
+
+        foreach (FieldCharacter character in FindObjectsByType<FieldCharacter>())
+        {
+            if (character == null || !character.gameObject.activeInHierarchy || character.SpriteHandler == null)
+            {
+                continue;
+            }
+
+            SpriteRenderer renderer = character.SpriteHandler.CharacterRenderer;
+            if (renderer == null || renderer.sprite == null || !renderer.bounds.Contains(worldPosition))
+            {
+                continue;
+            }
+
+            if (renderer.sortingOrder >= highestSortingOrder)
+            {
+                highestSortingOrder = renderer.sortingOrder;
+                selectedCharacter = character;
+            }
+        }
+
+        return selectedCharacter;
+    }
+
+    private Rect GetCharacterScreenRect(FieldCharacter character)
+    {
+        Bounds bounds = character.SpriteHandler.CharacterRenderer.bounds;
+        Vector3 min = Camera.main.WorldToScreenPoint(bounds.min);
+        Vector3 max = Camera.main.WorldToScreenPoint(bounds.max);
+        return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
     }
 
     public OverlayTile GetOverlayTileFromMousePos()

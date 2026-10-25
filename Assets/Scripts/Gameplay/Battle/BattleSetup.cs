@@ -14,9 +14,19 @@ public class BattleSetup : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        BattleMapMessenger bMessenger = FindAnyObjectByType<BattleMapMessenger>(); //get the battle map messenger
+
+        SetupBattle(bMessenger.playerArmy, bMessenger.enemyArmy);
+    }
+
     public void SetupBattle(FieldArmy playerArmy, FieldArmy enemyArmy)
     {
         BattleManager.i.SetBattleSpeed(0); //set the battle speed to paused to start
         
+        //pick a region for the player to be able to place their units
+
+        //
     }
 }

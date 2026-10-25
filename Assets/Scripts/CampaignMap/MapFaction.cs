@@ -44,3 +44,9 @@ public class MapFaction
         currentCurrency += change;
     }
 }
+
+public class FactionSaveData
+{
+    public List<string> ownedRegions;
+    public int currentMoney;
+}
