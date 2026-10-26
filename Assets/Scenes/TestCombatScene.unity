@@ -240,6 +240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldCharacter
   isGeneral: 0
   generalName: {fileID: 0}
+  healthbarPrefab: {fileID: 748680667013419759, guid: 295bf3a2ab5fb6543b53ce7b863b0fa3, type: 3}
   movementOrders: []
   spriteHandler: {fileID: 6935390}
   defaultBase: {fileID: 11400000, guid: 2c6343bf5afd2654ca23f23511469edf, type: 2}
@@ -959,6 +960,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldCharacter
   isGeneral: 1
   generalName: {fileID: 0}
+  healthbarPrefab: {fileID: 748680667013419759, guid: 295bf3a2ab5fb6543b53ce7b863b0fa3, type: 3}
   movementOrders: []
   spriteHandler: {fileID: 271629325}
   defaultBase: {fileID: 11400000, guid: d16ef53d8a266a146a3384f80e9a73c6, type: 2}
@@ -1532,6 +1534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldCharacter
   isGeneral: 0
   generalName: {fileID: 0}
+  healthbarPrefab: {fileID: 748680667013419759, guid: 295bf3a2ab5fb6543b53ce7b863b0fa3, type: 3}
   movementOrders: []
   spriteHandler: {fileID: 468084783}
   defaultBase: {fileID: 11400000, guid: d16ef53d8a266a146a3384f80e9a73c6, type: 2}
@@ -1893,6 +1896,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldCharacter
   isGeneral: 0
   generalName: {fileID: 0}
+  healthbarPrefab: {fileID: 748680667013419759, guid: 295bf3a2ab5fb6543b53ce7b863b0fa3, type: 3}
   movementOrders: []
   spriteHandler: {fileID: 601392586}
   defaultBase: {fileID: 11400000, guid: d16ef53d8a266a146a3384f80e9a73c6, type: 2}
@@ -2488,6 +2492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldCharacter
   isGeneral: 0
   generalName: {fileID: 0}
+  healthbarPrefab: {fileID: 748680667013419759, guid: 295bf3a2ab5fb6543b53ce7b863b0fa3, type: 3}
   movementOrders: []
   spriteHandler: {fileID: 923160455}
   defaultBase: {fileID: 11400000, guid: d16ef53d8a266a146a3384f80e9a73c6, type: 2}
@@ -2772,6 +2777,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldCharacter
   isGeneral: 1
   generalName: {fileID: 0}
+  healthbarPrefab: {fileID: 748680667013419759, guid: 295bf3a2ab5fb6543b53ce7b863b0fa3, type: 3}
   movementOrders: []
   spriteHandler: {fileID: 1024765806}
   defaultBase: {fileID: 11400000, guid: d16ef53d8a266a146a3384f80e9a73c6, type: 2}
@@ -2979,6 +2985,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldCharacter
   isGeneral: 0
   generalName: {fileID: 0}
+  healthbarPrefab: {fileID: 748680667013419759, guid: 295bf3a2ab5fb6543b53ce7b863b0fa3, type: 3}
   movementOrders: []
   spriteHandler: {fileID: 1261567933}
   defaultBase: {fileID: 11400000, guid: 2c6343bf5afd2654ca23f23511469edf, type: 2}
@@ -3173,7 +3180,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1356314631
 RectTransform:
   m_ObjectHideFlags: 0
@@ -168609,6 +168616,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldCharacter
   isGeneral: 0
   generalName: {fileID: 0}
+  healthbarPrefab: {fileID: 748680667013419759, guid: 295bf3a2ab5fb6543b53ce7b863b0fa3, type: 3}
   movementOrders: []
   spriteHandler: {fileID: 1948110589}
   defaultBase: {fileID: 11400000, guid: 2c6343bf5afd2654ca23f23511469edf, type: 2}
@@ -168878,6 +168886,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldCharacter
   isGeneral: 1
   generalName: {fileID: 0}
+  healthbarPrefab: {fileID: 748680667013419759, guid: 295bf3a2ab5fb6543b53ce7b863b0fa3, type: 3}
   movementOrders: []
   spriteHandler: {fileID: 2129949238}
   defaultBase: {fileID: 11400000, guid: d16ef53d8a266a146a3384f80e9a73c6, type: 2}

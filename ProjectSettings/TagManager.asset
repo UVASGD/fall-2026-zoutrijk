@@ -62,6 +62,9 @@ TagManager:
   - name: Wall
     uniqueID: 4080536525
     locked: 0
+  - name: WorldspaceBattleUI
+    uniqueID: 3121876373
+    locked: 0
   - name: MapCityLayer
     uniqueID: 2618659407
     locked: 0

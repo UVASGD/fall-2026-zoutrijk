@@ -11,6 +11,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     #region Fields
     [SerializeField] bool isGeneral; //whether or not the fieldCharacter is a general
     [SerializeField] General generalName; //used if the general dies in battle
+    [SerializeField] GameObject healthbarPrefab;
     private OverlayTile tilePosition;
     public OverlayTile TilePosition => tilePosition;
     private OverlayTile targetTile;
@@ -23,6 +24,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     [SerializeField] UnitBase defaultBase;
     [SerializeField] UnitArmor unitArmor;
     [SerializeField] Weapon unitWeapon;
+    private WorldspaceHealthbar healthBar;
     public UnitArmor UnitArmor => unitArmor;
     public Weapon UnitWeapon => unitWeapon;
     private Unit unit;
@@ -52,6 +54,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         UnitHP = MaxUnitHP; //TODO: change to be carryover from campaign map
 
         SetTilePosition(tilePosition);
+
+        healthBar = Instantiate(healthbarPrefab, BattleUI.i.gameObject.transform).GetComponent<WorldspaceHealthbar>(); //spawn healthbar as a child of the battleUI
     }
     #endregion
     #region Tile Movement
@@ -188,6 +192,9 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         {
             SetAttackTarget(nearestPlayerTarget);
         }
+
+        //update bar position if it has been prompted before
+        if(healthBar.barPrompted) healthBar.UpdateBarPosition(gameObject.transform.position);
     }
 
     private int GetTileDistanceTo(FieldCharacter other)
@@ -850,6 +857,10 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         }
 
         if (baseDamage < 0) return null; //no damage taken if below armor threshold
+
+        //if UnitHP is currently maximum, prompt the healthbar. Otherwise just update the healthbar.
+        if(UnitHP == MaxUnitHP) healthBar.PromptHealthbar();
+        healthBar.UpdateBarFill((float)UnitHP / MaxUnitHP); //cast to prevent rounding
 
         UnitHP -= baseDamage;
 
