@@ -25,7 +25,7 @@ public class TraitController
         else
         {
             //call the singleton TraitDB
-            TraitDefinition newDef = TraitDB.i.GetTraitByID(traitID);
+            TraitDefinition newDef = TraitDB.GetTraitByID(traitID);
             activeTraits.Add(traitID, new Trait(newDef, points)); //add to dictionary and apply the required points.
         }
 
