@@ -78,7 +78,7 @@ public class CampaignMapManager : MonoBehaviour
         cameraEffects.LerpCamera(new Vector3(worldPosition.x, worldPosition.y, -10f), 1.5f);
 
         //while this is happening, grab a sample of the to-be battle map and pack it into a seed data
-        BattleMapSeedData seedData = new BattleMapSeedData(terrainSampler.TestTerrainSampleAtPosition(worldPosition, 32), highlightedRegion.BiomePalette, highlightedRegion.RegionCapital);
+        BattleMapSeedData seedData = new BattleMapSeedData(terrainSampler.TestTerrainSampleAtPosition(worldPosition, 64), highlightedRegion.BiomePalette, highlightedRegion.RegionCapital);
         battleMapMessenger.seedData = seedData;
 
         yield return new WaitForSeconds(1.5f); //forced pause
