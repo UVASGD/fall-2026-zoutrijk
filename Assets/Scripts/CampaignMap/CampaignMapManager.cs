@@ -75,7 +75,7 @@ public class CampaignMapManager : MonoBehaviour
     {
         Debug.Log("TestLoadMap input received.");
 
-        cameraEffects.LerpCamera(worldPosition, 1.5f);
+        cameraEffects.LerpCamera(new Vector3(worldPosition.x, worldPosition.y, -10f), 1.5f);
 
         //while this is happening, grab a sample of the to-be battle map and pack it into a seed data
         BattleMapSeedData seedData = new BattleMapSeedData(terrainSampler.TestTerrainSampleAtPosition(worldPosition, 32), highlightedRegion.BiomePalette, highlightedRegion.RegionCapital);
@@ -213,7 +213,7 @@ public class CampaignMapManager : MonoBehaviour
         pendingPlayerArmy = playerArmy;
         pendingEnemyArmy = enemyArmy;
         Vector2 battlePosition = (playerArmy.transform.position + enemyArmy.transform.position) * 0.5f;
-        cameraEffects.LerpCamera(battlePosition, 1.5f);
+        cameraEffects.LerpCamera(new Vector3(battlePosition.x, battlePosition.y, -10f), 1.5f);
         campaignUI.ShowBattleDecision(playerArmy, enemyArmy);
     }
 
