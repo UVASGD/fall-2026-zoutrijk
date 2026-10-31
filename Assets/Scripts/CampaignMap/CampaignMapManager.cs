@@ -203,8 +203,9 @@ public class CampaignMapManager : MonoBehaviour
             return;
         }
 
-        battleMapMessenger.playerArmy = playerArmy;
-        battleMapMessenger.enemyArmy = enemyArmy;
+        battleMapMessenger.playerArmy = new BattleArmyData(playerArmy);
+        battleMapMessenger.enemyArmy = new BattleArmyData(enemyArmy);
+        battleMapMessenger.SetUnitDeploymentCounts(battleMapMessenger.playerArmy);
         battleMapMessenger.seedData = new BattleMapSeedData(
             terrainSampler.TestTerrainSampleAtPosition(enemyArmy.transform.position, 32),
             battleRegion.BiomePalette,

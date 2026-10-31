@@ -10,6 +10,9 @@ using UnityEngine;
 public class BattlefieldAnnouncer : MonoBehaviour
 {
     public static BattlefieldAnnouncer i;
+    public static BattlefieldAnnouncer generalSpeechBubble; //I call this a doubleton (crap architecture but terse coding)
+    [SerializeField] bool cornerAnnouncer = false; //whether or not this is the main UI announcer in the corner (general's speeches use a separate one)
+    [SerializeField] bool isGeneralSpeechBubble = false;
     public static event Action<string> onBattleFieldMessage;
     [SerializeField] Transform textParent; //should have a horizontal layout group for the text objects
     [SerializeField] GameObject textPrefab; //white announcement text for whatever message, must have a TMPro text comp
@@ -19,7 +22,8 @@ public class BattlefieldAnnouncer : MonoBehaviour
 
     void Awake()
     {
-        if(i==null) i = this;
+        if(i==null && cornerAnnouncer) i = this;
+        else if(isGeneralSpeechBubble) generalSpeechBubble = this;
     }
 
     void OnEnable()

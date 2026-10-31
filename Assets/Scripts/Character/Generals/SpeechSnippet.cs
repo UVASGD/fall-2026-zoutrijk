@@ -8,9 +8,16 @@ using System.Collections.Generic;
 public class SpeechSnippet : ScriptableObject
 {
     [SerializeField] SnippetType snippetType; //whether the trait is intro, body, or outro text
+    public SnippetType SnippetType => snippetType;
     [TextArea] [SerializeField] List<string> snippetText; //the content of the snippet (formatted as a text area in the inspector)
+    public List<string> SnippetText => snippetText;
     [SerializeField] float snippetChance; //if all conditions are met, what is the chance that this snippet is chosen for a speech
     [SerializeReference] List<SnippetCondition> conditions; //the conditions for causing the snippet to trigger
+
+    public bool RollSnippetChance()
+    {
+        return Random.value < snippetChance;
+    }
 
     /// <summary>
     /// Checks if the snippet should fire based on the list of snippet conditions.

@@ -15,6 +15,7 @@ public class MouseController : MonoBehaviour
     private OverlayTile hoveredTile; //the tile that the mouse is currently hovering over
     [SerializeField] private OverlayTile clickedTile; //the last tile that was left clicked
     public event Action<BattleState> updateBattleState;
+    public event Action<OverlayTile> deploymentTileClicked;
     private readonly List<OverlayTile> formationPreviewTiles = new List<OverlayTile>();
     private bool isRightDraggingFormation;
     private bool suppressRegularRightClickThisFrame;
@@ -158,6 +159,16 @@ public class MouseController : MonoBehaviour
     }
     private void HandleFocusedTile(BattleState battleState)
     {
+        if (battleState == BattleState.Deployment)
+        {
+            if (Mouse.current.leftButton.wasPressedThisFrame && hoveredTile != null && hoveredTile.RestingObject == null)
+            {
+                deploymentTileClicked?.Invoke(hoveredTile);
+            }
+
+            return;
+        }
+
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             clickedTile = hoveredTile;

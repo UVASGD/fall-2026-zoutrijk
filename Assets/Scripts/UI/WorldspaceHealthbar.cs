@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class WorldspaceHealthbar : MonoBehaviour
 {
-    private const float baseFillWidth = 90f;
+    private const float baseFillWidth = 45f;
     [HideInInspector] public bool barPrompted = false;
     [SerializeField] GameObject graphicsParent;
     [SerializeField] RectTransform fillImage;
-    float verticalOffset = 50f; //the vertical offset of this bar off the fieldcharacter.
+    float verticalOffset = 35f; //the vertical offset of this bar off the fieldcharacter.
     
     /// <summary>
     /// Called the first time damage is taken to make the bar visible (to reduce clutter on undamaged units)
@@ -16,6 +16,14 @@ public class WorldspaceHealthbar : MonoBehaviour
     {
         graphicsParent.SetActive(true);
         barPrompted = true;
+    }
+
+    /// <summary>
+    /// Called on unit death to remove a healthbar from the screen.
+    /// </summary>
+    public void CancelHealthbar()
+    {
+        graphicsParent.SetActive(false);
     }
 
     /// <summary>
@@ -33,7 +41,7 @@ public class WorldspaceHealthbar : MonoBehaviour
     /// <param name="worldposition"></param>
     public void UpdateBarPosition(Vector2 worldposition)
     {
-        Vector2 screenPos = Camera.main.ScreenToWorldPoint(worldposition);
-        gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(screenPos.x, screenPos.y + verticalOffset);
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(worldposition);
+        gameObject.GetComponent<RectTransform>().position = screenPosition + Vector3.up * verticalOffset;
     }
 }

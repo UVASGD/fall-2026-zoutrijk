@@ -43,7 +43,10 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     [SerializeField] private Vector2Int defaultTilePosition = new Vector2Int(4, 4);
     void Start()
     {
-        SetupUnit(defaultBase, defaultTilePosition);
+        if (unit == null)
+        {
+            SetupUnit(defaultBase, defaultTilePosition);
+        }
     }
     public void SetupUnit(UnitBase uBase, Vector2 tilePosition)
     {
@@ -145,6 +148,11 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             return;
         }
 
+        if (healthBar.barPrompted)
+        {
+            healthBar.UpdateBarPosition(transform.position);
+        }
+
         if (PlayerControlled)
         {
             if (CurrentBehavior == BehaviorState.Idle && attackTarget == null)
@@ -193,8 +201,6 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             SetAttackTarget(nearestPlayerTarget);
         }
 
-        //update bar position if it has been prompted before
-        if(healthBar.barPrompted) healthBar.UpdateBarPosition(gameObject.transform.position);
     }
 
     private int GetTileDistanceTo(FieldCharacter other)
@@ -923,6 +929,9 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         if(isGeneral) BattlefieldAnnouncer.i.BattlefieldAnnouncement($"General {generalName} has died");
 
         if (GlobalEditorSettings.i.RichDebugLogs) Debug.Log("Unit should die here");
+        
+        //deactivate health bar so it no longer shows onscreen
+        healthBar.CancelHealthbar();
     }
 
     public WorldObjectPreviewData ExposeObjectInfo()
