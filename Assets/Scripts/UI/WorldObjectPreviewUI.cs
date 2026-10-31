@@ -33,13 +33,13 @@ public class WorldObjectPreviewUI : MonoBehaviour
     }
 
     private MapObject currentObject; //the current object being displayed
-    public void OpenMenu(MapObject mapObject)
+    public void OpenMenu(MapObject mapObject) //disabled due to deprecated function
     {
-        currentObject = mapObject;
+        // currentObject = mapObject;
 
-        RefreshPreviewMenu();
+        // RefreshPreviewMenu();
 
-        graphicsParent.gameObject.SetActive(true);
+        // graphicsParent.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -57,10 +57,10 @@ public class WorldObjectPreviewUI : MonoBehaviour
 
     }
 
-    public void UpdateCurrentObject(MapObject newObject)
+    public void UpdateCurrentObject(MapObject newObject) //deprecated use
     {
-        currentObject = newObject;
-        RefreshPreviewMenu();
+        // currentObject = newObject;
+        // RefreshPreviewMenu();
     }
 
     public void HideMenu()

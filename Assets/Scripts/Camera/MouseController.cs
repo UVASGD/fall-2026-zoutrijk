@@ -170,7 +170,6 @@ public class MouseController : MonoBehaviour
 
             if (clickedObject != null)
             {
-                WorldObjectPreviewUI.i.OpenMenu(clickedObject);
                 updateBattleState?.Invoke(BattleState.UnitSelected);
 
                 if (clickedCharacter != null && clickedCharacter.PlayerControlled)
