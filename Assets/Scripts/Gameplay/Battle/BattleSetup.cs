@@ -9,8 +9,10 @@ public class BattleSetup : MonoBehaviour
     public static BattleSetup i;
     [SerializeField] private FieldCharacter fieldCharacterPrefab;
     [SerializeField] private DeploymentPhaseUI deploymentPhaseUI;
+    [SerializeField] SpeechStitcher speechStitcher;
     private UnitBase selectedUnitBase;
     private readonly List<UnitDeploymentCount> deploymentCounts = new List<UnitDeploymentCount>();
+    private List<string> deploymentSpeech;
 
     void Awake()
     {
@@ -53,7 +55,7 @@ public class BattleSetup : MonoBehaviour
     {
         BattleManager.i.SetBattleSpeed(0); //set the battle speed to paused to start
         
-        //pick a region for the player to be able to place their units
+        //pick a region for the player to be able to place their units (TODO)
 
         BattleMapMessenger battleMapMessenger = FindAnyObjectByType<BattleMapMessenger>();
         if (battleMapMessenger == null)
@@ -74,6 +76,8 @@ public class BattleSetup : MonoBehaviour
             deploymentPhaseUI.deploymentEnded += EndDeployment;
             deploymentPhaseUI.UpdatePhaseText("Deployment Phase");
         }
+
+        deploymentSpeech = speechStitcher.StitchSpeeches(battleMapMessenger.battleContext);
     }
 
     public void SelectUnitBase(UnitBase unitBase)
@@ -116,6 +120,11 @@ public class BattleSetup : MonoBehaviour
         FieldCharacter character = Instantiate(fieldCharacterPrefab);
         character.PlayerControlled = true;
         character.SetupUnit(selectedUnitBase, tile.gridLocation);
+        ClickDragCam cameraController = Camera.main?.GetComponent<ClickDragCam>();
+        if (cameraController != null)
+        {
+            cameraController.PlaceCamera(character.transform.position);
+        }
         deploymentPhaseUI?.TryDecrement(selectedUnitBase);
         selectedUnitBase = deploymentCount.count > 0 ? selectedUnitBase : null;
     }
@@ -124,5 +133,6 @@ public class BattleSetup : MonoBehaviour
     {
         selectedUnitBase = null;
         BattleManager.i.EndDeployment();
+        StartCoroutine(speechStitcher.ReadSpeech(deploymentSpeech));
     }
 }

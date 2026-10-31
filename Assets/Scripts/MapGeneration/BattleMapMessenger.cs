@@ -7,6 +7,7 @@ public class BattleMapMessenger : MonoBehaviour
     public BattleMapSeedData seedData;
     public BattleArmyData playerArmy;
     public BattleArmyData enemyArmy;
+    [HideInInspector] public BattleContext battleContext;
     public List<UnitDeploymentCount> unitDeploymentCounts = new List<UnitDeploymentCount>();
 
     public void SetUnitDeploymentCounts(BattleArmyData army)

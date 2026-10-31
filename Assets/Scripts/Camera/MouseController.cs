@@ -273,7 +273,7 @@ public class MouseController : MonoBehaviour
 
             if (GetCharacterScreenRect(character).Overlaps(selectionRect))
             {
-                character.TilePosition?.ShowTile();
+                character.TargetTile?.ShowTile();
                 highlightedUnits.Add(character);
             }
         }
@@ -421,6 +421,12 @@ public class MouseController : MonoBehaviour
 
         try
         {
+            OverlayTile previousTarget = toMove.TargetTile;
+            if (previousTarget != null && previousTarget != destination)
+            {
+                previousTarget.HideTile();
+            }
+
             if (toMove.TilePosition != null)
             {
                 toMove.TilePosition.HideTile();
@@ -429,7 +435,14 @@ public class MouseController : MonoBehaviour
 
             if (path.Count > 0)
             {
-                yield return toMove.setMoveOrders(path);
+                destination?.ShowTile();
+                int requestVersion = toMove.SetMoveOrders(path);
+                yield return toMove.FollowPath(requestVersion);
+
+                if (!toMove.IsMovementRequestCurrent(requestVersion))
+                {
+                    yield break;
+                }
             }
 
             if (destination != null)
@@ -926,7 +939,7 @@ public class MouseController : MonoBehaviour
     {
         selectedCharacters.Clear();
         selectedCharacters.AddRange(units.Where(unit => unit != null));
-        selectedCharacters.ForEach(unit => unit.TilePosition?.ShowTile());
+        selectedCharacters.ForEach(unit => unit.TargetTile?.ShowTile());
         characterToMoveSource = selectedCharacters.Count > 0 ? selectedCharacters[0].TilePosition : null;
         BattleUI.i.SetHighlightedUnits(selectedCharacters);
 

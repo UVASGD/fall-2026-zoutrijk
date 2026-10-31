@@ -1,6 +1,7 @@
 /// <summary>
 /// Context for a battle as used by SpeechSnippets to check against their list of conditions
 /// </summary>
+[System.Serializable]
 public class BattleContext
 {
     public General playerGeneral;

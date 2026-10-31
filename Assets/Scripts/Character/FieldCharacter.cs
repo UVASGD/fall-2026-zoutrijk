@@ -17,6 +17,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     private OverlayTile targetTile;
     public OverlayTile TargetTile => targetTile;
     [SerializeField] List<OverlayTile> movementOrders;
+    private int movementRequestVersion;
     public string internalCharacterName { get; private set; }
     public string unitDisplayName { get; private set; } //determined from province of recruitment probably? like 2nd Dolebin Archers
     [SerializeField] CharacterSpriteHandler spriteHandler;
@@ -92,8 +93,19 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     /// <param name="tiles"></param>
     public IEnumerator setMoveOrders(List<OverlayTile> tiles)
     {
+        int requestVersion = SetMoveOrders(tiles);
+        yield return FollowPath(requestVersion);
+    }
+
+    public int SetMoveOrders(List<OverlayTile> tiles)
+    {
         movementOrders = tiles;
-        yield return FollowPath();
+        return ++movementRequestVersion;
+    }
+
+    public bool IsMovementRequestCurrent(int requestVersion)
+    {
+        return requestVersion == movementRequestVersion;
     }
 
     [SerializeField] private float baseMoveSpeed = 6f;
@@ -502,7 +514,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             if (path != null && path.Count > 0)
             {
                 CurrentBehavior = BehaviorState.Moving;
-                yield return setMoveOrders(path);
+                int requestVersion = SetMoveOrders(path);
+                yield return FollowPath(requestVersion);
             }
 
             if (attackTarget == null || !attackTarget.gameObject.activeInHierarchy || attackTarget.UnitHP <= 0)
@@ -749,15 +762,15 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     /// <summary>
     /// Moves the character through a valid path without pausing at each tile. Occupancy is updated only when the next tile is reached.
     /// </summary>
-    private IEnumerator FollowPath()
+    public IEnumerator FollowPath(int requestVersion)
     {
-        if (movementOrders == null || movementOrders.Count == 0)
+        if (!IsMovementRequestCurrent(requestVersion) || movementOrders == null || movementOrders.Count == 0)
         {
             yield break;
         }
 
         List<OverlayTile> activeMovementOrders = new List<OverlayTile>(movementOrders);
-        if (activeMovementOrders.Count == 0)
+        if (!IsMovementRequestCurrent(requestVersion) || activeMovementOrders.Count == 0)
         {
             yield break;
         }
@@ -804,9 +817,19 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         while (elapsedTime < totalDuration)
         {
+            if (!IsMovementRequestCurrent(requestVersion))
+            {
+                yield break;
+            }
+
             while (MouseController.i != null && MouseController.i.MovementPaused)
             {
                 yield return null;
+            }
+
+            if (!IsMovementRequestCurrent(requestVersion))
+            {
+                yield break;
             }
 
             float normalizedTime = Mathf.Clamp01(elapsedTime / totalDuration);
@@ -822,6 +845,11 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             float timeScale = BattleManager.i != null ? BattleManager.i.TimeScaleMultiplier : 1f;
             elapsedTime += Time.deltaTime * Mathf.Max(1f, timeScale);
             yield return null;
+        }
+
+        if (!IsMovementRequestCurrent(requestVersion))
+        {
+            yield break;
         }
 
         transform.position = pathPoints[pathPoints.Count - 1];

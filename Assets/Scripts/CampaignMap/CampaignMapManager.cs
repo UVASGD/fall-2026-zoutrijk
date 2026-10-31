@@ -204,8 +204,13 @@ public class CampaignMapManager : MonoBehaviour
         }
 
         battleMapMessenger.playerArmy = new BattleArmyData(playerArmy);
+        
         battleMapMessenger.enemyArmy = new BattleArmyData(enemyArmy);
+        
         battleMapMessenger.SetUnitDeploymentCounts(battleMapMessenger.playerArmy);
+        
+        battleMapMessenger.battleContext = new BattleContext(playerArmy.General, enemyArmy.General, playerArmy.units.Count, enemyArmy.units.Count, true); //TODO: make variable depending on if the battle is player-attacker or not.
+        
         battleMapMessenger.seedData = new BattleMapSeedData(
             terrainSampler.TestTerrainSampleAtPosition(enemyArmy.transform.position, 32),
             battleRegion.BiomePalette,

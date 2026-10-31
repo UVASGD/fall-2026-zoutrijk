@@ -18,9 +18,9 @@ MonoBehaviour:
   - key: 0
     value: 0
   - key: 1
-    value: 1
+    value: 0
   - key: 2
-    value: 2
+    value: 0
   - key: 3
     value: 0
   associatedNoble: {fileID: 11400000, guid: cdba0e71a68e4b5459da6deecbe121fe, type: 2}
@@ -42,3 +42,7 @@ MonoBehaviour:
       value:
         TraitDef: {fileID: 11400000, guid: 486db191294215e4e87572c248a97ba9, type: 2}
         CurrentPoints: 5
+    - key: EDUCATION
+      value:
+        TraitDef: {fileID: 11400000, guid: 3bc942fc97798744faabdf24e7069c72, type: 2}
+        CurrentPoints: 3

@@ -3216,6 +3216,7 @@ GameObject:
   - component: {fileID: 1843530662}
   - component: {fileID: 1843530663}
   - component: {fileID: 1843530664}
+  - component: {fileID: 1843530665}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -3290,6 +3291,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BattleSetup
   fieldCharacterPrefab: {fileID: 2049030921493629436, guid: a12d1b5c685bce34aaa67b0d9c3655b2, type: 3}
   deploymentPhaseUI: {fileID: 1688477580}
+  speechStitcher: {fileID: 1843530665}
+--- !u!114 &1843530665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1843530659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cbf1222847f3eb4d9f12304d9c47dd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpeechStitcher
 --- !u!1 &1901633905
 GameObject:
   m_ObjectHideFlags: 0
