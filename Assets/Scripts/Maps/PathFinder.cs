@@ -1,10 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class PathFinder
 {
+    private static readonly Vector2Int[] directions =
+    {
+        new Vector2Int(0, 1),
+        new Vector2Int(1, 1),
+        new Vector2Int(1, 0),
+        new Vector2Int(1, -1),
+        new Vector2Int(0, -1),
+        new Vector2Int(-1, -1),
+        new Vector2Int(-1, 0),
+        new Vector2Int(-1, 1)
+    };
+
     //return a list of tiles a path must go through to reach a set target.
     public List<OverlayTile> FindPath(OverlayTile source, OverlayTile target)
     {
@@ -13,21 +24,30 @@ public class PathFinder
 
     public List<OverlayTile> FindPath(OverlayTile source, OverlayTile target, HashSet<OverlayTile> ignoredTiles)
     {
-        if (source == null || target == null)
+        if (source == null || target == null || MapManager.i == null || MapManager.i.map == null)
         {
             return new List<OverlayTile>();
         }
 
-        ResetSearchState();
-
         List<OverlayTile> openList = new List<OverlayTile>(); //tiles we want to check in the next loop iteration
-        List<OverlayTile> closedList = new List<OverlayTile>(); //tiles we do not need to recheck
+        HashSet<OverlayTile> closedList = new HashSet<OverlayTile>(); //tiles we do not need to recheck
+        HashSet<OverlayTile> discoveredTiles = new HashSet<OverlayTile>();
+        List<OverlayTile> searchedTiles = new List<OverlayTile>();
         
         openList.Add(source);
+        discoveredTiles.Add(source);
+        searchedTiles.Add(source);
 
         while(openList.Count > 0)
         {
-            OverlayTile currentOverlayTile = openList.OrderBy(x => x.F).First();
+            OverlayTile currentOverlayTile = openList[0];
+            for (int i = 1; i < openList.Count; i++)
+            {
+                if (openList[i].F < currentOverlayTile.F)
+                {
+                    currentOverlayTile = openList[i];
+                }
+            }
 
             openList.Remove(currentOverlayTile);
             closedList.Add(currentOverlayTile);
@@ -35,13 +55,18 @@ public class PathFinder
             if(currentOverlayTile == target)
             {
                 //found target tile, finalize path
-                return GetFinishedList(source, target);
+                List<OverlayTile> finishedPath = GetFinishedList(source, target);
+                ResetSearchState(searchedTiles);
+                return finishedPath;
             }
 
-            var neighborTiles = GetNeighborTiles(currentOverlayTile);
-
-            foreach(var neighbor in neighborTiles)
+            foreach (Vector2Int direction in directions)
             {
+                if (!MapManager.i.map.TryGetValue(currentOverlayTile.gridLocation + direction, out OverlayTile neighbor))
+                {
+                    continue;
+                }
+
                 if (closedList.Contains(neighbor))
                 {
                     continue;
@@ -56,8 +81,13 @@ public class PathFinder
                 int movementCost = GetMovementCost(currentOverlayTile, neighbor);
                 int newG = currentOverlayTile.G + movementCost;
 
-                if (neighbor.previous == null || newG < neighbor.G)
+                if (!discoveredTiles.Contains(neighbor) || newG < neighbor.G)
                 {
+                    if (discoveredTiles.Add(neighbor))
+                    {
+                        searchedTiles.Add(neighbor);
+                    }
+
                     neighbor.G = newG;
                     neighbor.H = GetDistance(target, neighbor);
                     neighbor.previous = currentOverlayTile;
@@ -70,6 +100,7 @@ public class PathFinder
             }
         }
 
+        ResetSearchState(searchedTiles);
         return new List<OverlayTile>();
     }
 
@@ -119,14 +150,14 @@ public class PathFinder
         return finishedList;
     }
 
-    private void ResetSearchState()
+    private void ResetSearchState(List<OverlayTile> searchedTiles)
     {
-        if (MapManager.i == null || MapManager.i.map == null)
+        if (searchedTiles == null)
         {
             return;
         }
 
-        foreach (OverlayTile tile in MapManager.i.map.Values)
+        foreach (OverlayTile tile in searchedTiles)
         {
             if (tile == null)
             {
@@ -155,38 +186,4 @@ public class PathFinder
         return dx == 1 && dy == 1 ? 14 : 10;
     }
 
-    private List<OverlayTile> GetNeighborTiles(OverlayTile sourceTile)
-    {
-        var map = MapManager.i != null ? MapManager.i.map : null;
-        if (map == null)
-        {
-            return new List<OverlayTile>();
-        }
-
-        List<OverlayTile> neighbors = new List<OverlayTile>();
-
-        Vector2Int[] directions = new[]
-        {
-            new Vector2Int(0, 1),
-            new Vector2Int(1, 1),
-            new Vector2Int(1, 0),
-            new Vector2Int(1, -1),
-            new Vector2Int(0, -1),
-            new Vector2Int(-1, -1),
-            new Vector2Int(-1, 0),
-            new Vector2Int(-1, 1)
-        };
-
-        foreach (Vector2Int direction in directions)
-        {
-            Vector2Int locationToCheck = sourceTile.gridLocation + direction;
-
-            if (map.ContainsKey(locationToCheck))
-            {
-                neighbors.Add(map[locationToCheck]);
-            }
-        }
-
-        return neighbors;
-    }
 }

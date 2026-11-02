@@ -40,9 +40,22 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     private FieldCharacter attackTarget;
     private Coroutine attackRoutine;
     private bool isDead;
+    private static bool victoryAnnounced;
+    private static int enemiesKilled;
+    private static int friendlyUnitsKilled;
+
+    public static void ResetBattleAnnouncements()
+    {
+        victoryAnnounced = false;
+        enemiesKilled = 0;
+        friendlyUnitsKilled = 0;
+    }
     private static Vector2 positionalOffset = new Vector2(0, 0.25f); //change to make it so character positions reflect properly on the isometric grid
     private static readonly HashSet<FieldCharacter> activeCharacters = new HashSet<FieldCharacter>();
     [SerializeField] private float idleTargetCheckInterval = 0.2f;
+    [SerializeField] private int playerPathThreatRange = 10;
+    [SerializeField] private int playerAutoAttackRange = 5;
+    private const int deathRetargetRange = 10;
     private float idleTargetCheckTimer;
     #endregion
     #region Setup
@@ -131,7 +144,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     [SerializeField] private float enemyAggroRange = 6f;
     [SerializeField] private AnimationCurve movementEase = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
     private float formationMoveSpeedOverride;
-    private float BaseMoveSpeed => unit != null && unit._base != null ? baseMoveSpeed + (unit._base.Agility * 0.5f) : baseMoveSpeed;
+    private float BaseMoveSpeed => unit != null ? baseMoveSpeed + (unit.agility * 0.5f) : baseMoveSpeed;
     public float CurrentMoveSpeed => formationMoveSpeedOverride > 0f ? formationMoveSpeedOverride : BaseMoveSpeed;
 
     public void SetFormationMoveSpeed(float speed)
@@ -191,10 +204,12 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         if (PlayerControlled)
         {
-            if (CurrentBehavior == BehaviorState.Idle && attackTarget == null && ShouldCheckForIdleTarget())
+            if (attackTarget == null && ShouldCheckForIdleTarget())
             {
-                FieldCharacter attacker = FindNearestAttackingEnemy();
-                if (attacker != null && GetTileDistanceTo(attacker) <= UnitWeapon.Range)
+                FieldCharacter attacker = CurrentBehavior == BehaviorState.Moving
+                    ? FindNearestEnemyNearMovementPath()
+                    : FindNearestAttackingEnemy();
+                if (attacker != null)
                 {
                     SetAttackTarget(attacker);
                 }
@@ -302,7 +317,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             }
 
             int distance = GetTileDistanceTo(potentialAttacker);
-            bool isThreatening = potentialAttacker.AttackTarget == this || distance <= 1;
+            bool isThreatening = potentialAttacker.AttackTarget == this
+                || distance <= playerAutoAttackRange;
             if (!isThreatening)
             {
                 continue;
@@ -316,6 +332,85 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         }
 
         return nearestAttacker;
+    }
+
+    private FieldCharacter FindNearestEnemyWithinRange(int range)
+    {
+        FieldCharacter nearestEnemy = null;
+        int nearestDistance = int.MaxValue;
+
+        foreach (FieldCharacter potentialEnemy in activeCharacters)
+        {
+            if (potentialEnemy == null
+                || potentialEnemy == this
+                || potentialEnemy.PlayerControlled == PlayerControlled
+                || potentialEnemy.UnitHP <= 0
+                || potentialEnemy.TilePosition == null)
+            {
+                continue;
+            }
+
+            int distance = GetTileDistanceTo(potentialEnemy);
+            if (distance <= range && distance < nearestDistance)
+            {
+                nearestEnemy = potentialEnemy;
+                nearestDistance = distance;
+            }
+        }
+
+        return nearestEnemy;
+    }
+
+    private FieldCharacter FindNearestEnemyNearMovementPath()
+    {
+        if (movementOrders == null || movementOrders.Count == 0)
+        {
+            return null;
+        }
+
+        FieldCharacter nearestEnemy = null;
+        int nearestPathDistance = int.MaxValue;
+        int nearestEnemyDistance = int.MaxValue;
+
+        foreach (FieldCharacter potentialEnemy in activeCharacters)
+        {
+            if (potentialEnemy == null
+                || potentialEnemy == this
+                || potentialEnemy.PlayerControlled
+                || potentialEnemy.UnitHP <= 0
+                || potentialEnemy.TilePosition == null)
+            {
+                continue;
+            }
+
+            int enemyDistance = GetTileDistanceTo(potentialEnemy);
+            for (int i = 0; i < movementOrders.Count; i++)
+            {
+                OverlayTile pathTile = movementOrders[i];
+                if (pathTile == null)
+                {
+                    continue;
+                }
+
+                int pathDistance = Mathf.Max(
+                    Mathf.Abs(pathTile.gridLocation.x - potentialEnemy.TilePosition.gridLocation.x),
+                    Mathf.Abs(pathTile.gridLocation.y - potentialEnemy.TilePosition.gridLocation.y));
+                if (pathDistance > playerPathThreatRange)
+                {
+                    continue;
+                }
+
+                if (pathDistance < nearestPathDistance
+                    || (pathDistance == nearestPathDistance && enemyDistance < nearestEnemyDistance))
+                {
+                    nearestEnemy = potentialEnemy;
+                    nearestPathDistance = pathDistance;
+                    nearestEnemyDistance = enemyDistance;
+                }
+            }
+        }
+
+        return nearestEnemy;
     }
 
     private static readonly Dictionary<FieldCharacter, int> activeMeleeAttackCountByTarget = new Dictionary<FieldCharacter, int>();
@@ -430,50 +525,57 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         int bestTargetDistance = int.MaxValue;
         int bestPathLength = int.MaxValue;
 
-        foreach (OverlayTile tile in MapManager.i.map.Values)
+        Vector2Int targetLocation = target.TilePosition.gridLocation;
+        int range = Mathf.Max(1, UnitWeapon.Range);
+        for (int x = targetLocation.x - range; x <= targetLocation.x + range; x++)
         {
-            if (tile == null || tile.isBlocked)
+            for (int y = targetLocation.y - range; y <= targetLocation.y + range; y++)
             {
-                continue;
-            }
+                if (!MapManager.i.TryGetOverlayTile(new Vector2Int(x, y), out OverlayTile tile)
+                    || tile == null
+                    || tile.isBlocked)
+                {
+                    continue;
+                }
 
-            if (tile == target.TilePosition)
-            {
-                continue;
-            }
+                if (tile == target.TilePosition)
+                {
+                    continue;
+                }
 
-            if (tile.RestingObject != null && !ReferenceEquals(tile.RestingObject, this) && !ReferenceEquals(tile.RestingObject, target))
-            {
-                continue;
-            }
+                if (tile.RestingObject != null && !ReferenceEquals(tile.RestingObject, this) && !ReferenceEquals(tile.RestingObject, target))
+                {
+                    continue;
+                }
 
-            if (reservedAttackTilesByTarget.TryGetValue(target, out HashSet<OverlayTile> reservedTiles) && reservedTiles.Contains(tile) && (!reservedAttackTileByAttacker.TryGetValue(this, out OverlayTile currentTile) || currentTile != tile))
-            {
-                continue;
-            }
+                if (reservedAttackTilesByTarget.TryGetValue(target, out HashSet<OverlayTile> reservedTiles) && reservedTiles.Contains(tile) && (!reservedAttackTileByAttacker.TryGetValue(this, out OverlayTile currentTile) || currentTile != tile))
+                {
+                    continue;
+                }
 
-            int tileDistanceToTarget = Mathf.Max(Mathf.Abs(tile.gridLocation.x - target.TilePosition.gridLocation.x), Mathf.Abs(tile.gridLocation.y - target.TilePosition.gridLocation.y));
-            if (tileDistanceToTarget > UnitWeapon.Range)
-            {
-                continue;
-            }
+                int tileDistanceToTarget = Mathf.Max(Mathf.Abs(tile.gridLocation.x - targetLocation.x), Mathf.Abs(tile.gridLocation.y - targetLocation.y));
+                if (tileDistanceToTarget > UnitWeapon.Range)
+                {
+                    continue;
+                }
 
-            if (UnitWeapon.Range <= 1 && tileDistanceToTarget != 1)
-            {
-                continue;
-            }
+                if (UnitWeapon.Range <= 1 && tileDistanceToTarget != 1)
+                {
+                    continue;
+                }
 
-            List<OverlayTile> path = pathFinder.FindPath(TilePosition, tile);
-            if (path == null || (path.Count == 0 && tile != TilePosition))
-            {
-                continue;
-            }
+                List<OverlayTile> path = pathFinder.FindPath(TilePosition, tile);
+                if (path == null || (path.Count == 0 && tile != TilePosition))
+                {
+                    continue;
+                }
 
-            if (tileDistanceToTarget < bestTargetDistance || (tileDistanceToTarget == bestTargetDistance && path.Count < bestPathLength))
-            {
-                bestTile = tile;
-                bestTargetDistance = tileDistanceToTarget;
-                bestPathLength = path.Count;
+                if (tileDistanceToTarget < bestTargetDistance || (tileDistanceToTarget == bestTargetDistance && path.Count < bestPathLength))
+                {
+                    bestTile = tile;
+                    bestTargetDistance = tileDistanceToTarget;
+                    bestPathLength = path.Count;
+                }
             }
         }
 
@@ -509,6 +611,11 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             attackTarget = null;
             CurrentBehavior = BehaviorState.Idle;
             return;
+        }
+
+        if (CurrentBehavior == BehaviorState.Moving)
+        {
+            InterruptUnit();
         }
 
         if (attackRoutine != null)
@@ -584,90 +691,84 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
     private IEnumerator AttackAfterDelay()
     {
-        if (unit == null || unit._base == null || attackTarget == null)
+        while (unit != null && unit._base != null && attackTarget != null)
         {
-            attackRoutine = null;
-            yield break;
-        }
-
-        if (GetTileDistanceTo(attackTarget) > UnitWeapon.Range)
-        {
-            attackTarget = null;
-            CurrentBehavior = BehaviorState.Idle;
-            attackRoutine = null;
-            yield break;
-        }
-
-        AttackType attackType = UnitWeapon != null && (UnitWeapon.Type == WeaponType.Bow || UnitWeapon.Type == WeaponType.Crossbow) ? AttackType.Ranged : AttackType.Melee;
-        int attackSlot = 0;
-
-        if (attackType == AttackType.Melee)
-        {
-            attackSlot = AcquireAttackSlot(attackTarget);
-        }
-
-        float delay = Mathf.Max(0f, unit._base.AttackDelay) + (attackType == AttackType.Melee ? attackSlot * 0.08f : 0f);
-
-        while (delay > 0f)
-        {
-            while (MouseController.i != null && MouseController.i.MovementPaused)
+            FieldCharacter target = attackTarget;
+            if (GetTileDistanceTo(target) > UnitWeapon.Range)
             {
+                attackTarget = null;
+                CurrentBehavior = BehaviorState.Idle;
+                attackRoutine = null;
+                yield break;
+            }
+
+            AttackType attackType = UnitWeapon != null && (UnitWeapon.Type == WeaponType.Bow || UnitWeapon.Type == WeaponType.Crossbow) ? AttackType.Ranged : AttackType.Melee;
+            int attackSlot = attackType == AttackType.Melee ? AcquireAttackSlot(target) : 0;
+            float delay = Mathf.Max(0f, unit._base.AttackDelay) + (attackType == AttackType.Melee ? attackSlot * 0.08f : 0f);
+
+            while (delay > 0f)
+            {
+                while (MouseController.i != null && MouseController.i.MovementPaused)
+                {
+                    yield return null;
+                }
+
+                float timeScale = BattleManager.i != null ? BattleManager.i.TimeScaleMultiplier : 1f;
+                delay -= Time.deltaTime * Mathf.Max(1f, timeScale);
                 yield return null;
             }
 
-            float timeScale = BattleManager.i != null ? BattleManager.i.TimeScaleMultiplier : 1f;
-            delay -= Time.deltaTime * Mathf.Max(1f, timeScale);
+            if (attackTarget != target || target == null || target.UnitHP <= 0)
+            {
+                if (attackType == AttackType.Melee)
+                {
+                    ReleaseAttackSlot(target);
+                }
+
+                attackRoutine = null;
+                yield break;
+            }
+
+            if (attackType == AttackType.Melee)
+            {
+                CurrentBehavior = BehaviorState.MeleeAttacking;
+                yield return StartCoroutine(BopTowardsTarget(target));
+            }
+            else
+            {
+                CurrentBehavior = BehaviorState.RangeAttacking;
+            }
+
+            if (BattleManager.i != null)
+            {
+                BattleManager.i.PerformAttack(this, target, attackType);
+            }
+
+            if (attackType == AttackType.Melee)
+            {
+                ReleaseAttackSlot(target);
+            }
+
+            if (target.UnitHP <= 0 || !target.gameObject.activeInHierarchy)
+            {
+                ReleaseAttackTile(target);
+                attackTarget = null;
+                CurrentBehavior = BehaviorState.Idle;
+                attackRoutine = null;
+                yield break;
+            }
+
+            if (attackType != AttackType.Melee)
+            {
+                attackRoutine = null;
+                CurrentBehavior = BehaviorState.Idle;
+                yield break;
+            }
+
             yield return null;
         }
 
-        if (attackTarget == null)
-        {
-            if (attackType == AttackType.Melee)
-            {
-                ReleaseAttackSlot(attackTarget);
-            }
-
-            attackRoutine = null;
-            yield break;
-        }
-
-        if (attackType == AttackType.Melee)
-        {
-            CurrentBehavior = BehaviorState.MeleeAttacking;
-            yield return StartCoroutine(BopTowardsTarget(attackTarget));
-        }
-        else
-        {
-            CurrentBehavior = BehaviorState.RangeAttacking;
-        }
-
-        if (BattleManager.i != null)
-        {
-            BattleManager.i.PerformAttack(this, attackTarget, attackType);
-        }
-
-        if (attackType == AttackType.Melee)
-        {
-            ReleaseAttackSlot(attackTarget);
-        }
-
-        if (attackTarget == null || attackTarget.UnitHP <= 0)
-        {
-            ReleaseAttackTile(attackTarget);
-            CurrentBehavior = BehaviorState.Idle;
-            attackRoutine = null;
-            yield break;
-        }
-
-        if (attackType == AttackType.Melee)
-        {
-            attackRoutine = StartCoroutine(AttackAfterDelay());
-        }
-        else
-        {
-            attackRoutine = null;
-            CurrentBehavior = BehaviorState.Idle;
-        }
+        attackRoutine = null;
     }
 
     /// <summary>
@@ -787,7 +888,16 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     /// </summary>
     public void InterruptUnit()
     {
-        
+        movementRequestVersion++;
+        movementOrders?.Clear();
+
+        if (tilePosition != null)
+        {
+            tilePosition.SetRestingObject(this);
+            targetTile = tilePosition;
+        }
+
+        CurrentBehavior = BehaviorState.Idle;
     }
 
     public void LimboState()
@@ -944,7 +1054,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         }
         else
         {
-            StartCoroutine(spriteHandler?.HitFlash()); //play hitflash animation
+            spriteHandler?.StartHitFlash();
         }
         return null;
     }
@@ -971,6 +1081,23 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         }
 
         isDead = true;
+        if (PlayerControlled)
+        {
+            friendlyUnitsKilled++;
+        }
+        else
+        {
+            enemiesKilled++;
+        }
+
+        List<FieldCharacter> unitsTargetingThis = new List<FieldCharacter>();
+        foreach (FieldCharacter character in activeCharacters)
+        {
+            if (character != null && character.attackTarget == this)
+            {
+                unitsTargetingThis.Add(character);
+            }
+        }
         onFieldCharacterDied?.Invoke(this);
 
         if (tilePosition != null)
@@ -987,6 +1114,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         if (spriteHandler != null)
         {
+            spriteHandler.StopHitFlash();
             spriteHandler.gameObject.SetActive(false);
         }
 
@@ -1005,6 +1133,40 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         
         //deactivate health bar so it no longer shows onscreen
         healthBar.CancelHealthbar();
+
+        if (!PlayerControlled && !victoryAnnounced && EnemyDeathCheck())
+        {
+            victoryAnnounced = true;
+            BattlefieldAnnouncer.i?.BattlefieldAnnouncement(
+                $"Victory! Enemies killed: {enemiesKilled}. Friendly units killed: {friendlyUnitsKilled}.");
+        }
+
+        foreach (FieldCharacter unitTargetingThis in unitsTargetingThis)
+        {
+            if (unitTargetingThis != null && unitTargetingThis.gameObject.activeInHierarchy)
+            {
+                unitTargetingThis.SetAttackTarget(
+                    unitTargetingThis.FindNearestEnemyWithinRange(deathRetargetRange));
+            }
+        }
+
+    }
+
+    private bool EnemyDeathCheck()
+    {
+        foreach (FieldCharacter character in activeCharacters)
+        {
+            if (character != null
+                && character != this
+                && character.unit != null
+                && !character.PlayerControlled
+                && !character.IsDead)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public WorldObjectPreviewData ExposeObjectInfo()

@@ -1160,7 +1160,7 @@ Transform:
   m_GameObject: {fileID: 200403826}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.14, y: 12.04, z: 0.5}
+  m_LocalPosition: {x: 12.957, y: 24.163, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1185,9 +1185,9 @@ MonoBehaviour:
       padding: 0
       mail: 0
     unitHealth: 25
-    attachedUnit: {fileID: 11400000, guid: 92e080f5c142f454e9d3daad77741065, type: 2}
+    attachedUnit: {fileID: 11400000, guid: b2aac64e9b57beb4b98059fc3a69caea, type: 2}
   general: {fileID: 11400000, guid: 854f433fde3a0e64daa377b95cdcd1ea, type: 2}
-  startingRegion: ALA
+  startingRegion: DOL
   startingOwner: OMN
   movementRangeIndicator: {fileID: 1960368374}
 --- !u!61 &200403829

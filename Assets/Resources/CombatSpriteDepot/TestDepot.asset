@@ -12,5 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aef8dad9a8ea0884490beeeb1f0e8e98, type: 3}
   m_Name: TestDepot
   m_EditorClassIdentifier: Assembly-CSharp::CombatSpriteDepot
-  idle: []
-  meleeBase: []
+  idle:
+    _animationSprites:
+    - {fileID: -579159171533866860, guid: f87f651ba7fd3a44ab41e7cf5e7fcef6, type: 3}
+    _animationDelay: 0
+  walking:
+    _animationSprites: []
+    _animationDelay: 0
+  meleeBase:
+    _animationSprites: []
+    _animationDelay: 0
+  rangedBase:
+    _animationSprites: []
+    _animationDelay: 0

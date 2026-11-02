@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -10,10 +11,15 @@ public class BattleSetup : MonoBehaviour
     [SerializeField] private FieldCharacter fieldCharacterPrefab;
     [SerializeField] private DeploymentPhaseUI deploymentPhaseUI;
     [SerializeField] SpeechStitcher speechStitcher;
+    [SerializeField] private int enemyDeploymentDistance = 50;
     private UnitBase selectedUnitBase;
     private FieldCharacter lastDeployedCharacter;
     private readonly List<UnitDeploymentCount> deploymentCounts = new List<UnitDeploymentCount>();
     private List<string> deploymentSpeech;
+    private BattleArmyData enemyArmy;
+    public int SelectedUnitCount => selectedUnitBase == null
+        ? 0
+        : deploymentCounts.Find(item => item.unitBase == selectedUnitBase)?.count ?? 0;
 
     void Awake()
     {
@@ -54,7 +60,9 @@ public class BattleSetup : MonoBehaviour
 
     public void SetupBattle(BattleArmyData playerArmy, BattleArmyData enemyArmy)
     {
+        FieldCharacter.ResetBattleAnnouncements();
         BattleManager.i.SetBattleSpeed(0); //set the battle speed to paused to start
+        this.enemyArmy = enemyArmy;
         
         //pick a region for the player to be able to place their units (TODO)
 
@@ -130,6 +138,7 @@ public class BattleSetup : MonoBehaviour
     private void EndDeployment()
     {
         selectedUnitBase = null;
+        DeployEnemyArmy();
         if (lastDeployedCharacter != null)
         {
             ClickDragCam cameraController = Camera.main?.GetComponent<ClickDragCam>();
@@ -139,5 +148,142 @@ public class BattleSetup : MonoBehaviour
         lastDeployedCharacter = null;
         BattleManager.i.EndDeployment();
         StartCoroutine(speechStitcher.ReadSpeech(deploymentSpeech));
+    }
+
+    private void DeployEnemyArmy()
+    {
+        if (enemyArmy == null || enemyArmy.Units == null || enemyArmy.Units.Count == 0 || MapManager.i == null)
+        {
+            return;
+        }
+
+        List<FieldCharacter> playerCharacters = FindObjectsByType<FieldCharacter>(FindObjectsSortMode.None)
+            .Where(character => character != null && character.PlayerControlled && character.TilePosition != null)
+            .ToList();
+        if (playerCharacters.Count == 0)
+        {
+            Debug.LogError("BattleSetup could not deploy the enemy army because no player units were deployed.");
+            return;
+        }
+
+        Vector2Int playerCenter = Vector2Int.zero;
+        foreach (FieldCharacter character in playerCharacters)
+        {
+            playerCenter += character.TilePosition.gridLocation;
+        }
+
+        playerCenter /= playerCharacters.Count;
+        Vector2Int mapCenter = Vector2Int.zero;
+        if (MapManager.i.map != null && MapManager.i.map.Count > 0)
+        {
+            foreach (Vector2Int location in MapManager.i.map.Keys)
+            {
+                mapCenter += location;
+            }
+
+            mapCenter /= MapManager.i.map.Count;
+        }
+
+        Vector2Int enemyDirection = mapCenter - playerCenter;
+        if (enemyDirection == Vector2Int.zero)
+        {
+            enemyDirection = Vector2Int.up;
+        }
+
+        Vector2Int cardinalEnemyDirection = GetCardinalDirection(enemyDirection);
+        Vector2Int enemyAnchor = playerCenter + cardinalEnemyDirection * Mathf.Max(1, enemyDeploymentDistance);
+        HashSet<OverlayTile> occupiedTiles = new HashSet<OverlayTile>(
+            playerCharacters.Select(character => character.TilePosition));
+        Dictionary<UnitBase, int> enemyUnitCounts = new Dictionary<UnitBase, int>();
+        foreach (CampaignUnit campaignUnit in enemyArmy.Units)
+        {
+            if (campaignUnit == null || campaignUnit.UnitBase == null)
+            {
+                continue;
+            }
+
+            int unitHealth = Mathf.Max(0, Mathf.RoundToInt(campaignUnit.UnitHealth));
+            if (unitHealth == 0)
+            {
+                continue;
+            }
+
+            if (enemyUnitCounts.ContainsKey(campaignUnit.UnitBase))
+            {
+                enemyUnitCounts[campaignUnit.UnitBase] += unitHealth;
+            }
+            else
+            {
+                enemyUnitCounts.Add(campaignUnit.UnitBase, unitHealth);
+            }
+        }
+
+        int totalEnemyUnits = enemyUnitCounts.Values.Sum();
+        int width = Mathf.Max(1, Mathf.CeilToInt(Mathf.Sqrt(totalEnemyUnits)));
+        int index = 0;
+
+        foreach (KeyValuePair<UnitBase, int> unitGroup in enemyUnitCounts)
+        {
+            for (int unitIndex = 0; unitIndex < unitGroup.Value; unitIndex++)
+            {
+                Vector2Int location = enemyAnchor
+                    + cardinalEnemyDirection * (index / width)
+                    + GetPerpendicularDirection(cardinalEnemyDirection) * (index % width);
+                if (!TryFindAvailableEnemyTile(location, occupiedTiles, out OverlayTile tile))
+                {
+                    Debug.LogError($"BattleSetup could not find a tile for enemy unit {unitGroup.Key.UnitName}.");
+                    continue;
+                }
+
+                FieldCharacter character = Instantiate(fieldCharacterPrefab);
+                character.PlayerControlled = false;
+                character.SetupUnit(unitGroup.Key, tile.gridLocation);
+                occupiedTiles.Add(tile);
+                index++;
+            }
+        }
+    }
+
+    private bool TryFindAvailableEnemyTile(
+        Vector2Int location,
+        HashSet<OverlayTile> occupiedTiles,
+        out OverlayTile tile)
+    {
+        tile = null;
+        for (int radius = 0; radius <= enemyDeploymentDistance; radius++)
+        {
+            for (int x = -radius; x <= radius; x++)
+            {
+                for (int y = -radius; y <= radius; y++)
+                {
+                    if (Mathf.Max(Mathf.Abs(x), Mathf.Abs(y)) != radius
+                        || !MapManager.i.TryGetOverlayTile(location + new Vector2Int(x, y), out OverlayTile candidate)
+                        || candidate == null
+                        || candidate.isBlocked
+                        || candidate.RestingObject != null
+                        || occupiedTiles.Contains(candidate))
+                    {
+                        continue;
+                    }
+
+                    tile = candidate;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private Vector2Int GetCardinalDirection(Vector2Int direction)
+    {
+        return Mathf.Abs(direction.x) >= Mathf.Abs(direction.y)
+            ? new Vector2Int((int)Mathf.Sign(direction.x), 0)
+            : new Vector2Int(0, (int)Mathf.Sign(direction.y));
+    }
+
+    private Vector2Int GetPerpendicularDirection(Vector2Int direction)
+    {
+        return new Vector2Int(-direction.y, direction.x);
     }
 }

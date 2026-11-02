@@ -310,25 +310,46 @@ public class MouseController : MonoBehaviour
             return;
         }
 
-        int stepCount = Mathf.Max(
-            Mathf.Abs(destination.gridLocation.x - origin.gridLocation.x),
-            Mathf.Abs(destination.gridLocation.y - origin.gridLocation.y));
-
-        for (int step = 0; step <= stepCount; step++)
+        int unitCount = BattleSetup.i != null ? BattleSetup.i.SelectedUnitCount : 0;
+        if (unitCount <= 0)
         {
-            float progress = stepCount == 0 ? 0f : (float)step / stepCount;
-            Vector2Int location = new Vector2Int(
-                Mathf.RoundToInt(Mathf.Lerp(origin.gridLocation.x, destination.gridLocation.x, progress)),
-                Mathf.RoundToInt(Mathf.Lerp(origin.gridLocation.y, destination.gridLocation.y, progress)));
+            return;
+        }
 
-            if (MapManager.i != null
-                && MapManager.i.TryGetOverlayTile(location, out OverlayTile tile)
-                && tile != null
-                && tile.RestingObject == null
-                && !deploymentPreviewTiles.Contains(tile))
+        Vector2Int dragDelta = destination.gridLocation - origin.gridLocation;
+        Vector2Int rotatedDelta = new Vector2Int(-dragDelta.x - dragDelta.y, -dragDelta.x + dragDelta.y);
+        bool useHorizontalAxis = Mathf.Abs(rotatedDelta.x) > Mathf.Abs(rotatedDelta.y)
+            || (Mathf.Abs(rotatedDelta.x) == Mathf.Abs(rotatedDelta.y)
+                && rotatedDelta.x * rotatedDelta.y >= 0);
+        Vector2Int axis = useHorizontalAxis
+            ? new Vector2Int((int)Mathf.Sign(rotatedDelta.x), 0)
+            : new Vector2Int(0, (int)Mathf.Sign(rotatedDelta.y));
+
+        if (axis == Vector2Int.zero)
+        {
+            axis = new Vector2Int(0, 1);
+        }
+
+        int depth = Mathf.Clamp(Mathf.Max(Mathf.Abs(rotatedDelta.x), Mathf.Abs(rotatedDelta.y)), 1, unitCount);
+        int width = Mathf.Max(1, Mathf.CeilToInt((float)unitCount / depth));
+        Vector2Int side = new Vector2Int(axis.y, -axis.x);
+        int index = 0;
+
+        for (int rank = 0; rank < depth && index < unitCount; rank++)
+        {
+            for (int file = 0; file < width && index < unitCount; file++)
             {
-                tile.ShowTile();
-                deploymentPreviewTiles.Add(tile);
+                Vector2Int location = origin.gridLocation + (axis * rank) + (side * file);
+                if (MapManager.i != null
+                    && MapManager.i.TryGetOverlayTile(location, out OverlayTile tile)
+                    && tile != null
+                    && tile.RestingObject == null)
+                {
+                    tile.ShowTile();
+                    deploymentPreviewTiles.Add(tile);
+                }
+
+                index++;
             }
         }
     }
@@ -751,14 +772,14 @@ public class MouseController : MonoBehaviour
             FieldCharacter unit = activeUnits[i];
             Vector2Int targetLocation = targetLocations[i];
 
-            if (!MapManager.i.TryGetOverlayTile(targetLocation, out OverlayTile targetTile))
+            MapManager.i.TryGetOverlayTile(targetLocation, out OverlayTile targetTile);
+            if (!IsFormationTargetAvailable(targetTile, selectedTiles)
+                || reservedTargetTiles.Contains(targetTile))
             {
-                return false;
-            }
-
-            if (!IsFormationTargetAvailable(targetTile, selectedTiles) || reservedTargetTiles.Contains(targetTile))
-            {
-                targetTile = GetNearestFreeAdjacentTile(origin, selectedTiles, reservedTargetTiles);
+                targetTile = GetNearestFreeFormationTile(
+                    targetLocation,
+                    selectedTiles,
+                    reservedTargetTiles);
             }
 
             if (targetTile == null || reservedTargetTiles.Contains(targetTile))
@@ -769,7 +790,17 @@ public class MouseController : MonoBehaviour
             List<OverlayTile> path = pathFinder.FindPath(unit.TilePosition, targetTile, selectedTiles);
             if (path.Count == 0 && unit.TilePosition != targetTile)
             {
-                return false;
+                targetTile = GetNearestReachableFormationTile(
+                    unit,
+                    targetLocation,
+                    selectedTiles,
+                    reservedTargetTiles);
+                if (targetTile == null)
+                {
+                    return false;
+                }
+
+                path = pathFinder.FindPath(unit.TilePosition, targetTile, selectedTiles);
             }
 
             reservedTargetTiles.Add(targetTile);
@@ -825,19 +856,20 @@ public class MouseController : MonoBehaviour
         }
 
         Vector2Int rotatedDelta = new Vector2Int(-dragDelta.x - dragDelta.y, -dragDelta.x + dragDelta.y);
+        bool useHorizontalAxis = Mathf.Abs(rotatedDelta.x) > Mathf.Abs(rotatedDelta.y)
+            || (Mathf.Abs(rotatedDelta.x) == Mathf.Abs(rotatedDelta.y)
+                && rotatedDelta.x * rotatedDelta.y >= 0);
         Vector2Int axis = new Vector2Int(
-            Mathf.Abs(rotatedDelta.x) >= Mathf.Abs(rotatedDelta.y) ? (int)Mathf.Sign(rotatedDelta.x) : 0,
-            Mathf.Abs(rotatedDelta.y) > Mathf.Abs(rotatedDelta.x) ? (int)Mathf.Sign(rotatedDelta.y) : 0);
+            useHorizontalAxis ? (int)Mathf.Sign(rotatedDelta.x) : 0,
+            useHorizontalAxis ? 0 : (int)Mathf.Sign(rotatedDelta.y));
 
         if (axis == Vector2Int.zero)
         {
             axis = new Vector2Int(0, 1);
         }
 
-        int dragMagnitude = Mathf.Abs(dragDelta.x) + Mathf.Abs(dragDelta.y);
-        float spread = Mathf.Clamp01((float)dragMagnitude / Mathf.Max(1f, units.Count));
-
-        int deepCount = Mathf.Max(1, Mathf.RoundToInt(Mathf.Lerp(units.Count, 1f, spread)));
+        int dragMagnitude = Mathf.Max(Mathf.Abs(rotatedDelta.x), Mathf.Abs(rotatedDelta.y));
+        int deepCount = Mathf.Clamp(dragMagnitude, 1, units.Count);
         int wideCount = Mathf.Max(1, Mathf.CeilToInt((float)units.Count / deepCount));
 
         Vector2Int side = new Vector2Int(axis.y, -axis.x);
@@ -857,6 +889,81 @@ public class MouseController : MonoBehaviour
         }
 
         return targetLocations;
+    }
+
+    private OverlayTile GetNearestFreeFormationTile(
+        Vector2Int desiredLocation,
+        HashSet<OverlayTile> selectedTiles,
+        HashSet<OverlayTile> reservedTargetTiles)
+    {
+        if (MapManager.i == null || MapManager.i.map == null)
+        {
+            return null;
+        }
+
+        OverlayTile nearestTile = null;
+        int nearestDistance = int.MaxValue;
+        foreach (OverlayTile tile in MapManager.i.map.Values)
+        {
+            if (!IsFormationTargetAvailable(tile, selectedTiles)
+                || reservedTargetTiles.Contains(tile))
+            {
+                continue;
+            }
+
+            int distance = Mathf.Max(
+                Mathf.Abs(tile.gridLocation.x - desiredLocation.x),
+                Mathf.Abs(tile.gridLocation.y - desiredLocation.y));
+            if (distance < nearestDistance)
+            {
+                nearestTile = tile;
+                nearestDistance = distance;
+            }
+        }
+
+        return nearestTile;
+    }
+
+    private OverlayTile GetNearestReachableFormationTile(
+        FieldCharacter unit,
+        Vector2Int desiredLocation,
+        HashSet<OverlayTile> selectedTiles,
+        HashSet<OverlayTile> reservedTargetTiles)
+    {
+        if (unit == null || MapManager.i == null || MapManager.i.map == null)
+        {
+            return null;
+        }
+
+        OverlayTile nearestTile = null;
+        int nearestDistance = int.MaxValue;
+        foreach (OverlayTile tile in MapManager.i.map.Values)
+        {
+            if (!IsFormationTargetAvailable(tile, selectedTiles)
+                || reservedTargetTiles.Contains(tile))
+            {
+                continue;
+            }
+
+            int distance = Mathf.Max(
+                Mathf.Abs(tile.gridLocation.x - desiredLocation.x),
+                Mathf.Abs(tile.gridLocation.y - desiredLocation.y));
+            if (distance >= nearestDistance)
+            {
+                continue;
+            }
+
+            List<OverlayTile> path = pathFinder.FindPath(unit.TilePosition, tile, selectedTiles);
+            if (path.Count == 0 && unit.TilePosition != tile)
+            {
+                continue;
+            }
+
+            nearestTile = tile;
+            nearestDistance = distance;
+        }
+
+        return nearestTile;
     }
 
     private void UpdateFormationPreview(OverlayTile origin, OverlayTile destination)

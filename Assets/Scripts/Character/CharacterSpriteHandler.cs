@@ -20,6 +20,7 @@ public class CharacterSpriteHandler : MonoBehaviour
     public void Setup(CombatSpriteDepot depot)
     {
         characterRenderer = GetComponent<SpriteRenderer>();
+        baseColor = characterRenderer.color;
 
         idle = depot.Idle;
         walkCycleAnimation = depot.Walking;
@@ -27,6 +28,8 @@ public class CharacterSpriteHandler : MonoBehaviour
         rangedAnimation = depot.RangedBase;
 
         animationState = CharacterAnimationState.Idle;
+
+        characterRenderer.sprite = idle.animationSprites[0];
     }
 
     public IEnumerator PlayOneshotAnimation(ObjectAnimation animation)
@@ -63,22 +66,48 @@ public class CharacterSpriteHandler : MonoBehaviour
     
     private const float hitFlashDelay = 0.1f;
     private const int hitFlashCount = 2;
+    private Coroutine hitFlashRoutine;
+    private Color baseColor = Color.white;
     
     /// <summary>
     /// Plays a red hitflash for taking damage. Usually called in FieldCharacter
     /// </summary>
     /// <returns></returns>
-    public IEnumerator HitFlash()
+    public void StartHitFlash()
     {
-        Color originalColor = characterRenderer.color;
-        
+        if (hitFlashRoutine != null)
+        {
+            StopCoroutine(hitFlashRoutine);
+        }
+
+        hitFlashRoutine = StartCoroutine(HitFlash());
+    }
+
+    public void StopHitFlash()
+    {
+        if (hitFlashRoutine != null)
+        {
+            StopCoroutine(hitFlashRoutine);
+            hitFlashRoutine = null;
+        }
+
+        if (characterRenderer != null)
+        {
+            characterRenderer.color = baseColor;
+        }
+    }
+
+    private IEnumerator HitFlash()
+    {
         for(int i = 0; i < hitFlashCount; i++)
         {
             characterRenderer.color = Color.red;
             yield return new WaitForSeconds(hitFlashDelay);
-            characterRenderer.color = originalColor;
+            characterRenderer.color = baseColor;
             yield return new WaitForSeconds(hitFlashDelay);
         }
+
+        hitFlashRoutine = null;
     }
 }
 public enum CharacterAnimationState

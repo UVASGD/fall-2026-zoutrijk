@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a0bed23e5efc884d84766e5e9b4d7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FieldCharacter
-  isGeneral: 1
+  isGeneral: 0
   generalName: {fileID: 0}
   healthbarPrefab: {fileID: 748680667013419759, guid: 295bf3a2ab5fb6543b53ce7b863b0fa3, type: 3}
   movementOrders: []
@@ -58,6 +58,9 @@ MonoBehaviour:
     mail: 1
   unitWeapon: {fileID: 11400000, guid: 7376f079182533343acd716802a9ec8d, type: 2}
   PlayerControlled: 1
+  idleTargetCheckInterval: 0.2
+  playerPathThreatRange: 10
+  playerAutoAttackRange: 5
   defaultTilePosition: {x: 5, y: 4}
   baseMoveSpeed: 15
   enemyAggroRange: 6
