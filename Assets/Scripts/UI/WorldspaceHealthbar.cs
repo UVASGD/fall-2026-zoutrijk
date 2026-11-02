@@ -6,7 +6,13 @@ public class WorldspaceHealthbar : MonoBehaviour
     [HideInInspector] public bool barPrompted = false;
     [SerializeField] GameObject graphicsParent;
     [SerializeField] RectTransform fillImage;
+    private RectTransform healthbarTransform;
     float verticalOffset = 35f; //the vertical offset of this bar off the fieldcharacter.
+
+    private void Awake()
+    {
+        healthbarTransform = GetComponent<RectTransform>();
+    }
     
     /// <summary>
     /// Called the first time damage is taken to make the bar visible (to reduce clutter on undamaged units)
@@ -42,6 +48,6 @@ public class WorldspaceHealthbar : MonoBehaviour
     public void UpdateBarPosition(Vector2 worldposition)
     {
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(worldposition);
-        gameObject.GetComponent<RectTransform>().position = screenPosition + Vector3.up * verticalOffset;
+        healthbarTransform.position = screenPosition + Vector3.up * verticalOffset;
     }
 }

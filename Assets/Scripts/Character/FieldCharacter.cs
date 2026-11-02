@@ -37,11 +37,25 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     private FieldCharacter attackTarget;
     private Coroutine attackRoutine;
     private static Vector2 positionalOffset = new Vector2(0, 0.25f); //change to make it so character positions reflect properly on the isometric grid
+    private static readonly HashSet<FieldCharacter> activeCharacters = new HashSet<FieldCharacter>();
+    [SerializeField] private float idleTargetCheckInterval = 0.2f;
+    private float idleTargetCheckTimer;
     #endregion
     #region Setup
 
     //TODO: change in place of selecting deployment area later in development
     [SerializeField] private Vector2Int defaultTilePosition = new Vector2Int(4, 4);
+
+    private void OnEnable()
+    {
+        activeCharacters.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        activeCharacters.Remove(this);
+    }
+
     void Start()
     {
         if (unit == null)
@@ -165,9 +179,14 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             healthBar.UpdateBarPosition(transform.position);
         }
 
+        if (BattleManager.i != null && BattleManager.i.battleSpeed <= 0)
+        {
+            return;
+        }
+
         if (PlayerControlled)
         {
-            if (CurrentBehavior == BehaviorState.Idle && attackTarget == null)
+            if (CurrentBehavior == BehaviorState.Idle && attackTarget == null && ShouldCheckForIdleTarget())
             {
                 FieldCharacter attacker = FindNearestAttackingEnemy();
                 if (attacker != null && GetTileDistanceTo(attacker) <= UnitWeapon.Range)
@@ -207,12 +226,27 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             return;
         }
 
-        FieldCharacter nearestPlayerTarget = FindNearestPlayerTarget();
-        if (nearestPlayerTarget != null && GetTileDistanceTo(nearestPlayerTarget) <= enemyAggroRange)
+        if (ShouldCheckForIdleTarget())
         {
-            SetAttackTarget(nearestPlayerTarget);
+            FieldCharacter nearestPlayerTarget = FindNearestPlayerTarget();
+            if (nearestPlayerTarget != null && GetTileDistanceTo(nearestPlayerTarget) <= enemyAggroRange)
+            {
+                SetAttackTarget(nearestPlayerTarget);
+            }
         }
 
+    }
+
+    private bool ShouldCheckForIdleTarget()
+    {
+        idleTargetCheckTimer -= Time.deltaTime;
+        if (idleTargetCheckTimer > 0f)
+        {
+            return false;
+        }
+
+        idleTargetCheckTimer = Mathf.Max(0.01f, idleTargetCheckInterval);
+        return true;
     }
 
     private int GetTileDistanceTo(FieldCharacter other)
@@ -232,8 +266,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         FieldCharacter nearestTarget = null;
         int nearestDistance = int.MaxValue;
 
-        FieldCharacter[] allUnits = FindObjectsByType<FieldCharacter>();
-        foreach (FieldCharacter potentialTarget in allUnits)
+        foreach (FieldCharacter potentialTarget in activeCharacters)
         {
             if (potentialTarget == null || potentialTarget == this || !potentialTarget.PlayerControlled || potentialTarget.UnitHP <= 0)
             {
@@ -256,8 +289,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         FieldCharacter nearestAttacker = null;
         int nearestDistance = int.MaxValue;
 
-        FieldCharacter[] allUnits = FindObjectsByType<FieldCharacter>();
-        foreach (FieldCharacter potentialAttacker in allUnits)
+        foreach (FieldCharacter potentialAttacker in activeCharacters)
         {
             if (potentialAttacker == null || potentialAttacker == this || potentialAttacker.PlayerControlled || potentialAttacker.UnitHP <= 0)
             {

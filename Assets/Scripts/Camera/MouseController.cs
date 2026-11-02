@@ -17,11 +17,14 @@ public class MouseController : MonoBehaviour
     public event Action<BattleState> updateBattleState;
     public event Action<OverlayTile> deploymentTileClicked;
     private readonly List<OverlayTile> formationPreviewTiles = new List<OverlayTile>();
+    private readonly List<OverlayTile> deploymentPreviewTiles = new List<OverlayTile>();
     private bool isRightDraggingFormation;
     private bool suppressRegularRightClickThisFrame;
     private OverlayTile formationDragOrigin;
     private Vector2 formationDragStartScreen;
     [SerializeField] private float formationDragDeadZonePixels = 16f;
+    private OverlayTile deploymentDragOrigin;
+    private Vector2 deploymentDragStartScreen;
 
     //unit movement fields
     public List<FieldCharacter> selectedCharacters; //the list of selected fieldCharacters. Right clicking a tile will move the formation.
@@ -152,7 +155,6 @@ public class MouseController : MonoBehaviour
         if (focusedTile != null)
         {
             transform.position = focusedTile.transform.position;
-            hoveredTile = focusedTile;
         }
 
         HandleFocusedTile(battleState);
@@ -161,9 +163,41 @@ public class MouseController : MonoBehaviour
     {
         if (battleState == BattleState.Deployment)
         {
-            if (Mouse.current.leftButton.wasPressedThisFrame && hoveredTile != null && hoveredTile.RestingObject == null)
+            if (Mouse.current.leftButton.wasPressedThisFrame)
             {
-                deploymentTileClicked?.Invoke(hoveredTile);
+                deploymentDragOrigin = hoveredTile;
+                deploymentDragStartScreen = Mouse.current.position.ReadValue();
+                ClearDeploymentPreview();
+            }
+            else if (Mouse.current.leftButton.isPressed && deploymentDragOrigin != null)
+            {
+                float dragDistance = Vector2.Distance(Mouse.current.position.ReadValue(), deploymentDragStartScreen);
+                if (dragDistance > formationDragDeadZonePixels)
+                {
+                    UpdateDeploymentPreview(deploymentDragOrigin, hoveredTile);
+                }
+            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                if (deploymentDragOrigin != null)
+                {
+                    float dragDistance = Vector2.Distance(Mouse.current.position.ReadValue(), deploymentDragStartScreen);
+                    if (dragDistance > formationDragDeadZonePixels)
+                    {
+                        foreach (OverlayTile tile in deploymentPreviewTiles)
+                        {
+                            deploymentTileClicked?.Invoke(tile);
+                        }
+                    }
+                    else
+                    {
+                        TryDeployOnTile(deploymentDragOrigin);
+                    }
+                }
+
+                deploymentDragOrigin = null;
+                deploymentDragStartScreen = Vector2.zero;
+                ClearDeploymentPreview();
             }
 
             return;
@@ -217,6 +251,62 @@ public class MouseController : MonoBehaviour
             updateBattleState?.Invoke(BattleState.CheckingLOS);
         }
     }
+
+    private void TryDeployOnTile(OverlayTile tile)
+    {
+        if (tile == null || tile.RestingObject != null)
+        {
+            return;
+        }
+
+        deploymentTileClicked?.Invoke(tile);
+    }
+
+    private void UpdateDeploymentPreview(OverlayTile origin, OverlayTile destination)
+    {
+        ClearDeploymentPreview();
+
+        if (origin == null || destination == null)
+        {
+            return;
+        }
+
+        int stepCount = Mathf.Max(
+            Mathf.Abs(destination.gridLocation.x - origin.gridLocation.x),
+            Mathf.Abs(destination.gridLocation.y - origin.gridLocation.y));
+
+        for (int step = 0; step <= stepCount; step++)
+        {
+            float progress = stepCount == 0 ? 0f : (float)step / stepCount;
+            Vector2Int location = new Vector2Int(
+                Mathf.RoundToInt(Mathf.Lerp(origin.gridLocation.x, destination.gridLocation.x, progress)),
+                Mathf.RoundToInt(Mathf.Lerp(origin.gridLocation.y, destination.gridLocation.y, progress)));
+
+            if (MapManager.i != null
+                && MapManager.i.TryGetOverlayTile(location, out OverlayTile tile)
+                && tile != null
+                && tile.RestingObject == null
+                && !deploymentPreviewTiles.Contains(tile))
+            {
+                tile.ShowTile();
+                deploymentPreviewTiles.Add(tile);
+            }
+        }
+    }
+
+    private void ClearDeploymentPreview()
+    {
+        foreach (OverlayTile tile in deploymentPreviewTiles)
+        {
+            if (tile != null)
+            {
+                tile.HideTile();
+            }
+        }
+
+        deploymentPreviewTiles.Clear();
+    }
+
     private void HandleRegularRightClick()
     {
         if (hoveredTile == null)
@@ -334,6 +424,7 @@ public class MouseController : MonoBehaviour
             return hoveredTile;
         }
 
+        hoveredTile = null;
         return null;
     }
 

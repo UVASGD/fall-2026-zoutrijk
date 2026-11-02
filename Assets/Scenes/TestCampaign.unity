@@ -6440,6 +6440,18 @@ MonoBehaviour:
       mail: 0
     unitHealth: 25
     attachedUnit: {fileID: 11400000, guid: 92e080f5c142f454e9d3daad77741065, type: 2}
+  - armor:
+      plating: 0
+      padding: 0
+      mail: 0
+    unitHealth: 1
+    attachedUnit: {fileID: 11400000, guid: 3d95b6dc500751f43b767222da61f991, type: 2}
+  - armor:
+      plating: 0
+      padding: 0
+      mail: 0
+    unitHealth: 75
+    attachedUnit: {fileID: 11400000, guid: b2aac64e9b57beb4b98059fc3a69caea, type: 2}
   general: {fileID: 11400000, guid: 43de047e8eef098448232f75b79f4517, type: 2}
   startingRegion: VAL
   startingOwner: BRE

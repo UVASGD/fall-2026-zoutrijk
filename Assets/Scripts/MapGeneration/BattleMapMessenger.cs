@@ -34,11 +34,11 @@ public class BattleMapMessenger : MonoBehaviour
 
             if (deploymentCount == null)
             {
-                unitDeploymentCounts.Add(new UnitDeploymentCount(campaignUnit.UnitBase, 1));
+                unitDeploymentCounts.Add(new UnitDeploymentCount(campaignUnit.UnitBase, (int)campaignUnit.UnitHealth));
             }
             else
             {
-                deploymentCount.count++;
+                deploymentCount.count ++;
             }
         }
     }

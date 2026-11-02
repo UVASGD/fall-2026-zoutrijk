@@ -11,6 +11,7 @@ public class BattleSetup : MonoBehaviour
     [SerializeField] private DeploymentPhaseUI deploymentPhaseUI;
     [SerializeField] SpeechStitcher speechStitcher;
     private UnitBase selectedUnitBase;
+    private FieldCharacter lastDeployedCharacter;
     private readonly List<UnitDeploymentCount> deploymentCounts = new List<UnitDeploymentCount>();
     private List<string> deploymentSpeech;
 
@@ -121,11 +122,7 @@ public class BattleSetup : MonoBehaviour
         FieldCharacter character = Instantiate(fieldCharacterPrefab);
         character.PlayerControlled = true;
         character.SetupUnit(selectedUnitBase, tile.gridLocation);
-        ClickDragCam cameraController = Camera.main?.GetComponent<ClickDragCam>();
-        if (cameraController != null)
-        {
-            cameraController.PlaceCamera(character.transform.position);
-        }
+        lastDeployedCharacter = character;
         deploymentPhaseUI?.TryDecrement(selectedUnitBase);
         selectedUnitBase = deploymentCount.count > 0 ? selectedUnitBase : null;
     }
@@ -133,6 +130,13 @@ public class BattleSetup : MonoBehaviour
     private void EndDeployment()
     {
         selectedUnitBase = null;
+        if (lastDeployedCharacter != null)
+        {
+            ClickDragCam cameraController = Camera.main?.GetComponent<ClickDragCam>();
+            cameraController?.PlaceCamera(lastDeployedCharacter.transform.position);
+        }
+
+        lastDeployedCharacter = null;
         BattleManager.i.EndDeployment();
         StartCoroutine(speechStitcher.ReadSpeech(deploymentSpeech));
     }

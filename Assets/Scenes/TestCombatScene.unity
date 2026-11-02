@@ -168040,6 +168040,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BattleSetup
   fieldCharacterPrefab: {fileID: 2049030921493629436, guid: a12d1b5c685bce34aaa67b0d9c3655b2, type: 3}
   deploymentPhaseUI: {fileID: 3613185175562289777}
+  speechStitcher: {fileID: 0}
 --- !u!1 &1901633905
 GameObject:
   m_ObjectHideFlags: 0
