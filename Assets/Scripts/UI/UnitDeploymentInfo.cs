@@ -1,9 +1,10 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UnitDeploymentInfo : MonoBehaviour
+public class UnitDeploymentInfo : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] TMP_Text unitName;
     [SerializeField] TMP_Text countText;
@@ -35,6 +36,11 @@ public class UnitDeploymentInfo : MonoBehaviour
         {
             onDeploymentPressed?.Invoke(unitDeploymentCount.unitBase);
         }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        MouseController.i?.SuppressDeploymentInput(1f);
     }
 
     public void Refresh()

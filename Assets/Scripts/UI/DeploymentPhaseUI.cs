@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DeploymentPhaseUI : MonoBehaviour
@@ -100,6 +102,31 @@ public class DeploymentPhaseUI : MonoBehaviour
     public void EnableGraphics()
     {
         SetGraphicsActive(true);
+    }
+
+    public bool IsPointerOverDeploymentUI()
+    {
+        if (graphicsParent == null || EventSystem.current == null || !graphicsParent.activeInHierarchy)
+        {
+            return false;
+        }
+
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero
+        };
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, raycastResults);
+
+        foreach (RaycastResult result in raycastResults)
+        {
+            if (result.gameObject == graphicsParent || result.gameObject.transform.IsChildOf(graphicsParent.transform))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void SetGraphicsActive(bool isActive)

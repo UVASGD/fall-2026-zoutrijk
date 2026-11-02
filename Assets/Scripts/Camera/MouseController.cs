@@ -25,6 +25,7 @@ public class MouseController : MonoBehaviour
     [SerializeField] private float formationDragDeadZonePixels = 16f;
     private OverlayTile deploymentDragOrigin;
     private Vector2 deploymentDragStartScreen;
+    private float deploymentInputBlockedUntil;
 
     //unit movement fields
     public List<FieldCharacter> selectedCharacters; //the list of selected fieldCharacters. Right clicking a tile will move the formation.
@@ -163,8 +164,20 @@ public class MouseController : MonoBehaviour
     {
         if (battleState == BattleState.Deployment)
         {
+            if (Time.unscaledTime < deploymentInputBlockedUntil)
+            {
+                CancelDeploymentInput();
+                return;
+            }
+
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
+                if (IsPointerOverUI())
+                {
+                    CancelDeploymentInput();
+                    return;
+                }
+
                 deploymentDragOrigin = hoveredTile;
                 deploymentDragStartScreen = Mouse.current.position.ReadValue();
                 ClearDeploymentPreview();
@@ -179,6 +192,12 @@ public class MouseController : MonoBehaviour
             }
             else if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
+                if (IsPointerOverUI())
+                {
+                    CancelDeploymentInput();
+                    return;
+                }
+
                 if (deploymentDragOrigin != null)
                 {
                     float dragDistance = Vector2.Distance(Mouse.current.position.ReadValue(), deploymentDragStartScreen);
@@ -250,6 +269,26 @@ public class MouseController : MonoBehaviour
         {
             updateBattleState?.Invoke(BattleState.CheckingLOS);
         }
+    }
+
+    public void SuppressDeploymentInput(float duration)
+    {
+        deploymentInputBlockedUntil = Mathf.Max(
+            deploymentInputBlockedUntil,
+            Time.unscaledTime + Mathf.Max(0f, duration));
+        CancelDeploymentInput();
+    }
+
+    private void CancelDeploymentInput()
+    {
+        deploymentDragOrigin = null;
+        deploymentDragStartScreen = Vector2.zero;
+        ClearDeploymentPreview();
+    }
+
+    private bool IsPointerOverUI()
+    {
+        return DeploymentPhaseUI.i != null && DeploymentPhaseUI.i.IsPointerOverDeploymentUI();
     }
 
     private void TryDeployOnTile(OverlayTile tile)

@@ -59,8 +59,9 @@ public class UnitBase : ScriptableObject
 
 public enum UnitType
 {
-    Melee,
-    Ranged
+    Melee, //only have melee available
+    Ranged, //archers, crossbows, skirmishers who have a ranged option and weaker melee secondary
+    Artillery //ranged weaponry with slow movement and long cooldowns between fire.
 }
 
 /// <summary>
