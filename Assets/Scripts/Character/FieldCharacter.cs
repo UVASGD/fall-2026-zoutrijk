@@ -11,11 +11,13 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     #region Fields
     [SerializeField] bool isGeneral; //whether or not the fieldCharacter is a general
     [SerializeField] General generalName; //used if the general dies in battle
+    [SerializeField] GameObject healthbarPrefab;
     private OverlayTile tilePosition;
     public OverlayTile TilePosition => tilePosition;
     private OverlayTile targetTile;
     public OverlayTile TargetTile => targetTile;
     [SerializeField] List<OverlayTile> movementOrders;
+    private int movementRequestVersion;
     public string internalCharacterName { get; private set; }
     public string unitDisplayName { get; private set; } //determined from province of recruitment probably? like 2nd Dolebin Archers
     [SerializeField] CharacterSpriteHandler spriteHandler;
@@ -23,6 +25,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     [SerializeField] UnitBase defaultBase;
     [SerializeField] UnitArmor unitArmor;
     [SerializeField] Weapon unitWeapon;
+    private WorldspaceHealthbar healthBar;
     public UnitArmor UnitArmor => unitArmor;
     public Weapon UnitWeapon => unitWeapon;
     private Unit unit;
@@ -41,7 +44,10 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     [SerializeField] private Vector2Int defaultTilePosition = new Vector2Int(4, 4);
     void Start()
     {
-        SetupUnit(defaultBase, defaultTilePosition);
+        if (unit == null)
+        {
+            SetupUnit(defaultBase, defaultTilePosition);
+        }
     }
     public void SetupUnit(UnitBase uBase, Vector2 tilePosition)
     {
@@ -52,6 +58,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         UnitHP = MaxUnitHP; //TODO: change to be carryover from campaign map
 
         SetTilePosition(tilePosition);
+
+        healthBar = Instantiate(healthbarPrefab, BattleUI.i.gameObject.transform).GetComponent<WorldspaceHealthbar>(); //spawn healthbar as a child of the battleUI
     }
     #endregion
     #region Tile Movement
@@ -85,8 +93,19 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     /// <param name="tiles"></param>
     public IEnumerator setMoveOrders(List<OverlayTile> tiles)
     {
+        int requestVersion = SetMoveOrders(tiles);
+        yield return FollowPath(requestVersion);
+    }
+
+    public int SetMoveOrders(List<OverlayTile> tiles)
+    {
         movementOrders = tiles;
-        yield return FollowPath();
+        return ++movementRequestVersion;
+    }
+
+    public bool IsMovementRequestCurrent(int requestVersion)
+    {
+        return requestVersion == movementRequestVersion;
     }
 
     [SerializeField] private float baseMoveSpeed = 6f;
@@ -141,6 +160,11 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             return;
         }
 
+        if (healthBar.barPrompted)
+        {
+            healthBar.UpdateBarPosition(transform.position);
+        }
+
         if (PlayerControlled)
         {
             if (CurrentBehavior == BehaviorState.Idle && attackTarget == null)
@@ -188,6 +212,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         {
             SetAttackTarget(nearestPlayerTarget);
         }
+
     }
 
     private int GetTileDistanceTo(FieldCharacter other)
@@ -489,7 +514,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             if (path != null && path.Count > 0)
             {
                 CurrentBehavior = BehaviorState.Moving;
-                yield return setMoveOrders(path);
+                int requestVersion = SetMoveOrders(path);
+                yield return FollowPath(requestVersion);
             }
 
             if (attackTarget == null || !attackTarget.gameObject.activeInHierarchy || attackTarget.UnitHP <= 0)
@@ -736,15 +762,15 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     /// <summary>
     /// Moves the character through a valid path without pausing at each tile. Occupancy is updated only when the next tile is reached.
     /// </summary>
-    private IEnumerator FollowPath()
+    public IEnumerator FollowPath(int requestVersion)
     {
-        if (movementOrders == null || movementOrders.Count == 0)
+        if (!IsMovementRequestCurrent(requestVersion) || movementOrders == null || movementOrders.Count == 0)
         {
             yield break;
         }
 
         List<OverlayTile> activeMovementOrders = new List<OverlayTile>(movementOrders);
-        if (activeMovementOrders.Count == 0)
+        if (!IsMovementRequestCurrent(requestVersion) || activeMovementOrders.Count == 0)
         {
             yield break;
         }
@@ -791,9 +817,19 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         while (elapsedTime < totalDuration)
         {
+            if (!IsMovementRequestCurrent(requestVersion))
+            {
+                yield break;
+            }
+
             while (MouseController.i != null && MouseController.i.MovementPaused)
             {
                 yield return null;
+            }
+
+            if (!IsMovementRequestCurrent(requestVersion))
+            {
+                yield break;
             }
 
             float normalizedTime = Mathf.Clamp01(elapsedTime / totalDuration);
@@ -809,6 +845,11 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             float timeScale = BattleManager.i != null ? BattleManager.i.TimeScaleMultiplier : 1f;
             elapsedTime += Time.deltaTime * Mathf.Max(1f, timeScale);
             yield return null;
+        }
+
+        if (!IsMovementRequestCurrent(requestVersion))
+        {
+            yield break;
         }
 
         transform.position = pathPoints[pathPoints.Count - 1];
@@ -850,6 +891,10 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         }
 
         if (baseDamage < 0) return null; //no damage taken if below armor threshold
+
+        //if UnitHP is currently maximum, prompt the healthbar. Otherwise just update the healthbar.
+        if(UnitHP == MaxUnitHP) healthBar.PromptHealthbar();
+        healthBar.UpdateBarFill((float)UnitHP / MaxUnitHP); //cast to prevent rounding
 
         UnitHP -= baseDamage;
 
@@ -912,6 +957,9 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         if(isGeneral) BattlefieldAnnouncer.i.BattlefieldAnnouncement($"General {generalName} has died");
 
         if (GlobalEditorSettings.i.RichDebugLogs) Debug.Log("Unit should die here");
+        
+        //deactivate health bar so it no longer shows onscreen
+        healthBar.CancelHealthbar();
     }
 
     public WorldObjectPreviewData ExposeObjectInfo()

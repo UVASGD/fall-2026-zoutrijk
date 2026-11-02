@@ -136,6 +136,8 @@ public class CampaignUnit
     [SerializeField] private float unitHealth; //health of the unit after various battles
     [SerializeField] private UnitBase attachedUnit; //the associated unitBase for this CampaignUnit
     public float UnitHealth => unitHealth;
+    public UnitBase UnitBase => attachedUnit;
+    public UnitArmor Armor => armor;
 
     /// <summary>
     /// setter for the unit's armor.
@@ -158,6 +160,18 @@ public class CampaignUnit
     public CampaignUnit(UnitArmor startingArmor, UnitBase attachedUnit)
     {
         this.unitHealth = 1f; //constructing a unit 
+        this.armor = startingArmor;
+        this.attachedUnit = attachedUnit;
+    }
+
+    public CampaignUnit DeepClone()
+    {
+        UnitArmor clonedArmor = armor == null
+            ? null
+            : new UnitArmor(armor.plating, armor.padding, armor.mail);
+        CampaignUnit clone = new CampaignUnit(clonedArmor, attachedUnit);
+        clone.unitHealth = unitHealth;
+        return clone;
     }
 
     public float GetUnitMaintenance()

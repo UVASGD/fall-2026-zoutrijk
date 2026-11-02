@@ -20,6 +20,27 @@ public class BattleManager : MonoBehaviour
         currentStates = new Stack<BattleState>();
 
         battleSpeed = 1;
+        currentStates.Push(BattleState.Deployment);
+        battleState = currentStates.Peek();
+        EnableDeploymentPhaseUI();
+        if (GetComponent<BattleSetup>() == null)
+        {
+            gameObject.AddComponent<BattleSetup>();
+        }
+    }
+
+    private void EnableDeploymentPhaseUI()
+    {
+        DeploymentPhaseUI deploymentPhaseUI = FindAnyObjectByType<DeploymentPhaseUI>();
+        deploymentPhaseUI?.EnableGraphics();
+    }
+
+    public void EndDeployment()
+    {
+        currentStates.Clear();
+        currentStates.Push(BattleState.SelectUnit);
+        battleState = BattleState.SelectUnit;
+        SetBattleSpeed(1);
     }
 
     void OnDestroy()
@@ -83,11 +104,14 @@ public class BattleManager : MonoBehaviour
     public void ClearBattleStates()
     {
         currentStates.Clear();
+        currentStates.Push(BattleState.Deployment);
+        battleState = currentStates.Peek();
     }
 }
 
 public enum BattleState
 {
+    Deployment,
     SelectUnit,
     UnitSelected,
     CheckingLOS //checking ranged line of sight

@@ -75,10 +75,10 @@ public class CampaignMapManager : MonoBehaviour
     {
         Debug.Log("TestLoadMap input received.");
 
-        cameraEffects.LerpCamera(worldPosition, 1.5f);
+        cameraEffects.LerpCamera(new Vector3(worldPosition.x, worldPosition.y, -10f), 1.5f);
 
         //while this is happening, grab a sample of the to-be battle map and pack it into a seed data
-        BattleMapSeedData seedData = new BattleMapSeedData(terrainSampler.TestTerrainSampleAtPosition(worldPosition, 32), highlightedRegion.BiomePalette, highlightedRegion.RegionCapital);
+        BattleMapSeedData seedData = new BattleMapSeedData(terrainSampler.TestTerrainSampleAtPosition(worldPosition, 64), highlightedRegion.BiomePalette, highlightedRegion.RegionCapital);
         battleMapMessenger.seedData = seedData;
 
         yield return new WaitForSeconds(1.5f); //forced pause
@@ -203,8 +203,14 @@ public class CampaignMapManager : MonoBehaviour
             return;
         }
 
-        battleMapMessenger.playerArmy = playerArmy;
-        battleMapMessenger.enemyArmy = enemyArmy;
+        battleMapMessenger.playerArmy = new BattleArmyData(playerArmy);
+        
+        battleMapMessenger.enemyArmy = new BattleArmyData(enemyArmy);
+        
+        battleMapMessenger.SetUnitDeploymentCounts(battleMapMessenger.playerArmy);
+        
+        battleMapMessenger.battleContext = new BattleContext(playerArmy.General, enemyArmy.General, playerArmy.units.Count, enemyArmy.units.Count, true); //TODO: make variable depending on if the battle is player-attacker or not.
+        
         battleMapMessenger.seedData = new BattleMapSeedData(
             terrainSampler.TestTerrainSampleAtPosition(enemyArmy.transform.position, 32),
             battleRegion.BiomePalette,
@@ -213,7 +219,7 @@ public class CampaignMapManager : MonoBehaviour
         pendingPlayerArmy = playerArmy;
         pendingEnemyArmy = enemyArmy;
         Vector2 battlePosition = (playerArmy.transform.position + enemyArmy.transform.position) * 0.5f;
-        cameraEffects.LerpCamera(battlePosition, 1.5f);
+        cameraEffects.LerpCamera(new Vector3(battlePosition.x, battlePosition.y, -10f), 1.5f);
         campaignUI.ShowBattleDecision(playerArmy, enemyArmy);
     }
 

@@ -8,5 +8,6 @@ public class DBParent : MonoBehaviour
         UnitDB.Init();
         BuildingDB.Init();
         TraitDB.Init();
+        SnippetDB.Init();
     }
 }

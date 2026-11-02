@@ -14,18 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitBase
   unitName: General's Bodyguard
   unitType: 0
-  combatSprites: {fileID: 0}
+  combatSprites: {fileID: 11400000, guid: 4c8ef0fd2ed789c4786bb99c1dcfcc55, type: 2}
   allowedPrimaryWeapons: 02000000i
   basePrimaryWeapon: {fileID: 11400000, guid: 7376f079182533343acd716802a9ec8d, type: 2}
   baseSecondaryWeapon: {fileID: 11400000, guid: 7376f079182533343acd716802a9ec8d, type: 2}
   unitDescription: This unit is tasked with keeping the general alive in the heat of battle - and scoring some powerful charges, as heavy cavalry.
-  portraitSprite: {fileID: 0}
+  portraitSprite: {fileID: -579159171533866860, guid: f87f651ba7fd3a44ab41e7cf5e7fcef6, type: 3}
   vitality: 8
   morale: 10
   agility: 5
   strength: 5
   attackDelay: 0.5
   unitMaintenance: 10
+  recruitmentCost: 0
+  recruitmentTime: 0
   startingArmor:
     plating: 5
     padding: 5

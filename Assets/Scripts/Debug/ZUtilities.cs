@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -83,5 +84,10 @@ public static class ZUtilities
         }
 
         yield return null;
+    }
+
+    public static T GetRandomElement<T>(List<T> list)
+    {
+        return list[UnityEngine.Random.Range(0, list.Count)];
     }
 }

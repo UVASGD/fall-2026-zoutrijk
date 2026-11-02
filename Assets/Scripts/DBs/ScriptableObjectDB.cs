@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 //Code taken from another one of my projects, creates a generic DB for a scriptable object type using a script that inherits. Very modular.
@@ -29,5 +30,9 @@ public class ScriptableObjectDB<T> : MonoBehaviour where T : ScriptableObject //
             return null;
         }
         return objects[name];
+    }
+    public static List<T> GetAllObjects()
+    {
+        return objects.Values.ToList();
     }
 }

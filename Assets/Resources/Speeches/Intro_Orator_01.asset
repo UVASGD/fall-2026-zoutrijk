@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bbc305217bc2748a480b6f62b94822, type: 3}
+  m_Name: Intro_Orator_01
+  m_EditorClassIdentifier: Assembly-CSharp::SpeechSnippet
+  snippetType: 0
+  snippetText:
+  - Oh muses, sing through me, a humble general,
+  - to inspire these men to meet their greatest deeds,
+  - their greatest potential,
+  - honor their families,
+  - and earn their right of conquest.
+  snippetChance: 1
+  conditions:
+  - rid: 6438116288549617726
+  - rid: 6438116288549617727
+  references:
+    version: 2
+    RefIds:
+    - rid: 6438116288549617726
+      type: {class: PlayerTraitReqSnippet, ns: , asm: Assembly-CSharp}
+      data:
+        conditionTitle: Education threshold
+        invertLogic: 0
+        orCause: 1
+        traitID: EDUCATION
+        pointThreshold: 1
+    - rid: 6438116288549617727
+      type: {class: PlayerTraitReqSnippet, ns: , asm: Assembly-CSharp}
+      data:
+        conditionTitle: Speaking Ability
+        invertLogic: 0
+        orCause: 1
+        traitID: SPEAKING_ABILITY
+        pointThreshold: 1
