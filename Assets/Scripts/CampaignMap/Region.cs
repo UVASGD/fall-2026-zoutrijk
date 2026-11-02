@@ -59,7 +59,7 @@ public class Region : MonoBehaviour
 
         owner = faction;
 
-        UpdateRegionColor(owner.fBase.MapColor);
+        RecolorPolitical();
     }
 
     /// <summary>
@@ -67,15 +67,14 @@ public class Region : MonoBehaviour
     /// </summary>
     public void RecolorPolitical()
     {
-        UpdateRegionColor(owner.fBase.MapColor);
+        //apply the material associated with the owner faction
+        regionRenderer.material = owner.fBase.MapMaterial;
     }
 
     /// <summary>
     /// recolor this region to match appropriate terrain graphics.
     /// </summary>
-    public void RecolorTerrain()
-    {
-        UpdateRegionColor(regionalTerrain.BackgroundColor);
+    public void RecolorTerrain() {
 
         //apply the material associated with the terrain
         regionRenderer.material = regionalTerrain.RegionalMaterial;

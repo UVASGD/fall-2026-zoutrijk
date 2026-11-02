@@ -11,6 +11,7 @@ public class MapFactionBase : ScriptableObject
     [SerializeField] List<string> startingRegions;
     [SerializeField] Color mapColor;
     [SerializeField] Color secondaryColor;
+    [SerializeField] Material mapMaterial;
     [SerializeField] List<CultureType> acceptedCultures;
     [SerializeField] int startingMoney;
 
@@ -22,6 +23,7 @@ public class MapFactionBase : ScriptableObject
     public List<string> StartingRegions => startingRegions;
     public Color MapColor => mapColor;
     public Color SecondaryColor => secondaryColor;
+    public Material MapMaterial => mapMaterial;
     public List<CultureType> AcceptedCultures => acceptedCultures;
     public int StartingMoney => startingMoney;
 }

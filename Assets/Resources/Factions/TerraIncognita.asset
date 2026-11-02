@@ -20,4 +20,6 @@ MonoBehaviour:
   - TER
   mapColor: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 1}
   secondaryColor: {r: 0.44705886, g: 0.44705886, b: 0.44705886, a: 1}
+  mapMaterial: {fileID: 2100000, guid: b7be5d6b98d809741bf68aba65f17d58, type: 2}
   acceptedCultures: 
+  startingMoney: 0

@@ -20,4 +20,6 @@ MonoBehaviour:
   - MOL
   mapColor: {r: 0.7962169, g: 0.8509804, b: 0.70980394, a: 1}
   secondaryColor: {r: 0.7960785, g: 0.85098046, b: 0.70980394, a: 1}
-  acceptedCultures: 00000000
+  mapMaterial: {fileID: 2100000, guid: b236d1150c53a5944a16d650b17fa58e, type: 2}
+  acceptedCultures: 00000000i
+  startingMoney: 0

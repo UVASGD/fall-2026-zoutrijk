@@ -20,4 +20,6 @@ MonoBehaviour:
   - QOL
   mapColor: {r: 0.5137255, g: 0.5803922, b: 1, a: 1}
   secondaryColor: {r: 0.514151, g: 0.58194387, b: 1, a: 1}
-  acceptedCultures: 00000000
+  mapMaterial: {fileID: 2100000, guid: 70503f067dbb5c74197839f550aa2966, type: 2}
+  acceptedCultures: 00000000i
+  startingMoney: 0

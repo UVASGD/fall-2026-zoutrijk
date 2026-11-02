@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1afc34a85f7a0f241be0d19158b4e7ed, type: 3}
   m_Name: Wetland
   m_EditorClassIdentifier: Assembly-CSharp::RegionalTerrain
-  regionalMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  regionalMaterial: {fileID: 2100000, guid: 4d69668fda7ef7d4480311bf28af6da7, type: 2}
   terrainName: Wetland
   backgroundColor: {r: 0.4454877, g: 0.47753394, b: 0.6698113, a: 1}
