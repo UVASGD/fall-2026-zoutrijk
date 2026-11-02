@@ -78,6 +78,7 @@ public class BattleSetup : MonoBehaviour
         }
 
         deploymentSpeech = speechStitcher.StitchSpeeches(battleMapMessenger.battleContext);
+        CombatMusicManager.i.PlayDeploymentTheme();
     }
 
     public void SelectUnitBase(UnitBase unitBase)
