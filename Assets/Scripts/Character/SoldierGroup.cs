@@ -16,7 +16,7 @@ public class SoldierGroup
 
     public void AssignSoldier(FieldCharacter soldier)
     {
-        if (!assignedSoldiers.Contains(soldier))
+        if (soldier != null && !soldier.IsDead && !assignedSoldiers.Contains(soldier))
         {
             assignedSoldiers.Add(soldier);
         }
@@ -27,6 +27,16 @@ public class SoldierGroup
         {
             AssignSoldier(soldier);
         }
+    }
+
+    public void RemoveSoldier(FieldCharacter soldier)
+    {
+        assignedSoldiers.Remove(soldier);
+    }
+
+    public void RemoveDeadSoldiers()
+    {
+        assignedSoldiers.RemoveAll(soldier => soldier == null || soldier.IsDead);
     }
 
     public void UpdateGroupNumber(int newNumber)

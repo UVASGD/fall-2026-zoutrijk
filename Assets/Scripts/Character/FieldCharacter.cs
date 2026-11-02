@@ -8,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public class FieldCharacter : MonoBehaviour, ObjectHP
 {
+    public static event Action<FieldCharacter> onFieldCharacterDied;
+
     #region Fields
     [SerializeField] bool isGeneral; //whether or not the fieldCharacter is a general
     [SerializeField] General generalName; //used if the general dies in battle
@@ -32,10 +34,12 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     public Unit Unit => unit;
     public int MaxUnitHP => unit.vitality;
     public int UnitHP { get; private set; }
+    public bool IsDead => isDead || UnitHP <= 0;
     public bool PlayerControlled; //make private set later
     public BehaviorState CurrentBehavior { get; private set; } = BehaviorState.Idle;
     private FieldCharacter attackTarget;
     private Coroutine attackRoutine;
+    private bool isDead;
     private static Vector2 positionalOffset = new Vector2(0, 0.25f); //change to make it so character positions reflect properly on the isometric grid
     private static readonly HashSet<FieldCharacter> activeCharacters = new HashSet<FieldCharacter>();
     [SerializeField] private float idleTargetCheckInterval = 0.2f;
@@ -70,6 +74,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         spriteHandler.Setup(uBase.CombatSprites);
 
         UnitHP = MaxUnitHP; //TODO: change to be carryover from campaign map
+        isDead = false;
 
         SetTilePosition(tilePosition);
 
@@ -960,6 +965,14 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
     private void FieldUnitDeath()
     {
+        if (isDead)
+        {
+            return;
+        }
+
+        isDead = true;
+        onFieldCharacterDied?.Invoke(this);
+
         if (tilePosition != null)
         {
             tilePosition.ClearRestingObject();
