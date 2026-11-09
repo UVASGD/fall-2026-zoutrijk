@@ -157,7 +157,7 @@ public class BattleSetup : MonoBehaviour
             return;
         }
 
-        List<FieldCharacter> playerCharacters = FindObjectsByType<FieldCharacter>(FindObjectsSortMode.None)
+        List<FieldCharacter> playerCharacters = FindObjectsByType<FieldCharacter>()
             .Where(character => character != null && character.PlayerControlled && character.TilePosition != null)
             .ToList();
         if (playerCharacters.Count == 0)

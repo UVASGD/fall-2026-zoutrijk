@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -85,7 +86,16 @@ public class BattleManager : MonoBehaviour
         }
         else if(attackType == AttackType.Ranged)
         {
-            
+            List<FieldCharacter> opponentArmy = FindObjectsByType<FieldCharacter>()
+                .Where(character => character != null && (character.PlayerControlled ^ attacker.PlayerControlled) && character.TilePosition != null)
+                .ToList();
+            foreach (FieldCharacter opponent in opponentArmy)
+            {
+                if (attacker.AttackTarget.GetTileDistanceTo(opponent) <= attacker.UnitWeapon.SplashRadius)
+                {
+                    opponent.TakeDamage(attacker.UnitWeapon.BaseDamage, attacker.UnitWeapon.DamageType);
+                }
+            }
         }
     }
 
