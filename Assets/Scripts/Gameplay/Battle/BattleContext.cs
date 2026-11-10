@@ -11,7 +11,8 @@ public class BattleContext
     public float relativeStrength => (float)playerArmySize/enemyArmySize;
 
     public bool playerAttacking;
-
+    public string currentLocation;
+    public bool coastalBattle; //true if there is at least one water pixel on the map
     public BattleContext(General player, General enemy, int playerSize, int enemySize, bool playerAttacking)
     {
         playerGeneral = player;

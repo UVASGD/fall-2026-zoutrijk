@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpeechSnippet
   snippetType: 0
   snippetText:
-  - Oh muses, sing through me, a humble general,
+  - Oh muses, sing through me, humble {3},
   - to inspire these men to meet their greatest deeds,
   - their greatest potential,
   - honor their families,
@@ -23,6 +23,7 @@ MonoBehaviour:
   conditions:
   - rid: 6438116288549617726
   - rid: 6438116288549617727
+  exportString: []
   references:
     version: 2
     RefIds:

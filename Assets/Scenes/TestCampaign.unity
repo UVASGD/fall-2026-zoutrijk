@@ -11024,6 +11024,8 @@ MonoBehaviour:
     playerArmySize: 0
     enemyArmySize: 0
     playerAttacking: 0
+    currentLocation: 
+    coastalBattle: 0
   unitDeploymentCounts: []
 --- !u!1 &1762860537
 GameObject:

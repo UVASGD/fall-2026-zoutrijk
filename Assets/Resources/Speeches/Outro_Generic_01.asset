@@ -15,8 +15,9 @@ MonoBehaviour:
   snippetType: 2
   snippetText:
   - And let your spoils be plentiful!
-  snippetChance: 1
+  snippetChance: 0.2
   conditions: []
+  exportString: []
   references:
     version: 2
     RefIds: []

@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using System;
 
 /// <summary>
 /// A chunk of a speech that only applies if the correct context is met.
@@ -16,7 +18,7 @@ public class SpeechSnippet : ScriptableObject
 
     public bool RollSnippetChance()
     {
-        return Random.value < snippetChance;
+        return UnityEngine.Random.value < snippetChance;
     }
 
     /// <summary>
@@ -39,6 +41,28 @@ public class SpeechSnippet : ScriptableObject
         }
 
         return true;
+    }
+
+    [HideInInspector] public List<string> exportString;
+    /// <summary>
+    /// Replaces dynamic variable headers with appropriate 
+    /// </summary>
+    /// <param name="battleContext"></param>
+    public void SetExportString(BattleContext battleContext)
+    {
+        exportString = new List<string>();
+        foreach(string line in SnippetText)
+        {
+            //replace the variables via string.format like so
+            string formattedLine = String.Format(
+            line,
+            battleContext.enemyGeneral.noble.House.HouseName, battleContext.playerGeneral.noble.House.HouseName,
+            battleContext.enemyGeneral.FullName, battleContext.playerGeneral.FullName,
+            battleContext.currentLocation
+            );
+
+            exportString.Add(formattedLine);
+        }
     }
 
     public void AddCondition(SnippetCondition condition)

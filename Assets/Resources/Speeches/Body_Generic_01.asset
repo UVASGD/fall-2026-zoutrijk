@@ -16,8 +16,9 @@ MonoBehaviour:
   snippetText:
   - Men!
   - May your hearts be hardened, and your discipline prove true today.
-  snippetChance: 1
+  snippetChance: 0.2
   conditions: []
+  exportString: []
   references:
     version: 2
     RefIds: []

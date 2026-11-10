@@ -15,11 +15,12 @@ MonoBehaviour:
   snippetType: 0
   snippetText:
   - Men!
-  - Today we face the mighty forces of Omnia.
-  - They may fight hard.
-  - but we will make sure their efforts are in vain.
+  - Today we face the mighty forces of {0}.
+  - They may fight hard,
+  - but we will ensure their efforts are in vain.
   snippetChance: 1
   conditions: []
+  exportString: []
   references:
     version: 2
     RefIds: []

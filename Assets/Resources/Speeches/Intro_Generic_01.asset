@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpeechSnippet
   snippetType: 0
   snippetText:
-  - Countrymen! Loyal soldiers of Breskvutt!
-  - Today we face our enemies of Omnia on the field of battle.
+  - Countrymen! Loyal soldiers of House {1}!
+  - Today we face our enemies of House {0} on the field of battle.
   snippetChance: 1
   conditions: []
+  exportString: []
   references:
     version: 2
     RefIds: []
