@@ -46,19 +46,19 @@ public class SpeechStitcher : MonoBehaviour
         {
             if(bodySnippet.RollSnippetChance())
             {
-                snippetTexts.AddRange(bodySnippet.SnippetText);
+                snippetTexts.AddRange(bodySnippet.exportString);
             }
         }
 
         //Pick an intro
         if(GlobalEditorSettings.i.RichDebugLogs) Debug.Log($"{allIntros.Count} intros passed this context");
-        if(allIntros.Count > 1) snippetTexts.AddRange(ZUtilities.GetRandomElement(allIntros).SnippetText); //pick one random member
+        if(allIntros.Count > 1) snippetTexts.AddRange(ZUtilities.GetRandomElement(allIntros).exportString); //pick one random member
 
 
 
         //Pick an outro
         if(GlobalEditorSettings.i.RichDebugLogs) Debug.Log($"{allOutros.Count} outros passed this context");
-        if(allOutros.Count > 1) snippetTexts.AddRange(ZUtilities.GetRandomElement(allOutros).SnippetText); //pick one random member
+        if(allOutros.Count > 1) snippetTexts.AddRange(ZUtilities.GetRandomElement(allOutros).exportString); //pick one random member
 
         
         if(GlobalEditorSettings.i.RichDebugLogs) Debug.Log($"Speech stitched to be {snippetTexts.Count} lines long");

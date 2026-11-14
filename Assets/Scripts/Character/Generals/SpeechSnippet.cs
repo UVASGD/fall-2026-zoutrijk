@@ -27,6 +27,8 @@ public class SpeechSnippet : ScriptableObject
     /// <param name="orator"></param>
     public bool CheckSnippetCondition(BattleContext context)
     {
+        SetExportString(context); //assign the export string
+        
         foreach(var condition in conditions)
         {
             bool conditionResult = condition.OnCauseCheck(context);
