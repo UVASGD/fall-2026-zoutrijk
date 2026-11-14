@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bbc305217bc2748a480b6f62b94822, type: 3}
+  m_Name: Body_Madness_06
+  m_EditorClassIdentifier: Assembly-CSharp::SpeechSnippet
+  snippetType: 1
+  snippetText:
+  - "I\u2019ve seen them before! The little devils that gnaw at the root of the world."
+  - "Can\u2019t be too long until it\u2019s cut and we all wither - it\u2019s horrible!"
+  - "We have to stop them! We have to\u2026"
+  snippetChance: 0.2
+  conditions:
+  - rid: 6706315269582094406
+  exportString: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 6706315269582094406
+      type: {class: PlayerTraitReqSnippet, ns: , asm: Assembly-CSharp}
+      data:
+        conditionTitle: Deranged
+        invertLogic: 0
+        orCause: 0
+        traitID: MADNESS
+        pointThreshold: 3

@@ -269,7 +269,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         return true;
     }
 
-    private int GetTileDistanceTo(FieldCharacter other)
+    public int GetTileDistanceTo(FieldCharacter other)
     {
         if (other == null || TilePosition == null || other.TilePosition == null)
         {
