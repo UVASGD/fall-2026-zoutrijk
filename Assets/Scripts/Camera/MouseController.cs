@@ -18,6 +18,12 @@ public class MouseController : MonoBehaviour
     public event Action<OverlayTile> deploymentTileClicked;
     private readonly List<OverlayTile> formationPreviewTiles = new List<OverlayTile>();
     private readonly List<OverlayTile> deploymentPreviewTiles = new List<OverlayTile>();
+    private readonly List<OverlayTile> rangedSplashPreviewTiles = new List<OverlayTile>();
+    private OverlayTile rangedSplashPreviewOrigin;
+    private int rangedSplashPreviewRadius = -1;
+    private LineRenderer rangedRangeBoundary;
+    private FieldCharacter rangedRangeUnit;
+    private int rangedRange = -1;
     private bool isRightDraggingFormation;
     private bool suppressRegularRightClickThisFrame;
     private OverlayTile formationDragOrigin;
@@ -34,6 +40,8 @@ public class MouseController : MonoBehaviour
     private readonly Queue<IEnumerator> movementQueue = new Queue<IEnumerator>();
     private bool isProcessingMovementQueue;
     public bool MovementPaused => BattleManager.i != null && BattleManager.i.battleSpeed == 0;
+    private bool IsRangedAttackModifierHeld => Keyboard.current != null
+        && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed);
     #endregion
 
     void Awake()
@@ -158,7 +166,156 @@ public class MouseController : MonoBehaviour
             transform.position = focusedTile.transform.position;
         }
 
+        UpdateRangedRangeBoundary(battleState);
+        UpdateRangedSplashPreview(battleState);
         HandleFocusedTile(battleState);
+    }
+
+    private void UpdateRangedRangeBoundary(BattleState battleState)
+    {
+        FieldCharacter selectedRangedUnit = selectedCharacters != null && selectedCharacters.Count == 1
+            ? selectedCharacters[0]
+            : null;
+        int range = selectedRangedUnit != null && selectedRangedUnit.IsRanged
+            ? selectedRangedUnit.MaximumRangedRange
+            : -1;
+
+        if (battleState != BattleState.UnitSelected
+            || selectedRangedUnit == null
+            || selectedRangedUnit.TilePosition == null
+            || range < 0)
+        {
+            ClearRangedRangeBoundary();
+            return;
+        }
+
+        if (rangedRangeBoundary != null
+            && rangedRangeUnit == selectedRangedUnit
+            && rangedRange == range)
+        {
+            return;
+        }
+
+        ClearRangedRangeBoundary();
+
+        if (MapManager.i == null || MapManager.i.map == null)
+        {
+            return;
+        }
+
+        OverlayTile origin = selectedRangedUnit.TilePosition;
+        if (!MapManager.i.TryGetOverlayTile(origin.gridLocation + Vector2Int.right, out OverlayTile xNeighbor)
+            || !MapManager.i.TryGetOverlayTile(origin.gridLocation + Vector2Int.up, out OverlayTile yNeighbor))
+        {
+            return;
+        }
+
+        Vector3 center = origin.transform.position;
+        Vector3 xStep = xNeighbor.transform.position - center;
+        Vector3 yStep = yNeighbor.transform.position - center;
+        float boundaryDistance = range + 0.5f;
+
+        GameObject boundaryObject = new GameObject($"{selectedRangedUnit.name} Ranged Range");
+        rangedRangeBoundary = boundaryObject.AddComponent<LineRenderer>();
+        rangedRangeBoundary.useWorldSpace = true;
+        rangedRangeBoundary.loop = true;
+        rangedRangeBoundary.positionCount = 4;
+        rangedRangeBoundary.startWidth = 0.08f;
+        rangedRangeBoundary.endWidth = 0.08f;
+        rangedRangeBoundary.startColor = Color.red;
+        rangedRangeBoundary.endColor = Color.red;
+        rangedRangeBoundary.sortingLayerName = "Floor Highlight";
+        rangedRangeBoundary.sortingOrder = 5;
+        rangedRangeBoundary.material = new Material(Shader.Find("Sprites/Default"));
+        rangedRangeBoundary.SetPositions(new[]
+        {
+            center + (xStep + yStep) * boundaryDistance,
+            center + (xStep - yStep) * boundaryDistance,
+            center - (xStep + yStep) * boundaryDistance,
+            center + (-xStep + yStep) * boundaryDistance
+        });
+
+        rangedRangeUnit = selectedRangedUnit;
+        rangedRange = range;
+    }
+
+    private void ClearRangedRangeBoundary()
+    {
+        if (rangedRangeBoundary != null)
+        {
+            Destroy(rangedRangeBoundary.gameObject);
+            rangedRangeBoundary = null;
+        }
+
+        rangedRangeUnit = null;
+        rangedRange = -1;
+    }
+
+    private void UpdateRangedSplashPreview(BattleState battleState)
+    {
+        FieldCharacter selectedRangedUnit = selectedCharacters != null && selectedCharacters.Count == 1
+            ? selectedCharacters[0]
+            : null;
+        int splashRadius = selectedRangedUnit != null && selectedRangedUnit.IsRanged && selectedRangedUnit.RangedProjectile != null
+            ? selectedRangedUnit.RangedProjectile.SplashRadius
+            : -1;
+
+        if (battleState != BattleState.UnitSelected
+            || hoveredTile == null
+            || splashRadius < 0
+            || !IsRangedAttackModifierHeld)
+        {
+            ClearRangedSplashPreview();
+            return;
+        }
+
+        if (rangedSplashPreviewOrigin == hoveredTile && rangedSplashPreviewRadius == splashRadius)
+        {
+            return;
+        }
+
+        ClearRangedSplashPreview();
+        rangedSplashPreviewOrigin = hoveredTile;
+        rangedSplashPreviewRadius = splashRadius;
+
+        if (MapManager.i == null || MapManager.i.map == null)
+        {
+            return;
+        }
+
+        foreach (OverlayTile tile in MapManager.i.map.Values)
+        {
+            int distance = Mathf.Max(
+                Mathf.Abs(tile.gridLocation.x - hoveredTile.gridLocation.x),
+                Mathf.Abs(tile.gridLocation.y - hoveredTile.gridLocation.y));
+            if (distance <= splashRadius)
+            {
+                tile.ShowTile();
+                rangedSplashPreviewTiles.Add(tile);
+            }
+        }
+    }
+
+    private void ClearRangedSplashPreview()
+    {
+        foreach (OverlayTile tile in rangedSplashPreviewTiles)
+        {
+            if (tile != null)
+            {
+                tile.HideTile();
+            }
+        }
+
+        rangedSplashPreviewTiles.Clear();
+        rangedSplashPreviewOrigin = null;
+        rangedSplashPreviewRadius = -1;
+
+        if (selectedCharacters != null)
+        {
+            selectedCharacters.ForEach(unit => unit.TargetTile?.ShowTile());
+        }
+
+        clickedTile?.ShowTile();
     }
     private void HandleFocusedTile(BattleState battleState)
     {
@@ -396,6 +553,11 @@ public class MouseController : MonoBehaviour
                         continue;
                     }
 
+                    if (attacker.IsRanged && !IsRangedAttackModifierHeld)
+                    {
+                        continue;
+                    }
+
                     if (GlobalEditorSettings.i.RichDebugLogs) Debug.Log($"Attacking {restingCharacter.name} with {attacker.name}");
                     attacker.SetAttackTarget(restingCharacter);
                 }
@@ -412,11 +574,6 @@ public class MouseController : MonoBehaviour
         foreach (FieldCharacter character in FindObjectsByType<FieldCharacter>())
         {
             if (character == null || !character.gameObject.activeInHierarchy || !character.PlayerControlled)
-            {
-                continue;
-            }
-
-            if (character.SpriteHandler == null || character.SpriteHandler.CharacterRenderer == null || character.SpriteHandler.CharacterRenderer.sprite == null)
             {
                 continue;
             }
@@ -444,20 +601,23 @@ public class MouseController : MonoBehaviour
 
         foreach (FieldCharacter character in FindObjectsByType<FieldCharacter>())
         {
-            if (character == null || !character.gameObject.activeInHierarchy || character.SpriteHandler == null)
+            if (character == null || !character.gameObject.activeInHierarchy)
             {
                 continue;
             }
 
-            SpriteRenderer renderer = character.SpriteHandler.CharacterRenderer;
-            if (renderer == null || renderer.sprite == null || !renderer.bounds.Contains(worldPosition))
+            if (!character.CollisionBounds.Contains(worldPosition))
             {
                 continue;
             }
 
-            if (renderer.sortingOrder >= highestSortingOrder)
+            SpriteRenderer renderer = character.SpriteHandler != null
+                ? character.SpriteHandler.CharacterRenderer
+                : null;
+            int sortingOrder = renderer != null ? renderer.sortingOrder : 0;
+            if (sortingOrder >= highestSortingOrder)
             {
-                highestSortingOrder = renderer.sortingOrder;
+                highestSortingOrder = sortingOrder;
                 selectedCharacter = character;
             }
         }
@@ -467,7 +627,7 @@ public class MouseController : MonoBehaviour
 
     private Rect GetCharacterScreenRect(FieldCharacter character)
     {
-        Bounds bounds = character.SpriteHandler.CharacterRenderer.bounds;
+        Bounds bounds = character.CollisionBounds;
         Vector3 min = Camera.main.WorldToScreenPoint(bounds.min);
         Vector3 max = Camera.main.WorldToScreenPoint(bounds.max);
         return Rect.MinMaxRect(min.x, min.y, max.x, max.y);

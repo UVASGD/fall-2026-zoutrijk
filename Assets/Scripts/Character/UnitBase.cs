@@ -10,6 +10,7 @@ public class UnitBase : ScriptableObject
     [SerializeField] string unitName;
     [SerializeField] UnitType unitType;
     [SerializeField] CombatSpriteDepot combatSprites;
+    [SerializeField] Projectile rangedProjectile;
 
     [Header("Weapons")]
     [SerializeField] List<WeaponType> allowedPrimaryWeapons;
@@ -25,6 +26,9 @@ public class UnitBase : ScriptableObject
     [SerializeField] int agility;
     [SerializeField] int strength;
     [SerializeField] float attackDelay = 0.5f;
+    [SerializeField] float reloadTime = 0.5f;
+    [Header("Combat")]
+    [SerializeField] int maximumRangedRange = 5;
 
     [SerializeField] int unitMaintenance;
     [SerializeField] int recruitmentCost; //how much the upstart cost is to muster
@@ -38,6 +42,7 @@ public class UnitBase : ScriptableObject
     public string UnitName { get { return unitName; } }
     public UnitType UnitType => unitType;
     public CombatSpriteDepot CombatSprites { get { return combatSprites; } }
+    public Projectile RangedProjectile => rangedProjectile;
     public string UnitDescription { get { return unitDescription; } }
     public Sprite PortraitSprite { get { return portraitSprite; } }
 
@@ -50,6 +55,8 @@ public class UnitBase : ScriptableObject
     public int Agility { get { return agility; } }
     public int Strength { get { return strength; } }
     public float AttackDelay { get { return attackDelay; } }
+    public float ReloadTime { get { return Mathf.Max(0f, reloadTime); } }
+    public int MaximumRangedRange => Mathf.Max(1, maximumRangedRange);
 
     public int RecruitmentCost => recruitmentCost;
     public int UnitMaintenance => unitMaintenance;
@@ -61,7 +68,8 @@ public enum UnitType
 {
     Melee, //only have melee available
     Ranged, //archers, crossbows, skirmishers who have a ranged option and weaker melee secondary
-    Artillery //ranged weaponry with slow movement and long cooldowns between fire.
+    [System.Obsolete("Artillery is classified as Ranged.")]
+    Artillery = Ranged
 }
 
 /// <summary>

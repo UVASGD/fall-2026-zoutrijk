@@ -6,7 +6,22 @@ public class CharacterSpriteHandler : MonoBehaviour
 {
     private Sprite currentSprite;
     private SpriteRenderer characterRenderer;
+    private SpriteRenderer rootRenderer;
+    private SpriteRenderer offsetRenderer;
     public SpriteRenderer CharacterRenderer => characterRenderer;
+    public Vector2Int FacingDirection { get; private set; } = ObjectAnimation.DownRight;
+    public bool HasIdleSprites => idle != null && idle.HasSprites;
+    public bool HasMeleeAnimation => meleeAnimation != null && meleeAnimation.HasSprites;
+    public bool HasRangedAnimation => rangedAnimation != null && rangedAnimation.HasSprites;
+    public bool HasWalkingAnimation => walkCycleAnimation != null && walkCycleAnimation.HasSprites;
+    public int WalkingFrameCount => HasWalkingAnimation
+        ? walkCycleAnimation.GetSprites(FacingDirection).Count
+        : 0;
+    public bool HasDyingAnimation => dyingAnimation != null && dyingAnimation.HasSprites;
+    public bool HasReloadAnimation => reloadAnimation != null && reloadAnimation.HasSprites;
+    public float ReloadAnimationDuration => HasReloadAnimation
+        ? reloadAnimation.GetAnimationTime(FacingDirection)
+        : 0f;
     
     public CharacterAnimationState animationState;
     
@@ -15,21 +30,109 @@ public class CharacterSpriteHandler : MonoBehaviour
     ObjectAnimation walkCycleAnimation;
     ObjectAnimation meleeAnimation;
     ObjectAnimation rangedAnimation;
+    ObjectAnimation dyingAnimation;
+    ObjectAnimation reloadAnimation;
+    private Coroutine walkingAnimationRoutine;
 
     //init function to be used by the FieldCharacter
     public void Setup(CombatSpriteDepot depot)
     {
-        characterRenderer = GetComponent<SpriteRenderer>();
+        rootRenderer = GetComponent<SpriteRenderer>();
+        characterRenderer = rootRenderer;
+
+        if (Mathf.Abs(depot.Offset) > Mathf.Epsilon)
+        {
+            if (offsetRenderer == null)
+            {
+                GameObject offsetObject = new GameObject("Offset Sprite");
+                offsetObject.transform.SetParent(transform, false);
+                offsetRenderer = offsetObject.AddComponent<SpriteRenderer>();
+                CopyRendererSettings(rootRenderer, offsetRenderer);
+            }
+
+            offsetRenderer.transform.localPosition = Vector3.up * depot.Offset;
+            offsetRenderer.enabled = true;
+            rootRenderer.enabled = false;
+            characterRenderer = offsetRenderer;
+        }
+        else if (offsetRenderer != null)
+        {
+            offsetRenderer.enabled = false;
+            rootRenderer.enabled = true;
+        }
+
         baseColor = characterRenderer.color;
 
         idle = depot.Idle;
         walkCycleAnimation = depot.Walking;
         meleeAnimation = depot.MeleeBase;
         rangedAnimation = depot.RangedBase;
+        dyingAnimation = depot.Dying;
+        reloadAnimation = depot.Reload;
 
         animationState = CharacterAnimationState.Idle;
 
-        characterRenderer.sprite = idle.animationSprites[0];
+        SetFacingDirection(idle.facingDirection);
+        List<Sprite> sprites = idle.GetSprites(FacingDirection);
+        if (sprites.Count > 0)
+        {
+            characterRenderer.sprite = sprites[0];
+        }
+    }
+
+    private static void CopyRendererSettings(SpriteRenderer source, SpriteRenderer destination)
+    {
+        destination.sharedMaterial = source.sharedMaterial;
+        destination.color = source.color;
+        destination.flipX = source.flipX;
+        destination.flipY = source.flipY;
+        destination.sortingLayerID = source.sortingLayerID;
+        destination.sortingOrder = source.sortingOrder;
+        destination.maskInteraction = source.maskInteraction;
+        destination.spriteSortPoint = source.spriteSortPoint;
+        destination.renderingLayerMask = source.renderingLayerMask;
+    }
+
+    public IEnumerator PlayDyingAnimation()
+    {
+        if (HasDyingAnimation)
+        {
+            yield return PlayOneshotAnimation(dyingAnimation);
+        }
+    }
+
+    public void SetFacingDirection(Vector2Int direction)
+    {
+        if (direction != Vector2Int.zero)
+        {
+            FacingDirection = ObjectAnimation.NormalizeDirection(direction);
+            RefreshCurrentAnimationSprite();
+        }
+    }
+
+    private void RefreshCurrentAnimationSprite()
+    {
+        ObjectAnimation animation = null;
+        if (animationState == CharacterAnimationState.LoopingAnimation)
+        {
+            animation = walkCycleAnimation;
+        }
+
+        if (animation == null)
+        {
+            animation = idle;
+        }
+
+        if (animation == null)
+        {
+            return;
+        }
+
+        List<Sprite> sprites = animation.GetSprites(FacingDirection);
+        if (sprites.Count > 0)
+        {
+            characterRenderer.sprite = sprites[0];
+        }
     }
 
     public IEnumerator PlayOneshotAnimation(ObjectAnimation animation)
@@ -39,29 +142,124 @@ public class CharacterSpriteHandler : MonoBehaviour
         float elapsedTime = 0f;
         float spriteTime = 0f;
         int spriteIndex = 0;
+        List<Sprite> sprites = animation.GetSprites(FacingDirection);
 
-        characterRenderer.sprite = animation.animationSprites[spriteIndex];
+        if (sprites.Count == 0)
+        {
+            yield break;
+        }
 
-        while(elapsedTime < animation.animationTime)
+        characterRenderer.sprite = sprites[spriteIndex];
+
+        while(elapsedTime < animation.GetAnimationTime(FacingDirection))
         {
             elapsedTime += Time.deltaTime;
             spriteTime += Time.deltaTime;
-            if(spriteTime > animation.animationDelay && spriteIndex < animation.animationSprites.Count)
+            if(spriteTime > animation.animationDelay && spriteIndex < sprites.Count - 1)
             {
                 //increment the index and update the sprite
                 spriteIndex++;
-                characterRenderer.sprite = animation.animationSprites[spriteIndex];
+                characterRenderer.sprite = sprites[spriteIndex];
                 spriteTime = 0f;
             }
 
             yield return null;
         }
     }
+
+    public IEnumerator PlayMeleeAnimation()
+    {
+        if (HasMeleeAnimation)
+        {
+            yield return PlayOneshotAnimation(meleeAnimation);
+        }
+    }
+
+    public IEnumerator PlayRangedAnimation()
+    {
+        if (HasRangedAnimation)
+        {
+            yield return PlayOneshotAnimation(rangedAnimation);
+        }
+    }
+
+    public IEnumerator PlayReloadAnimation()
+    {
+        if (HasReloadAnimation)
+        {
+            yield return PlayOneshotAnimation(reloadAnimation);
+        }
+    }
     
-    //TODO: make this logic functional
     public IEnumerator LoopAnimation(ObjectAnimation animation)
     {
-        yield return null;
+        while (true)
+        {
+            yield return PlayAnimationCycle(animation);
+        }
+    }
+
+    public IEnumerator PlayIdleAnimationCycle()
+    {
+        if (idle != null && animationState == CharacterAnimationState.Idle)
+        {
+            yield return PlayAnimationCycle(idle);
+        }
+    }
+
+    public void StartWalkingAnimation()
+    {
+        if (!HasWalkingAnimation || walkingAnimationRoutine != null)
+        {
+            return;
+        }
+
+        walkingAnimationRoutine = StartCoroutine(LoopWalkingAnimation());
+    }
+
+    public void StopWalkingAnimation()
+    {
+        if (walkingAnimationRoutine != null)
+        {
+            StopCoroutine(walkingAnimationRoutine);
+            walkingAnimationRoutine = null;
+        }
+
+        if (animationState == CharacterAnimationState.LoopingAnimation)
+        {
+            animationState = CharacterAnimationState.Idle;
+        }
+    }
+
+    private IEnumerator LoopWalkingAnimation()
+    {
+        animationState = CharacterAnimationState.LoopingAnimation;
+        while (true)
+        {
+            yield return PlayAnimationCycle(walkCycleAnimation);
+        }
+    }
+
+    private IEnumerator PlayAnimationCycle(ObjectAnimation animation)
+    {
+        List<Sprite> sprites = animation.GetSprites(FacingDirection);
+        if (sprites.Count == 0)
+        {
+            yield break;
+        }
+
+        characterRenderer.sprite = sprites[0];
+        if (sprites.Count == 1 || animation.animationDelay <= 0f)
+        {
+            yield return null;
+            yield break;
+        }
+
+        for (int spriteIndex = 1; spriteIndex < sprites.Count; spriteIndex++)
+        {
+            yield return new WaitForSeconds(animation.animationDelay);
+            characterRenderer.sprite = sprites[spriteIndex];
+        }
     }
     
     private const float hitFlashDelay = 0.1f;

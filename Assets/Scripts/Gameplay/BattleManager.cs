@@ -78,6 +78,11 @@ public class BattleManager : MonoBehaviour
     /// <param name="attackType">The type of attack being performed.</param>
     public void PerformAttack(FieldCharacter attacker, ObjectHP receiver, AttackType attackType)
     {
+        AudioClip attackSfx = attackType == AttackType.Melee
+            ? attacker.MeleeAttackSfx
+            : attacker.RangedAttackSfx;
+        AudioManager.Instance?.PlaySfx(attackSfx);
+
         if(attackType == AttackType.Melee)
         {
             int attackerDamage = attacker.Unit.strength + attacker.UnitWeapon.BaseDamage;
@@ -86,17 +91,44 @@ public class BattleManager : MonoBehaviour
         }
         else if(attackType == AttackType.Ranged)
         {
+            if (GlobalEditorSettings.i.RichDebugLogs)
+            {
+                Debug.Log($"Ranged attack from {attacker.name} to {attacker.AttackTarget?.name ?? receiver.ToString()}.");
+            }
+
+            if (attacker.RangedProjectile != null && attacker.AttackTarget != null)
+            {
+                LaunchProjectile(attacker);
+                return;
+            }
+
             List<FieldCharacter> opponentArmy = FindObjectsByType<FieldCharacter>()
                 .Where(character => character != null && (character.PlayerControlled ^ attacker.PlayerControlled) && character.TilePosition != null)
                 .ToList();
+            int splashRadius = attacker.RangedProjectile != null
+                ? attacker.RangedProjectile.SplashRadius
+                : 0;
             foreach (FieldCharacter opponent in opponentArmy)
             {
-                if (attacker.AttackTarget.GetTileDistanceTo(opponent) <= attacker.UnitWeapon.SplashRadius)
+                if (attacker.AttackTarget.GetTileDistanceTo(opponent) <= splashRadius)
                 {
                     opponent.TakeDamage(attacker.UnitWeapon.BaseDamage, attacker.UnitWeapon.DamageType);
                 }
             }
         }
+    }
+
+    private void LaunchProjectile(FieldCharacter attacker)
+    {
+        GameObject projectileObject = new GameObject($"{attacker.name} Projectile");
+        projectileObject.transform.position = attacker.transform.position;
+        ProjectileInstance projectileInstance = projectileObject.AddComponent<ProjectileInstance>();
+        projectileInstance.Initialize(
+            attacker.RangedProjectile,
+            attacker.AttackTarget,
+            attacker.UnitWeapon.DamageType,
+            attacker.PlayerControlled,
+            0.2f);
     }
 
     /// <summary>

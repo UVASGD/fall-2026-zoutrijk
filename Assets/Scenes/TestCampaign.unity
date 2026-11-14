@@ -6450,8 +6450,8 @@ MonoBehaviour:
       plating: 0
       padding: 0
       mail: 0
-    unitHealth: 75
-    attachedUnit: {fileID: 11400000, guid: b2aac64e9b57beb4b98059fc3a69caea, type: 2}
+    unitHealth: 5
+    attachedUnit: {fileID: 11400000, guid: cefd9faa47ece6640a666fb39f209acd, type: 2}
   general: {fileID: 11400000, guid: 43de047e8eef098448232f75b79f4517, type: 2}
   startingRegion: VAL
   startingOwner: BRE

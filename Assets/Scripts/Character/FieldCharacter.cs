@@ -30,6 +30,10 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     private WorldspaceHealthbar healthBar;
     public UnitArmor UnitArmor => unitArmor;
     public Weapon UnitWeapon => unitWeapon;
+    public int MaximumRangedRange => unit != null ? unit._base.MaximumRangedRange : 0;
+    public Projectile RangedProjectile { get; private set; }
+    public AudioClip MeleeAttackSfx { get; private set; }
+    public AudioClip RangedAttackSfx { get; private set; }
     private Unit unit;
     public Unit Unit => unit;
     public int MaxUnitHP => unit.vitality;
@@ -39,10 +43,16 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     public BehaviorState CurrentBehavior { get; private set; } = BehaviorState.Idle;
     private FieldCharacter attackTarget;
     private Coroutine attackRoutine;
+    private Coroutine idleAnimationRoutine;
+    private float reloadTimer;
     private bool isDead;
     private static bool victoryAnnounced;
     private static int enemiesKilled;
     private static int friendlyUnitsKilled;
+    private const float rangedAimDelay = 0.5f;
+    [SerializeField] private Vector2Int facingDirection = ObjectAnimation.DownRight;
+    public Vector2Int FacingDirection => facingDirection;
+    public Bounds CollisionBounds => new Bounds(transform.position, Vector3.one * collisionSquareSize);
 
     public static void ResetBattleAnnouncements()
     {
@@ -51,6 +61,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         friendlyUnitsKilled = 0;
     }
     private static Vector2 positionalOffset = new Vector2(0, 0.25f); //change to make it so character positions reflect properly on the isometric grid
+    private const float collisionSquareSize = 0.5f;
     private static readonly HashSet<FieldCharacter> activeCharacters = new HashSet<FieldCharacter>();
     [SerializeField] private float idleTargetCheckInterval = 0.2f;
     [SerializeField] private int playerPathThreatRange = 10;
@@ -82,9 +93,20 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     }
     public void SetupUnit(UnitBase uBase, Vector2 tilePosition)
     {
+        if (idleAnimationRoutine != null)
+        {
+            StopCoroutine(idleAnimationRoutine);
+            idleAnimationRoutine = null;
+        }
+
         unit = new Unit(uBase);
         internalCharacterName = uBase.UnitName; //bubbled up 
         spriteHandler.Setup(uBase.CombatSprites);
+        SetFacingDirection(uBase.CombatSprites.Idle.facingDirection);
+        RangedProjectile = uBase.RangedProjectile;
+        MeleeAttackSfx = uBase.CombatSprites.MeleeAttackSfx;
+        RangedAttackSfx = uBase.CombatSprites.RangedAttackSfx;
+        StartIdleAnimation();
 
         UnitHP = MaxUnitHP; //TODO: change to be carryover from campaign map
         isDead = false;
@@ -92,6 +114,40 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         SetTilePosition(tilePosition);
 
         healthBar = Instantiate(healthbarPrefab, BattleUI.i.gameObject.transform).GetComponent<WorldspaceHealthbar>(); //spawn healthbar as a child of the battleUI
+    }
+
+    private IEnumerator PlayIdleAnimationWhenIdle()
+    {
+        while (!isDead && spriteHandler != null && spriteHandler.HasIdleSprites)
+        {
+            if (CurrentBehavior == BehaviorState.Idle)
+            {
+                yield return spriteHandler.PlayIdleAnimationCycle();
+            }
+            else
+            {
+                yield return null;
+            }
+        }
+
+        idleAnimationRoutine = null;
+    }
+
+    private void StartIdleAnimation()
+    {
+        if (idleAnimationRoutine == null && spriteHandler != null && spriteHandler.HasIdleSprites)
+        {
+            idleAnimationRoutine = StartCoroutine(PlayIdleAnimationWhenIdle());
+        }
+    }
+
+    private void StopIdleAnimation()
+    {
+        if (idleAnimationRoutine != null)
+        {
+            StopCoroutine(idleAnimationRoutine);
+            idleAnimationRoutine = null;
+        }
     }
     #endregion
     #region Tile Movement
@@ -133,6 +189,33 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     {
         movementOrders = tiles;
         return ++movementRequestVersion;
+    }
+
+    private void SetFacingDirection(Vector2Int direction)
+    {
+        if (direction == Vector2Int.zero)
+        {
+            return;
+        }
+
+        Vector2Int normalizedDirection = ObjectAnimation.NormalizeDirection(direction);
+        if (CurrentBehavior == BehaviorState.Moving
+            && normalizedDirection != facingDirection
+            && GlobalEditorSettings.i.RichDebugLogs)
+        {
+            Debug.Log($"{internalCharacterName} is turning from {facingDirection} to {normalizedDirection} while moving at {transform.position}.");
+        }
+
+        facingDirection = normalizedDirection;
+        spriteHandler?.SetFacingDirection(facingDirection);
+    }
+
+    private void FaceTile(OverlayTile tile)
+    {
+        if (tile != null && tilePosition != null)
+        {
+            SetFacingDirection(tile.gridLocation - tilePosition.gridLocation);
+        }
     }
 
     public bool IsMovementRequestCurrent(int requestVersion)
@@ -361,6 +444,14 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         return nearestEnemy;
     }
 
+    private bool IsRangedUnit => unit != null && unit._base.UnitType == UnitType.Ranged;
+    public bool IsRanged => IsRangedUnit;
+
+    private int GetAttackRange()
+    {
+        return IsRangedUnit ? MaximumRangedRange : UnitWeapon.Range;
+    }
+
     private FieldCharacter FindNearestEnemyNearMovementPath()
     {
         if (movementOrders == null || movementOrders.Count == 0)
@@ -508,7 +599,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         Vector2Int targetTile = target.TilePosition.gridLocation;
         int distance = Mathf.Max(Mathf.Abs(attackerTile.x - targetTile.x), Mathf.Abs(attackerTile.y - targetTile.y));
 
-        return distance <= UnitWeapon.Range;
+        return distance <= GetAttackRange();
     }
 
     public bool TryFindNearestAttackTile(FieldCharacter target, out OverlayTile nearestTile)
@@ -526,7 +617,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         int bestPathLength = int.MaxValue;
 
         Vector2Int targetLocation = target.TilePosition.gridLocation;
-        int range = Mathf.Max(1, UnitWeapon.Range);
+        int attackRange = GetAttackRange();
+        int range = Mathf.Max(1, attackRange);
         for (int x = targetLocation.x - range; x <= targetLocation.x + range; x++)
         {
             for (int y = targetLocation.y - range; y <= targetLocation.y + range; y++)
@@ -554,12 +646,12 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
                 }
 
                 int tileDistanceToTarget = Mathf.Max(Mathf.Abs(tile.gridLocation.x - targetLocation.x), Mathf.Abs(tile.gridLocation.y - targetLocation.y));
-                if (tileDistanceToTarget > UnitWeapon.Range)
+                if (tileDistanceToTarget > attackRange)
                 {
                     continue;
                 }
 
-                if (UnitWeapon.Range <= 1 && tileDistanceToTarget != 1)
+                if (attackRange <= 1 && tileDistanceToTarget != 1)
                 {
                     continue;
                 }
@@ -624,6 +716,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         }
 
         attackTarget = target;
+        FaceTile(target.TilePosition);
         CurrentBehavior = BehaviorState.Moving;
         attackRoutine = StartCoroutine(MoveToNearestAttackTileAndAttack());
     }
@@ -638,7 +731,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         while (attackTarget != null && attackTarget.gameObject.activeInHierarchy && attackTarget.UnitHP > 0)
         {
-            if (GetTileDistanceTo(attackTarget) <= UnitWeapon.Range)
+            if (GetTileDistanceTo(attackTarget) <= GetAttackRange())
             {
                 CurrentBehavior = BehaviorState.MeleeAttacking;
                 attackRoutine = StartCoroutine(AttackAfterDelay());
@@ -668,7 +761,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
                 yield break;
             }
 
-            if (GetTileDistanceTo(attackTarget) <= UnitWeapon.Range)
+            if (GetTileDistanceTo(attackTarget) <= GetAttackRange())
             {
                 CurrentBehavior = BehaviorState.MeleeAttacking;
                 attackRoutine = StartCoroutine(AttackAfterDelay());
@@ -694,7 +787,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         while (unit != null && unit._base != null && attackTarget != null)
         {
             FieldCharacter target = attackTarget;
-            if (GetTileDistanceTo(target) > UnitWeapon.Range)
+            if (GetTileDistanceTo(target) > GetAttackRange())
             {
                 attackTarget = null;
                 CurrentBehavior = BehaviorState.Idle;
@@ -702,9 +795,11 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
                 yield break;
             }
 
-            AttackType attackType = UnitWeapon != null && (UnitWeapon.Type == WeaponType.Bow || UnitWeapon.Type == WeaponType.Crossbow) ? AttackType.Ranged : AttackType.Melee;
+            AttackType attackType = IsRangedUnit ? AttackType.Ranged : AttackType.Melee;
             int attackSlot = attackType == AttackType.Melee ? AcquireAttackSlot(target) : 0;
-            float delay = Mathf.Max(0f, unit._base.AttackDelay) + (attackType == AttackType.Melee ? attackSlot * 0.08f : 0f);
+            float delay = attackType == AttackType.Ranged
+                ? 0f
+                : Mathf.Max(0f, unit._base.AttackDelay) + attackSlot * 0.08f;
 
             while (delay > 0f)
             {
@@ -732,16 +827,54 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             if (attackType == AttackType.Melee)
             {
                 CurrentBehavior = BehaviorState.MeleeAttacking;
-                yield return StartCoroutine(BopTowardsTarget(target));
+                if (spriteHandler != null && spriteHandler.HasMeleeAnimation)
+                {
+                    yield return StartCoroutine(spriteHandler.PlayMeleeAnimation());
+                }
+                else
+                {
+                    yield return StartCoroutine(BopTowardsTarget(target));
+                }
             }
             else
             {
                 CurrentBehavior = BehaviorState.RangeAttacking;
+                FaceTile(target.TilePosition);
+
+                float aimDelay = rangedAimDelay;
+                while (aimDelay > 0f)
+                {
+                    while (MouseController.i != null && MouseController.i.MovementPaused)
+                    {
+                        yield return null;
+                    }
+
+                    float timeScale = BattleManager.i != null ? BattleManager.i.TimeScaleMultiplier : 1f;
+                    aimDelay -= Time.deltaTime * Mathf.Max(1f, timeScale);
+                    yield return null;
+                }
+
+                if (attackTarget != target || target == null || target.UnitHP <= 0)
+                {
+                    attackRoutine = null;
+                    yield break;
+                }
+
+                if (spriteHandler != null && spriteHandler.HasRangedAnimation)
+                {
+                    yield return StartCoroutine(spriteHandler.PlayRangedAnimation());
+                }
             }
 
             if (BattleManager.i != null)
             {
                 BattleManager.i.PerformAttack(this, target, attackType);
+            }
+
+            if (attackType == AttackType.Ranged
+                && (unit._base.ReloadTime > 0f || (spriteHandler != null && spriteHandler.HasReloadAnimation)))
+            {
+                yield return StartCoroutine(ReloadRangedWeapon());
             }
 
             if (attackType == AttackType.Melee)
@@ -771,6 +904,34 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         attackRoutine = null;
     }
 
+    private IEnumerator ReloadRangedWeapon()
+    {
+        float reloadAnimationDuration = spriteHandler != null && spriteHandler.HasReloadAnimation
+            ? spriteHandler.ReloadAnimationDuration
+            : 0f;
+        reloadTimer = Mathf.Max(0.01f, unit._base.ReloadTime, reloadAnimationDuration);
+        Coroutine reloadAnimationRoutine = spriteHandler != null && spriteHandler.HasReloadAnimation
+            ? StartCoroutine(spriteHandler.PlayReloadAnimation())
+            : null;
+
+        while (reloadTimer > 0f)
+        {
+            while (MouseController.i != null && MouseController.i.MovementPaused)
+            {
+                yield return null;
+            }
+
+            float timeScale = BattleManager.i != null ? BattleManager.i.TimeScaleMultiplier : 1f;
+            reloadTimer -= Time.deltaTime * Mathf.Max(1f, timeScale);
+            yield return null;
+        }
+
+        if (reloadAnimationRoutine != null)
+        {
+            StopCoroutine(reloadAnimationRoutine);
+        }
+    }
+
     /// <summary>
     /// Sample animation where a unit bops towards another to signify an attack
     /// </summary>
@@ -783,6 +944,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             yield break;
         }
 
+        FaceTile(target.TilePosition);
         Vector3 startPosition = transform.position;
         Vector3 targetDirection = (target.transform.position - transform.position);
         if (targetDirection.sqrMagnitude < 0.001f)
@@ -878,8 +1040,37 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             return;
         }
 
+        if (tilePosition != null)
+        {
+            Vector2Int movementDirection = tile.gridLocation - tilePosition.gridLocation;
+            if (movementDirection != Vector2Int.zero)
+            {
+                SetFacingDirection(movementDirection);
+            }
+        }
+
         tilePosition = tile;
         tile.SetRestingObject(this);
+    }
+
+    private void UpdateMovementFacing(List<OverlayTile> path, int segmentIndex, OverlayTile sourceTile)
+    {
+        if (segmentIndex < 0 || segmentIndex >= path.Count || path[segmentIndex] == null)
+        {
+            return;
+        }
+
+        Vector2Int segmentStart = segmentIndex == 0 && sourceTile != null
+            ? sourceTile.gridLocation
+            : segmentIndex > 0 && path[segmentIndex - 1] != null
+                ? path[segmentIndex - 1].gridLocation
+                : path[segmentIndex].gridLocation;
+        Vector2Int segmentDirection = path[segmentIndex].gridLocation - segmentStart;
+
+        if (segmentDirection != Vector2Int.zero)
+        {
+            SetFacingDirection(segmentDirection);
+        }
     }
 
     
@@ -890,6 +1081,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     {
         movementRequestVersion++;
         movementOrders?.Clear();
+        spriteHandler?.StopWalkingAnimation();
+        StartIdleAnimation();
 
         if (tilePosition != null)
         {
@@ -923,6 +1116,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         }
 
         CurrentBehavior = BehaviorState.Moving;
+        StopIdleAnimation();
+        spriteHandler?.StartWalkingAnimation();
         targetTile = activeMovementOrders[activeMovementOrders.Count - 1];
 
         OverlayTile sourceTile = tilePosition;
@@ -942,6 +1137,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         if (pathPoints.Count <= 1)
         {
+            spriteHandler?.StopWalkingAnimation();
             if (sourceTile != null && sourceTile != targetTile)
             {
                 sourceTile.SetRestingObject(this);
@@ -949,6 +1145,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
             movementOrders.Clear();
             CurrentBehavior = BehaviorState.Idle;
+            StartIdleAnimation();
             yield break;
         }
 
@@ -966,6 +1163,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         {
             if (!IsMovementRequestCurrent(requestVersion))
             {
+                spriteHandler?.StopWalkingAnimation();
+                StartIdleAnimation();
                 yield break;
             }
 
@@ -976,6 +1175,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
             if (!IsMovementRequestCurrent(requestVersion))
             {
+                spriteHandler?.StopWalkingAnimation();
+                StartIdleAnimation();
                 yield break;
             }
 
@@ -983,6 +1184,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             transform.position = GetPositionOnPath(pathPoints, normalizedTime);
 
             int nextPathIndex = Mathf.Clamp((int)(normalizedTime * activeMovementOrders.Count), 0, Mathf.Max(0, activeMovementOrders.Count - 1));
+            UpdateMovementFacing(activeMovementOrders, nextPathIndex, sourceTile);
             if (nextPathIndex != pathIndex && nextPathIndex >= 0 && nextPathIndex < activeMovementOrders.Count)
             {
                 SetCurrentTile(activeMovementOrders[nextPathIndex]);
@@ -996,6 +1198,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         if (!IsMovementRequestCurrent(requestVersion))
         {
+            spriteHandler?.StopWalkingAnimation();
+            StartIdleAnimation();
             yield break;
         }
 
@@ -1009,7 +1213,9 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         SetCurrentTile(targetTile);
 
         movementOrders.Clear();
+        spriteHandler?.StopWalkingAnimation();
         CurrentBehavior = BehaviorState.Idle;
+        StartIdleAnimation();
     }
     #endregion
     #region MapObject and HP implementation
@@ -1115,7 +1321,14 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         if (spriteHandler != null)
         {
             spriteHandler.StopHitFlash();
-            spriteHandler.gameObject.SetActive(false);
+            if (spriteHandler.HasDyingAnimation)
+            {
+                StartCoroutine(PlayDyingAnimationAndDisable());
+            }
+            else
+            {
+                spriteHandler.gameObject.SetActive(false);
+            }
         }
 
         if (attackRoutine != null)
@@ -1150,6 +1363,15 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             }
         }
 
+    }
+
+    private IEnumerator PlayDyingAnimationAndDisable()
+    {
+        yield return spriteHandler.PlayDyingAnimation();
+        if (spriteHandler != null)
+        {
+            spriteHandler.gameObject.SetActive(false);
+        }
     }
 
     private bool EnemyDeathCheck()

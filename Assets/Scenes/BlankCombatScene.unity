@@ -3280,7 +3280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58a4df543682b05439f0f6b66941b1f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GlobalSettings
-  richDebugLogs: 0
+  richDebugLogs: 1
   mapGenTester: 1
 --- !u!114 &1843530664
 MonoBehaviour:
