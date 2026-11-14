@@ -210,11 +210,26 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         spriteHandler?.SetFacingDirection(facingDirection);
     }
 
+    private void SetFacingDirectionFromGrid(Vector2Int gridDirection)
+    {
+        if (gridDirection == Vector2Int.zero)
+        {
+            return;
+        }
+
+        // Grid +X/+Y project to screen UpRight/UpLeft respectively.
+        Vector2Int animationDirection = new Vector2Int(
+            gridDirection.x - gridDirection.y,
+            gridDirection.x + gridDirection.y
+        );
+        SetFacingDirection(animationDirection);
+    }
+
     private void FaceTile(OverlayTile tile)
     {
         if (tile != null && tilePosition != null)
         {
-            SetFacingDirection(tile.gridLocation - tilePosition.gridLocation);
+            SetFacingDirectionFromGrid(tile.gridLocation - tilePosition.gridLocation);
         }
     }
 
@@ -827,6 +842,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             if (attackType == AttackType.Melee)
             {
                 CurrentBehavior = BehaviorState.MeleeAttacking;
+                FaceTile(target.TilePosition);
                 if (spriteHandler != null && spriteHandler.HasMeleeAnimation)
                 {
                     yield return StartCoroutine(spriteHandler.PlayMeleeAnimation());
@@ -1045,7 +1061,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
             Vector2Int movementDirection = tile.gridLocation - tilePosition.gridLocation;
             if (movementDirection != Vector2Int.zero)
             {
-                SetFacingDirection(movementDirection);
+                SetFacingDirectionFromGrid(movementDirection);
             }
         }
 
@@ -1069,7 +1085,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         if (segmentDirection != Vector2Int.zero)
         {
-            SetFacingDirection(segmentDirection);
+            SetFacingDirectionFromGrid(segmentDirection);
         }
     }
 
@@ -1116,11 +1132,12 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         }
 
         CurrentBehavior = BehaviorState.Moving;
+        OverlayTile sourceTile = tilePosition;
+        UpdateMovementFacing(activeMovementOrders, 0, sourceTile);
         StopIdleAnimation();
         spriteHandler?.StartWalkingAnimation();
         targetTile = activeMovementOrders[activeMovementOrders.Count - 1];
 
-        OverlayTile sourceTile = tilePosition;
         if (sourceTile != null && sourceTile != targetTile)
         {
             sourceTile.ClearRestingObject();

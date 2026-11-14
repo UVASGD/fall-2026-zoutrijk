@@ -242,23 +242,37 @@ public class CharacterSpriteHandler : MonoBehaviour
 
     private IEnumerator PlayAnimationCycle(ObjectAnimation animation)
     {
-        List<Sprite> sprites = animation.GetSprites(FacingDirection);
-        if (sprites.Count == 0)
+        Vector2Int animationDirection = FacingDirection;
+        int spriteIndex = 0;
+        while (true)
         {
-            yield break;
-        }
+            List<Sprite> sprites = animation.GetSprites(animationDirection);
+            if (sprites.Count == 0)
+            {
+                yield break;
+            }
 
-        characterRenderer.sprite = sprites[0];
-        if (sprites.Count == 1 || animation.animationDelay <= 0f)
-        {
-            yield return null;
-            yield break;
-        }
-
-        for (int spriteIndex = 1; spriteIndex < sprites.Count; spriteIndex++)
-        {
-            yield return new WaitForSeconds(animation.animationDelay);
             characterRenderer.sprite = sprites[spriteIndex];
+            if (sprites.Count == 1 || animation.animationDelay <= 0f)
+            {
+                yield return null;
+                yield break;
+            }
+
+            yield return new WaitForSeconds(animation.animationDelay);
+
+            if (FacingDirection != animationDirection)
+            {
+                animationDirection = FacingDirection;
+                spriteIndex = 0;
+                continue;
+            }
+
+            spriteIndex++;
+            if (spriteIndex >= sprites.Count)
+            {
+                yield break;
+            }
         }
     }
     
