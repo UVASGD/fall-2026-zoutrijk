@@ -889,7 +889,10 @@ public class MouseController : MonoBehaviour
             return false;
         }
 
-        List<FieldCharacter> activeUnits = units.Where(unit => unit != null && unit.TilePosition != null).ToList();
+        List<FieldCharacter> activeUnits = units
+            .Where(unit => unit != null && unit.TilePosition != null)
+            .Distinct()
+            .ToList();
         if (activeUnits.Count == 0)
         {
             return false;
@@ -907,7 +910,10 @@ public class MouseController : MonoBehaviour
             return false;
         }
 
-        List<FieldCharacter> activeUnits = units.Where(unit => unit != null && unit.TilePosition != null).ToList();
+        List<FieldCharacter> activeUnits = units
+            .Where(unit => unit != null && unit.TilePosition != null)
+            .Distinct()
+            .ToList();
         if (activeUnits.Count == 0)
         {
             return false;
@@ -1335,7 +1341,11 @@ public class MouseController : MonoBehaviour
     public void SetSelectedUnits(List<FieldCharacter> units)
     {
         selectedCharacters.Clear();
-        selectedCharacters.AddRange(units.Where(unit => unit != null));
+        selectedCharacters.AddRange(
+            units
+                .Where(unit => unit != null)
+                .Distinct()
+        );
         selectedCharacters.ForEach(unit => unit.TargetTile?.ShowTile());
         characterToMoveSource = selectedCharacters.Count > 0 ? selectedCharacters[0].TilePosition : null;
         BattleUI.i.SetHighlightedUnits(selectedCharacters);

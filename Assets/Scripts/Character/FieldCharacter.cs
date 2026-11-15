@@ -44,6 +44,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     private FieldCharacter attackTarget;
     private Coroutine attackRoutine;
     private Coroutine idleAnimationRoutine;
+    private bool wasWalking;
     private float reloadTimer;
     private bool isDead;
     private static bool victoryAnnounced;
@@ -298,6 +299,22 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         if (BattleManager.i != null && BattleManager.i.battleSpeed <= 0)
         {
             return;
+        }
+
+        if (CurrentBehavior == BehaviorState.Moving)
+        {
+            if (!wasWalking)
+            {
+                spriteHandler?.ResetWalkingAnimation();
+                wasWalking = true;
+            }
+
+            spriteHandler?.UpdateWalkingAnimation(facingDirection, Time.deltaTime);
+        }
+        else if (wasWalking)
+        {
+            wasWalking = false;
+            spriteHandler?.ResetWalkingAnimation();
         }
 
         if (PlayerControlled)
@@ -1097,7 +1114,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
     {
         movementRequestVersion++;
         movementOrders?.Clear();
-        spriteHandler?.StopWalkingAnimation();
+        wasWalking = false;
+        spriteHandler?.ResetWalkingAnimation();
         StartIdleAnimation();
 
         if (tilePosition != null)
@@ -1135,7 +1153,8 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         OverlayTile sourceTile = tilePosition;
         UpdateMovementFacing(activeMovementOrders, 0, sourceTile);
         StopIdleAnimation();
-        spriteHandler?.StartWalkingAnimation();
+
+        spriteHandler?.ResetWalkingAnimation();
         targetTile = activeMovementOrders[activeMovementOrders.Count - 1];
 
         if (sourceTile != null && sourceTile != targetTile)
@@ -1154,7 +1173,6 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         if (pathPoints.Count <= 1)
         {
-            spriteHandler?.StopWalkingAnimation();
             if (sourceTile != null && sourceTile != targetTile)
             {
                 sourceTile.SetRestingObject(this);
@@ -1180,7 +1198,6 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         {
             if (!IsMovementRequestCurrent(requestVersion))
             {
-                spriteHandler?.StopWalkingAnimation();
                 StartIdleAnimation();
                 yield break;
             }
@@ -1192,7 +1209,6 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
             if (!IsMovementRequestCurrent(requestVersion))
             {
-                spriteHandler?.StopWalkingAnimation();
                 StartIdleAnimation();
                 yield break;
             }
@@ -1215,7 +1231,6 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
 
         if (!IsMovementRequestCurrent(requestVersion))
         {
-            spriteHandler?.StopWalkingAnimation();
             StartIdleAnimation();
             yield break;
         }
@@ -1230,7 +1245,6 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         SetCurrentTile(targetTile);
 
         movementOrders.Clear();
-        spriteHandler?.StopWalkingAnimation();
         CurrentBehavior = BehaviorState.Idle;
         StartIdleAnimation();
     }
@@ -1338,6 +1352,7 @@ public class FieldCharacter : MonoBehaviour, ObjectHP
         if (spriteHandler != null)
         {
             spriteHandler.StopHitFlash();
+            StopIdleAnimation();
             if (spriteHandler.HasDyingAnimation)
             {
                 StartCoroutine(PlayDyingAnimationAndDisable());

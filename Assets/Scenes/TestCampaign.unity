@@ -6438,8 +6438,8 @@ MonoBehaviour:
       plating: 0
       padding: 0
       mail: 0
-    unitHealth: 25
-    attachedUnit: {fileID: 11400000, guid: 92e080f5c142f454e9d3daad77741065, type: 2}
+    unitHealth: 5
+    attachedUnit: {fileID: 11400000, guid: 8552312098b9f0742a131eefd2b1fd90, type: 2}
   - armor:
       plating: 0
       padding: 0

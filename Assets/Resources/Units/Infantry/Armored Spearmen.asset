@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af47a0843ed8af345a6c8366f1ea89da, type: 3}
+  m_Name: Armored Spearmen
+  m_EditorClassIdentifier: Assembly-CSharp::UnitBase
+  unitName: Armored Spearmen
+  unitType: 0
+  combatSprites: {fileID: 11400000, guid: bd4e41f57acdaa940bb6115a05885d91, type: 2}
+  rangedProjectile: {fileID: 0}
+  allowedPrimaryWeapons: 
+  basePrimaryWeapon: {fileID: 11400000, guid: 7e635f5bf4f8e4c43b1fbfb8aeca0226, type: 2}
+  baseSecondaryWeapon: {fileID: 11400000, guid: 7376f079182533343acd716802a9ec8d, type: 2}
+  unitDescription: 
+  portraitSprite: {fileID: 437470284, guid: 905ac08303a290041aaac188a14d51cb, type: 3}
+  vitality: 2
+  morale: 10
+  agility: 3
+  strength: 10
+  attackDelay: 0.5
+  reloadTime: 0.1
+  maximumRangedRange: 0
+  unitMaintenance: 0
+  recruitmentCost: 0
+  recruitmentTime: 0
+  startingArmor:
+    plating: 0
+    padding: 0
+    mail: 0

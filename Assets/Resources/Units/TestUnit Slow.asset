@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitBase
   unitName: Test Unit
   unitType: 0
-  combatSprites: {fileID: 11400000, guid: 4c8ef0fd2ed789c4786bb99c1dcfcc55, type: 2}
+  combatSprites: {fileID: 11400000, guid: bd4e41f57acdaa940bb6115a05885d91, type: 2}
   allowedPrimaryWeapons: 
   basePrimaryWeapon: {fileID: 0}
   baseSecondaryWeapon: {fileID: 0}

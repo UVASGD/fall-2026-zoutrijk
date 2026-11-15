@@ -32,7 +32,9 @@ public class CharacterSpriteHandler : MonoBehaviour
     ObjectAnimation rangedAnimation;
     ObjectAnimation dyingAnimation;
     ObjectAnimation reloadAnimation;
-    private Coroutine walkingAnimationRoutine;
+    private Vector2Int walkingDirection = ObjectAnimation.DownRight;
+    private int walkingFrameIndex;
+    private float walkingFrameTime;
 
     //init function to be used by the FieldCharacter
     public void Setup(CombatSpriteDepot depot)
@@ -71,6 +73,7 @@ public class CharacterSpriteHandler : MonoBehaviour
         reloadAnimation = depot.Reload;
 
         animationState = CharacterAnimationState.Idle;
+        walkingDirection = FacingDirection;
 
         SetFacingDirection(idle.facingDirection);
         List<Sprite> sprites = idle.GetSprites(FacingDirection);
@@ -78,6 +81,7 @@ public class CharacterSpriteHandler : MonoBehaviour
         {
             characterRenderer.sprite = sprites[0];
         }
+
     }
 
     private static void CopyRendererSettings(SpriteRenderer source, SpriteRenderer destination)
@@ -105,8 +109,12 @@ public class CharacterSpriteHandler : MonoBehaviour
     {
         if (direction != Vector2Int.zero)
         {
-            FacingDirection = ObjectAnimation.NormalizeDirection(direction);
-            RefreshCurrentAnimationSprite();
+            Vector2Int normalizedDirection = ObjectAnimation.NormalizeDirection(direction);
+            if (normalizedDirection != FacingDirection)
+            {
+                FacingDirection = normalizedDirection;
+                RefreshCurrentAnimationSprite();
+            }
         }
     }
 
@@ -151,11 +159,12 @@ public class CharacterSpriteHandler : MonoBehaviour
 
         characterRenderer.sprite = sprites[spriteIndex];
 
-        while(elapsedTime < animation.GetAnimationTime(FacingDirection))
+        float animationDuration = animation.GetAnimationTime(FacingDirection);
+        while (elapsedTime < animationDuration)
         {
             elapsedTime += Time.deltaTime;
             spriteTime += Time.deltaTime;
-            if(spriteTime > animation.animationDelay && spriteIndex < sprites.Count - 1)
+            if (spriteTime >= animation.animationDelay && spriteIndex < sprites.Count - 1)
             {
                 //increment the index and update the sprite
                 spriteIndex++;
@@ -165,6 +174,8 @@ public class CharacterSpriteHandler : MonoBehaviour
 
             yield return null;
         }
+
+        animationState = CharacterAnimationState.Idle;
     }
 
     public IEnumerator PlayMeleeAnimation()
@@ -207,37 +218,45 @@ public class CharacterSpriteHandler : MonoBehaviour
         }
     }
 
-    public void StartWalkingAnimation()
+    public void ResetWalkingAnimation()
     {
-        if (!HasWalkingAnimation || walkingAnimationRoutine != null)
+        walkingFrameIndex = 0;
+        walkingFrameTime = 0f;
+        walkingDirection = FacingDirection;
+    }
+
+    public void UpdateWalkingAnimation(Vector2Int direction, float deltaTime)
+    {
+        if (!HasWalkingAnimation)
         {
             return;
         }
 
-        walkingAnimationRoutine = StartCoroutine(LoopWalkingAnimation());
-    }
-
-    public void StopWalkingAnimation()
-    {
-        if (walkingAnimationRoutine != null)
+        Vector2Int normalizedDirection = ObjectAnimation.NormalizeDirection(direction);
+        if (normalizedDirection != walkingDirection)
         {
-            StopCoroutine(walkingAnimationRoutine);
-            walkingAnimationRoutine = null;
+            walkingDirection = normalizedDirection;
+            walkingFrameIndex = 0;
+            walkingFrameTime = 0f;
         }
 
-        if (animationState == CharacterAnimationState.LoopingAnimation)
+        List<Sprite> sprites = walkCycleAnimation.GetSprites(walkingDirection);
+        if (sprites.Count == 0)
         {
-            animationState = CharacterAnimationState.Idle;
+            return;
         }
-    }
 
-    private IEnumerator LoopWalkingAnimation()
-    {
-        animationState = CharacterAnimationState.LoopingAnimation;
-        while (true)
+        if (sprites.Count > 1 && walkCycleAnimation.animationDelay > 0f)
         {
-            yield return PlayAnimationCycle(walkCycleAnimation);
+            walkingFrameTime += deltaTime;
+            while (walkingFrameTime >= walkCycleAnimation.animationDelay)
+            {
+                walkingFrameTime -= walkCycleAnimation.animationDelay;
+                walkingFrameIndex = (walkingFrameIndex + 1) % sprites.Count;
+            }
         }
+
+        characterRenderer.sprite = sprites[walkingFrameIndex];
     }
 
     private IEnumerator PlayAnimationCycle(ObjectAnimation animation)

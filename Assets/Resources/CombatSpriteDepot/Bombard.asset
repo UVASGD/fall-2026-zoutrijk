@@ -13,40 +13,64 @@ MonoBehaviour:
   m_Name: Bombard
   m_EditorClassIdentifier: Assembly-CSharp::CombatSpriteDepot
   idle:
-    _downRightAnimationSprites: []
-    _rightAnimationSprites: []
-    _upRightAnimationSprites: []
-    _upAnimationSprites: []
-    _upLeftAnimationSprites: []
-    _leftAnimationSprites: []
-    _downLeftAnimationSprites: []
-    _downAnimationSprites: []
+    _downRightAnimationSprites:
+    - {fileID: -1382535601, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _rightAnimationSprites:
+    - {fileID: -736832358, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upRightAnimationSprites:
+    - {fileID: 1033862332, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upAnimationSprites:
+    - {fileID: 665289459, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upLeftAnimationSprites:
+    - {fileID: 1123009075, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _leftAnimationSprites:
+    - {fileID: -1510610862, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _downLeftAnimationSprites:
+    - {fileID: 2042767753, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _downAnimationSprites:
+    - {fileID: -433051362, guid: 584717063f53f75489a6a161897f133a, type: 3}
     _animationSprites: []
     _animationDelay: 0.05
     _facingDirection: {x: 0, y: -1}
   walking:
-    _downRightAnimationSprites: []
-    _rightAnimationSprites: []
-    _upRightAnimationSprites: []
-    _upAnimationSprites: []
-    _upLeftAnimationSprites: []
-    _leftAnimationSprites: []
-    _downLeftAnimationSprites: []
-    _downAnimationSprites: []
+    _downRightAnimationSprites:
+    - {fileID: -1382535601, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _rightAnimationSprites:
+    - {fileID: -736832358, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upRightAnimationSprites:
+    - {fileID: 1033862332, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upAnimationSprites:
+    - {fileID: 665289459, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upLeftAnimationSprites:
+    - {fileID: 1123009075, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _leftAnimationSprites:
+    - {fileID: -1510610862, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _downLeftAnimationSprites:
+    - {fileID: 2042767753, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _downAnimationSprites:
+    - {fileID: -433051362, guid: 584717063f53f75489a6a161897f133a, type: 3}
     _animationSprites: []
     _animationDelay: 0.05
     _facingDirection: {x: 0, y: -1}
   meleeBase:
-    _downRightAnimationSprites: []
-    _rightAnimationSprites: []
-    _upRightAnimationSprites: []
-    _upAnimationSprites: []
-    _upLeftAnimationSprites: []
-    _leftAnimationSprites: []
-    _downLeftAnimationSprites: []
-    _downAnimationSprites: []
+    _downRightAnimationSprites:
+    - {fileID: -1382535601, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _rightAnimationSprites:
+    - {fileID: -736832358, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upRightAnimationSprites:
+    - {fileID: 1033862332, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upAnimationSprites:
+    - {fileID: 665289459, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upLeftAnimationSprites:
+    - {fileID: 1123009075, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _leftAnimationSprites:
+    - {fileID: -1510610862, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _downLeftAnimationSprites:
+    - {fileID: 2042767753, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _downAnimationSprites:
+    - {fileID: -433051362, guid: 584717063f53f75489a6a161897f133a, type: 3}
     _animationSprites: []
-    _animationDelay: 0
+    _animationDelay: 0.05
     _facingDirection: {x: 0, y: -1}
   rangedBase:
     _downRightAnimationSprites:
@@ -317,35 +341,59 @@ MonoBehaviour:
     _animationDelay: 0.05
     _facingDirection: {x: 0, y: -1}
   dying:
-    _downRightAnimationSprites: []
-    _rightAnimationSprites: []
-    _upRightAnimationSprites: []
-    _upAnimationSprites: []
-    _upLeftAnimationSprites: []
-    _leftAnimationSprites: []
-    _downLeftAnimationSprites: []
-    _downAnimationSprites: []
+    _downRightAnimationSprites:
+    - {fileID: -1382535601, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _rightAnimationSprites:
+    - {fileID: -736832358, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upRightAnimationSprites:
+    - {fileID: 1033862332, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upAnimationSprites:
+    - {fileID: 665289459, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upLeftAnimationSprites:
+    - {fileID: 1123009075, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _leftAnimationSprites:
+    - {fileID: -1510610862, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _downLeftAnimationSprites:
+    - {fileID: 2042767753, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _downAnimationSprites:
+    - {fileID: -433051362, guid: 584717063f53f75489a6a161897f133a, type: 3}
     _animationSprites: []
-    _animationDelay: 0
+    _animationDelay: 0.05
     _facingDirection: {x: 0, y: -1}
   offset: -0.25
   meleeAttackSfx: {fileID: 0}
   rangedAttackSfx: {fileID: 0}
   reload:
-    _downRightAnimationSprites: []
-    _rightAnimationSprites: []
-    _upRightAnimationSprites: []
-    _upAnimationSprites: []
-    _upLeftAnimationSprites: []
-    _leftAnimationSprites: []
-    _downLeftAnimationSprites: []
-    _downAnimationSprites: []
+    _downRightAnimationSprites:
+    - {fileID: -1382535601, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _rightAnimationSprites:
+    - {fileID: -736832358, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upRightAnimationSprites:
+    - {fileID: 1033862332, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upAnimationSprites:
+    - {fileID: 665289459, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _upLeftAnimationSprites:
+    - {fileID: 1123009075, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _leftAnimationSprites:
+    - {fileID: -1510610862, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _downLeftAnimationSprites:
+    - {fileID: 2042767753, guid: 584717063f53f75489a6a161897f133a, type: 3}
+    _downAnimationSprites:
+    - {fileID: -433051362, guid: 584717063f53f75489a6a161897f133a, type: 3}
     _animationSprites: []
-    _animationDelay: 0
+    _animationDelay: 0.05
     _facingDirection: {x: 0, y: -1}
-  targetSlot: 0
-  spritesToParse: []
-  framesPerDirection: 32
+  targetSlot: 5
+  spritesToParse:
+  - {fileID: 1033862332, guid: 584717063f53f75489a6a161897f133a, type: 3}
+  - {fileID: -736832358, guid: 584717063f53f75489a6a161897f133a, type: 3}
+  - {fileID: -1382535601, guid: 584717063f53f75489a6a161897f133a, type: 3}
+  - {fileID: -433051362, guid: 584717063f53f75489a6a161897f133a, type: 3}
+  - {fileID: 2042767753, guid: 584717063f53f75489a6a161897f133a, type: 3}
+  - {fileID: -1510610862, guid: 584717063f53f75489a6a161897f133a, type: 3}
+  - {fileID: 1123009075, guid: 584717063f53f75489a6a161897f133a, type: 3}
+  - {fileID: 665289459, guid: 584717063f53f75489a6a161897f133a, type: 3}
+  framesPerDirection: 1
   startingOrientation: 2
   counterClockwise: 0
   defaultFrameDelay: 0.05
