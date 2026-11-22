@@ -98,6 +98,23 @@ public partial class FieldCharacter
 
     public void InterruptUnit()
     {
+        FieldCharacter interruptedTarget = attackTarget;
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine);
+            attackRoutine = null;
+        }
+        if (interruptedTarget != null)
+        {
+            ReleaseAttackSlot(interruptedTarget);
+            ReleaseAttackTile(interruptedTarget);
+        }
+        attackTarget = null;
+        InterruptMovement();
+    }
+
+    public void InterruptMovement()
+    {
         movementRequestVersion++;
         movementOrders?.Clear();
         wasWalking = false;

@@ -7,6 +7,33 @@ public partial class FieldCharacter
     private bool IsRangedUnit => unit != null && unit._base.UnitType == UnitType.Ranged;
     public bool IsRanged => IsRangedUnit;
 
+    public void CheckForCloseTargetClash()
+    {
+        if (attackTarget == null
+            || attackTarget == this
+            || attackTarget.IsDead
+            || attackTarget.PlayerControlled == PlayerControlled)
+        {
+            return;
+        }
+
+        int clashRange = IsRangedUnit ? 1 : GetAttackRange();
+        if (GetTileDistanceTo(attackTarget) > clashRange)
+        {
+            return;
+        }
+
+        if (CurrentBehavior == BehaviorState.Moving)
+        {
+            InterruptMovement();
+        }
+
+        if (attackTarget.CurrentBehavior == BehaviorState.Moving)
+        {
+            attackTarget.InterruptMovement();
+        }
+    }
+
     private int GetAttackRange()
     {
         return IsRangedUnit ? MaximumRangedRange : UnitWeapon.Range;

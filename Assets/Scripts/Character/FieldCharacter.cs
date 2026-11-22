@@ -301,6 +301,8 @@ public partial class FieldCharacter : MonoBehaviour, ObjectHP
             return;
         }
 
+        CheckForCloseTargetClash();
+
         if (CurrentBehavior == BehaviorState.Moving)
         {
             if (!wasWalking)

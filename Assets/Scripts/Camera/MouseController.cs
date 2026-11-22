@@ -851,33 +851,6 @@ public class MouseController : MonoBehaviour
                 unit.ClearFormationMoveSpeed();
             }
         }
-
-        if (selectedCharacters != null)
-        {
-            bool clearedAnySelectedUnits = false;
-            for (int i = selectedCharacters.Count - 1; i >= 0; i--)
-            {
-                if (units.Contains(selectedCharacters[i]))
-                {
-                    selectedCharacters.RemoveAt(i);
-                    clearedAnySelectedUnits = true;
-                }
-            }
-
-            if (clearedAnySelectedUnits)
-            {
-                if (selectedCharacters.Count > 0)
-                {
-                    BattleUI.i.SetHighlightedUnits(selectedCharacters);
-                    GroupUI.i.UpdateNumberOfSelectedUnits(selectedCharacters.Count);
-                }
-                else
-                {
-                    BattleUI.i.ClearHighlightedUnits();
-                    GroupUI.i.UpdateNumberOfSelectedUnits(0, true);
-                }
-            }
-        }
     }
 
     private bool TryBuildFormationMovePlan(List<FieldCharacter> units, OverlayTile destination, out List<FormationMovePlan> movePlan)
