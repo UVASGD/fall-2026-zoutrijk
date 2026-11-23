@@ -52,6 +52,7 @@ public class UnitBase : ScriptableObject
 
     public int Vitality { get { return vitality; } }
     public int Morale { get { return morale; } }
+    public float SurrenderChance => Mathf.Clamp01((10f - Mathf.Clamp(morale, 0, 10)) / 10f);
     public int Agility { get { return agility; } }
     public int Strength { get { return strength; } }
     public float AttackDelay { get { return attackDelay; } }

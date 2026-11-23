@@ -468,6 +468,18 @@ public partial class FieldCharacter : MonoBehaviour, ObjectHP
         }
 
         isDead = true;
+        bool surrendered = unit != null
+            && unit._base != null
+            && UnityEngine.Random.value < unit._base.SurrenderChance;
+        if (surrendered)
+        {
+            BattleManager.i?.RegisterPrisoner(this);
+            if (GlobalEditorSettings.i.RichDebugLogs)
+            {
+                Debug.Log($"{internalCharacterName} surrendered and was added to the prisoner ledger.");
+            }
+        }
+
         if (PlayerControlled)
         {
             friendlyUnitsKilled++;
@@ -533,7 +545,7 @@ public partial class FieldCharacter : MonoBehaviour, ObjectHP
         {
             victoryAnnounced = true;
             BattlefieldAnnouncer.i?.BattlefieldAnnouncement(
-                $"Victory! Enemies killed: {enemiesKilled}. Friendly units killed: {friendlyUnitsKilled}.");
+                $"Victory! Enemies killed: {enemiesKilled}. Friendly units dead: {friendlyUnitsKilled}.");
         }
 
         foreach (FieldCharacter unitTargetingThis in unitsTargetingThis)

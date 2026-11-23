@@ -11,6 +11,8 @@ public class BattleManager : MonoBehaviour
     public static BattleManager i;
     public BattleState battleState { get; private set; }
     private Stack<BattleState> currentStates;
+    public List<FieldCharacter> prisoners { get; private set; } = new List<FieldCharacter>();
+    public List<FieldCharacter> prisonerLedger => prisoners;
     public int battleSpeed {get; private set;} //can either be 0 (paused), 1 (normal), or 2 (sped up)
     public float TimeScaleMultiplier => battleSpeed <= 0 ? 0f : battleSpeed;
     void Awake()
@@ -23,11 +25,23 @@ public class BattleManager : MonoBehaviour
         battleSpeed = 1;
         currentStates.Push(BattleState.Deployment);
         battleState = currentStates.Peek();
+        prisoners.Clear();
         EnableDeploymentPhaseUI();
         if (GetComponent<BattleSetup>() == null)
         {
             gameObject.AddComponent<BattleSetup>();
         }
+    }
+
+    public void RegisterPrisoner(FieldCharacter prisoner)
+    {
+        if (prisoner == null || prisoner.Unit == null || prisoners.Contains(prisoner))
+        {
+            return;
+        }
+
+        prisoners.Add(prisoner);
+        BattleUI.i.UpdatePrisonerCount(prisoners.Count);
     }
 
     private void EnableDeploymentPhaseUI()

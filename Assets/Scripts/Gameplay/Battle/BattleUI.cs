@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -21,6 +22,7 @@ public class BattleUI : MonoBehaviour
     [SerializeField] private Color movementPathColor = new Color(0.2f, 0.85f, 1f, 1f);
     [SerializeField] private float movementPathWidth = 0.12f;
     [SerializeField] private int movementPathSortingOrder = 10; 
+    [SerializeField] TMP_Text prisonerCount;
     private readonly List<LineRenderer> activeMovementLines = new List<LineRenderer>();
 
     public List<FieldCharacter> HighlightedUnits => highlightedUnits;
@@ -92,19 +94,6 @@ public class BattleUI : MonoBehaviour
         }
     }
 
-    public LineRenderer CreateMovementPath(List<OverlayTile> tiles)
-    {
-        return null;
-    }
-
-    public void DestroyMovementPath(LineRenderer lineRenderer)
-    {
-        if (lineRenderer == null)
-        {
-            return;
-        }
-    }
-
     public void AttemptGrouping()
     {
         if (highlightedUnits.Count > 0)
@@ -115,5 +104,10 @@ public class BattleUI : MonoBehaviour
 
             Debug.Log("Attempting to group selected units.");
         }
+    }
+
+    public void UpdatePrisonerCount(int newCount)
+    {
+        prisonerCount.text = $"{newCount} prisoners captured";
     }
 }

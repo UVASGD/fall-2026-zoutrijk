@@ -88,6 +88,8 @@ public class BattleSetup : MonoBehaviour
 
         deploymentSpeech = speechStitcher.StitchSpeeches(battleMapMessenger.battleContext);
         CombatMusicManager.i.PlayDeploymentTheme();
+
+        BattleUI.i.UpdatePrisonerCount(0); //start off at zero and clear any lingering data
     }
 
     public void SelectUnitBase(UnitBase unitBase)

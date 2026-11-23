@@ -1184,7 +1184,7 @@ MonoBehaviour:
       plating: 0
       padding: 0
       mail: 0
-    unitHealth: 25
+    unitHealth: 5
     attachedUnit: {fileID: 11400000, guid: b2aac64e9b57beb4b98059fc3a69caea, type: 2}
   general: {fileID: 11400000, guid: 854f433fde3a0e64daa377b95cdcd1ea, type: 2}
   startingRegion: DOL
